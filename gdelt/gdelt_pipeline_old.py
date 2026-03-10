@@ -7,6 +7,16 @@ from typing import List, Dict
 from gdeltdoc import GdeltDoc, Filters
 from dotenv import load_dotenv
 from rich.console import Console
+import requests
+import urllib3
+
+# Disable SSL warnings and verification as a workaround for certificate issues in this environment
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+original_request = requests.Session.request
+def unverified_request(*args, **kwargs):
+    kwargs['verify'] = False
+    return original_request(*args, **kwargs)
+requests.Session.request = unverified_request
 
 # Add parent directory to path to import helpers
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -14,8 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from helpers.supabase_helper import (
     get_unprocessed_companies,
     update_company_state,
-    insert_articles,
-    mark_company_complete  # Wait, I didn't verify if mark_company_complete was in supabase_helper. It's not. I should add it or use update_company_state.
+    insert_articles
 )
 
 # Fix for missing function - I will define it inline or import update_company_state with is_processed=True
@@ -52,6 +61,7 @@ def fetch_gdelt_articles(company_name: str, stock_symbol: str, date: dt.date):
         .replace(" Ltd.", "")
         .replace(" LLC", "")
         .replace(",", "")
+        .strip()
     )
     
     # Construct filters
@@ -60,7 +70,7 @@ def fetch_gdelt_articles(company_name: str, stock_symbol: str, date: dt.date):
         start_date=date.strftime("%Y-%m-%d"),
         end_date=(date + dt.timedelta(days=1)).strftime("%Y-%m-%d"),
         country="US", 
-        language="English",
+        language="en",
     )
     
     # gdeltdoc wrapper handles the API call
@@ -72,10 +82,22 @@ def fetch_gdelt_articles(company_name: str, stock_symbol: str, date: dt.date):
         # Transform to our format
         results = []
         for _, row in articles.iterrows():
+            # seendate is usually YYYYMMDDTHHMMSSZ (e.g. 20170915T120000Z)
+            # convert to ISO format for Supabase
+            seendate = row.get('seendate')
+            publish_date = None
+            if seendate:
+                try:
+                    # Remove Z and convert T to space or just use strptime
+                    dt_obj = dt.datetime.strptime(seendate, "%Y%m%dT%H%M%SZ")
+                    publish_date = dt_obj.strftime("%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    publish_date = seendate
+
             results.append({
                 "title": row.get('title'),
                 "url": row.get('url'),
-                "publish_date": row.get('seendate'), # seendate is usually YYYYMMDDHHMMSS
+                "publish_date": publish_date,
                 "media_name": row.get('domain'),
                 "stock_symbol": stock_symbol,
                 "company_name": company_name,

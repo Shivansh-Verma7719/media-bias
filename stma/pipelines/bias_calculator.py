@@ -11,6 +11,12 @@ from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from threading import Lock
 
+import sys
+
+# Add pipelines to path to import helpers
+sys.path.insert(0, os.path.dirname(__file__))
+from helpers.db_helper import get_db_connection
+
 # Load environment variables
 load_dotenv()
 
@@ -28,14 +34,7 @@ results_lock = Lock()
 # Global Cache for Outlet Data
 outlet_cache = {}  # id -> {'stance': float, 'followers': float}
 
-def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        port=os.getenv("DB_PORT", "5432")
-    )
+# removed get_db_connection as it is now imported
 
 def normalize_followers(followers):
     """
@@ -69,15 +68,41 @@ def preload_media_outlets():
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, stance_score, avg_followers FROM media_outlets")
+            # Check if columns exist
+            cur.execute("SELECT * FROM media_outlets LIMIT 0")
+            colnames = [desc[0] for desc in cur.description]
+            
+            has_stance = 'stance_score' in colnames
+            has_followers = 'avg_followers' in colnames
+            
+            cols = ["id"]
+            if has_stance: cols.append("stance_score")
+            if has_followers: cols.append("avg_followers")
+            
+            query = f"SELECT {', '.join(cols)} FROM media_outlets"
+            cur.execute(query)
             rows = cur.fetchall()
+            
             for r in rows:
-                oid, stance, followers = r
+                # Map based on what we selected
+                idx = 0
+                oid = r[idx]; idx += 1
+                
+                stance = 0.0
+                if has_stance:
+                    val = r[idx]; idx += 1
+                    stance = float(val) if val is not None else 0.0
+                    
+                followers = 0.0
+                if has_followers:
+                    val = r[idx]; idx += 1
+                    followers = float(val) if val is not None else 0.0
+
                 outlet_cache[oid] = {
-                    'stance': float(stance) if stance is not None else 0.0,
-                    'followers': float(followers) if followers is not None else 0.0
+                    'stance': stance,
+                    'followers': followers
                 }
-        console.print(f"[green]Loaded {len(outlet_cache)} media outlets into cache.[/green]")
+        console.print(f"[green]Loaded {len(outlet_cache)} media outlets into cache. (Stance: {has_stance}, Followers: {has_followers})[/green]")
     finally:
         conn.close()
 
@@ -225,15 +250,48 @@ def run_bias_calculation(prod_mode=False):
     
     conn = get_db_connection()
     try:
+        # Check/Create bias_index table
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS bias_index (
+                    id SERIAL PRIMARY KEY,
+                    ticker VARCHAR(20),
+                    date DATE,
+                    bias_score FLOAT,
+                    norm_bias_score FLOAT,
+                    close FLOAT,
+                    UNIQUE(ticker, date)
+                );
+            """)
+            conn.commit()
+
         # 2. Get Companies to Process
         # Group by ticker to assign to threads
         with conn.cursor() as cur:
+            # Check if we have data
+            cur.execute("SELECT COUNT(*) FROM bias_index")
+            count = cur.fetchone()[0]
+            
+            if count == 0:
+                console.print("[yellow]bias_index is empty. Populating from articles...[/yellow]")
+                # Populate from articles
+                cur.execute("""
+                    INSERT INTO bias_index (ticker, date)
+                    SELECT DISTINCT c.symbol, DATE(a.published_at)
+                    FROM articles a
+                    JOIN companies c ON a.company_id = c.id
+                    WHERE a.published_at IS NOT NULL
+                    ON CONFLICT (ticker, date) DO NOTHING
+                """)
+                conn.commit()
+                console.print(f"[green]Populated bias_index.[/green]")
+
             if TEST_MODE:
                 console.print("Fetching random 10 companies for testing...")
                 cur.execute("SELECT DISTINCT ticker FROM bias_index")
                 all_tickers = [r[0] for r in cur.fetchall()]
                 if not all_tickers:
-                    console.print("[red]No data in bias_index![/red]")
+                    console.print("[red]No data in bias_index after population![/red]")
                     return
                 selected_tickers = random.sample(all_tickers, min(10, len(all_tickers)))
             else:

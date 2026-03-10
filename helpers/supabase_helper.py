@@ -37,7 +37,7 @@ def get_unprocessed_companies(limit=None):
     """
     supabase = get_supabase_client()
     try:
-        query = supabase.table("companies").select("*").eq("is_processed", False).order("last_updated", nulls_first=True)
+        query = supabase.table("companies").select("*").eq("is_processed", False).order("last_updated", nullsfirst=True)
         if limit:
             query = query.limit(limit)
         response = query.execute()

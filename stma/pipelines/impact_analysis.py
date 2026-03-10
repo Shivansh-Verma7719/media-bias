@@ -15,35 +15,114 @@ from helpers.db_helper import get_db_connection
 # CONFIGURATION
 TOP_N_COMPANIES = None
 
-def analyze_impact_rigorous():
-    conn = get_db_connection()
+import subprocess
+import io
+
+def fetch_data_docker():
+    """Fetch data using docker exec when direct connection fails."""
     try:
-        print("Fetching Companies by Article Count...")
-        # 1. Get Tickers (Ordered by volume)
-        top_q = "SELECT symbol FROM companies ORDER BY current_page DESC"
-        with conn.cursor() as cur:
-            cur.execute(top_q)
-            top_tickers = [r[0] for r in cur.fetchall()]
+        print("Attempting to fetch data via Docker exec...")
         
+        # 1. Get Top Tickers
+        cmd_tickers = [
+            "docker", "exec", "supabase-db", "psql", "-U", "postgres", "-d", "postgres", "-c",
+            "COPY (SELECT symbol FROM companies ORDER BY current_page DESC) TO STDOUT WITH CSV"
+        ]
+        result = subprocess.run(cmd_tickers, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Docker command failed: {result.stderr}")
+            return None
+            
+        top_tickers = [line.strip() for line in result.stdout.splitlines() if line.strip()]
         if TOP_N_COMPANIES:
             top_tickers = top_tickers[:TOP_N_COMPANIES]
-            print(f"Limiting to Top {TOP_N_COMPANIES} companies.")
             
-        print(f"Selected {len(top_tickers)} companies (e.g., {top_tickers[:5]})...")
+        print(f"Selected {len(top_tickers)} companies via Docker.")
         
-        print("Fetching Price and Bias Data for Statistical Analysis...")
-        # Fetching necessary columns for these tickers
-        t_tuple = tuple(top_tickers)
+        # 2. Get Data
+        # Constuct dynamic IN clause
+        tickers_str = "'" + "','".join(top_tickers) + "'"
+        
         query = f"""
-            SELECT ticker, date, close, norm_bias_score 
-            FROM bias_index 
-            WHERE close IS NOT NULL 
-            AND norm_bias_score IS NOT NULL
-            AND ticker IN %s
-            ORDER BY ticker, date
+            COPY (
+                SELECT b.ticker, b.date, s.close, b.norm_bias_score 
+                FROM bias_index b
+                JOIN stock_prices s ON b.ticker = s.ticker AND b.date = s.date
+                WHERE s.close IS NOT NULL 
+                AND b.norm_bias_score IS NOT NULL
+                AND b.ticker IN ({tickers_str})
+                ORDER BY b.ticker, b.date
+            ) TO STDOUT WITH CSV HEADER
         """
-        df = pd.read_sql(query, conn, params=(t_tuple,))
         
+        cmd_data = [
+            "docker", "exec", "supabase-db", "psql", "-U", "postgres", "-d", "postgres", "-c", query
+        ]
+        
+        print("Running detailed query via Docker...")
+        result_data = subprocess.run(cmd_data, capture_output=True, text=True)
+        
+        if result_data.returncode != 0:
+            print(f"Docker detailed query failed: {result_data.stderr}")
+            return None
+            
+        # Load into DataFrame
+        df = pd.read_csv(io.StringIO(result_data.stdout))
+        return df
+        
+    except Exception as e:
+        print(f"Error fetching data via Docker: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+def analyze_impact_rigorous():
+    conn = get_db_connection()
+    df = None
+    
+    if not conn:
+        print("Failed to connect to DB directly. Trying Docker fallback...")
+        df = fetch_data_docker()
+        if df is None:
+            print("Failed to fetch data via Docker as well.")
+            return
+
+    if df is None: # Only run normal path if conn succeeded AND df not yet fetched
+        try:
+            print("Fetching Companies by Article Count...")
+            # 1. Get Tickers (Ordered by volume)
+            top_q = "SELECT symbol FROM companies ORDER BY current_page DESC"
+            with conn.cursor() as cur:
+                cur.execute(top_q)
+                top_tickers = [r[0] for r in cur.fetchall()]
+            
+            if TOP_N_COMPANIES:
+                top_tickers = top_tickers[:TOP_N_COMPANIES]
+                print(f"Limiting to Top {TOP_N_COMPANIES} companies.")
+                
+            print(f"Selected {len(top_tickers)} companies (e.g., {top_tickers[:5]})...")
+            
+            print("Fetching Price and Bias Data for Statistical Analysis...")
+            # Fetching necessary columns for these tickers
+            # JOIN bias_index with stock_prices to get close data
+            t_tuple = tuple(top_tickers)
+            query = f"""
+                SELECT b.ticker, b.date, s.close, b.norm_bias_score 
+                FROM bias_index b
+                JOIN stock_prices s ON b.ticker = s.ticker AND b.date = s.date
+                WHERE s.close IS NOT NULL 
+                AND b.norm_bias_score IS NOT NULL
+                AND b.ticker IN %s
+                ORDER BY b.ticker, b.date
+            """
+            df = pd.read_sql(query, conn, params=(t_tuple,))
+        except Exception as e:
+             print(f"Error fetching data from DB: {e}")
+             return
+        finally:
+             conn.close()
+    
+    try:    
         if df.empty:
             print("No data found.")
             return
@@ -64,7 +143,7 @@ def analyze_impact_rigorous():
         # Calculate Cumulative Returns (5-day, 14-day, 30-day)
         indexer_5 = pd.api.indexers.FixedForwardWindowIndexer(window_size=5)
         df['ret_5d'] = df.groupby('ticker')['ret'].shift(-1).rolling(window=indexer_5).sum()
-
+        
         indexer_14 = pd.api.indexers.FixedForwardWindowIndexer(window_size=14)
         df['ret_14d'] = df.groupby('ticker')['ret'].shift(-1).rolling(window=indexer_14).sum()
 
@@ -72,12 +151,17 @@ def analyze_impact_rigorous():
         df['ret_30d'] = df.groupby('ticker')['ret'].shift(-1).rolling(window=indexer_30).sum()
         
         # Drop NaNs created by shift/pct_change
+        before_drop = len(df)
         data = df.dropna(subset=['ret_next', 'ret_5d', 'ret_14d', 'ret_30d', 'norm_bias_score'])
+        print(f"Rows before dropna: {before_drop}")
+        print(f"Rows after dropna (valid returns & bias): {len(data)}")
+        print(f"Dropped {before_drop - len(data)} rows due to missing future returns or bias scores.")
         
         # Filter out 0 bias (or very close to 0) to avoid hugging x-axis
         print(f"Rows before 0-filter: {len(data)}")
         data_filtered = data[data['norm_bias_score'].abs() > 0.001].copy()
         print(f"Rows after 0-filter: {len(data_filtered)}")
+        print(f"Dropped {len(data) - len(data_filtered)} rows with bias approx 0.")
         
         # Split into Positive and Negative Bias regimes
         pos_data = data_filtered[data_filtered['norm_bias_score'] > 0].copy()
@@ -115,7 +199,36 @@ def analyze_impact_rigorous():
         
         # --- Study 1: Panel Regression Splitted ---
         print("\n--- 1. Panel Regression (Split Pos/Neg) ---")
+        print("Model Specification:")
+        print("  Dependent Variable (Y): Future Returns (1-Day, 5-Day, etc.)")
+        print("  Independent Variable (X): Normalized Bias Score (Demeaned)")
+        print("  Observations: Number of stock-days used in the regression.\n")
         
+        # Helper to extract stats
+        detailed_results = []
+
+        def extract_stats(model, regime, horizon):
+            # params is a Series, we want the coefficient for 'bias_demean' (or the constant if relevant, but mainly interest is bias)
+            # The model X has 'const' and 'bias_demean'.
+            # We focus on 'bias_demean'.
+            term = 'bias_demean'
+            if term in model.params:
+                return {
+                    'Regime': regime,
+                    'Horizon': horizon,
+                    'Term': term,
+                    'Coefficient': model.params[term],
+                    'P_Value': model.pvalues[term],
+                    'Standard_Error': model.bse[term],
+                    'T_Value': model.tvalues[term],
+                    'Conf_Int_Lower': model.conf_int().loc[term][0],
+                    'Conf_Int_Upper': model.conf_int().loc[term][1],
+                    'R_Squared': model.rsquared,
+                    'Adj_R_Squared': model.rsquared_adj,
+                    'Observations': model.nobs
+                }
+            return None
+
         results_txt = "REGRESSION RESULTS\n\n"
         results_txt += "| Regime | Forecast Horizon | Beta | P-Value | Significance |\n"
         results_txt += "| :--- | :--- | :--- | :--- | :--- |\n"
@@ -136,18 +249,22 @@ def analyze_impact_rigorous():
             # 1-Day
             model_1d = sm.OLS(d['ret_next_demean'], X).fit(cov_type='cluster', cov_kwds={'groups': d['ticker']})
             beta_1d, p_1d = model_1d.params['bias_demean'], model_1d.pvalues['bias_demean']
+            detailed_results.append(extract_stats(model_1d, label, "1-Day"))
             
             # 5-Day
             model_5d = sm.OLS(d['ret_5d_demean'], X).fit(cov_type='cluster', cov_kwds={'groups': d['ticker']})
             beta_5d, p_5d = model_5d.params['bias_demean'], model_5d.pvalues['bias_demean']
+            detailed_results.append(extract_stats(model_5d, label, "5-Day"))
 
             # 14-Day
             model_14d = sm.OLS(d['ret_14d_demean'], X).fit(cov_type='cluster', cov_kwds={'groups': d['ticker']})
             beta_14d, p_14d = model_14d.params['bias_demean'], model_14d.pvalues['bias_demean']
+            detailed_results.append(extract_stats(model_14d, label, "14-Day"))
 
             # 30-Day
             model_30d = sm.OLS(d['ret_30d_demean'], X).fit(cov_type='cluster', cov_kwds={'groups': d['ticker']})
             beta_30d, p_30d = model_30d.params['bias_demean'], model_30d.pvalues['bias_demean']
+            detailed_results.append(extract_stats(model_30d, label, "30-Day"))
             
             def get_sig(p): return "Significant" if p < 0.05 else "Insignificant"
 
@@ -163,8 +280,16 @@ def analyze_impact_rigorous():
 
         print(results_txt)
         
+        # Save Text Summary
         with open('visualizations/impact_analysis/regression_results.txt', 'w') as f:
             f.write(results_txt)
+
+        # Save Detailed CSV
+        if detailed_results:
+            results_df = pd.DataFrame([r for r in detailed_results if r is not None])
+            csv_path = 'visualizations/impact_analysis/detailed_regression_results.csv'
+            results_df.to_csv(csv_path, index=False)
+            print(f"Saved detailed regression results to {csv_path}")
 
         # Visualize Coefficients Comparison
         labels = [m['label'] for m in models_data]
@@ -187,7 +312,7 @@ def analyze_impact_rigorous():
         import traceback
         traceback.print_exc()
     finally:
-        conn.close()
+        pass
 
 if __name__ == "__main__":
     analyze_impact_rigorous()

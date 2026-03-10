@@ -14,17 +14,41 @@ _upsert_lock = threading.Lock()
 
 def get_db_connection():
     """Establish a connection to the PostgreSQL database."""
+    # Support for Supabase/Postgres specific env vars
+    # Prioritize POSTGRES_USER, then DB_USER, then default to 'postgres'. 
+    # SUPABASE_USER is often for the dashboard/API, not necessarily the DB user.
+    user = os.getenv("POSTGRES_USER") or os.getenv("DB_USER") or "postgres"
+    host = os.getenv("POSTGRES_HOST") or os.getenv("DB_HOST")
+    
+    # Fix for running outside docker-compose
+    if host == "db" or not host:
+        host = "localhost"
+
     try:
         conn = psycopg2.connect(
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT"),
-            database=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD")
+            host=host,
+            port=os.getenv("POSTGRES_PORT") or os.getenv("DB_PORT"),
+            database=os.getenv("POSTGRES_DB") or os.getenv("DB_NAME") or "postgres",
+            user=user,
+            password=os.getenv("POSTGRES_PASSWORD") or os.getenv("DB_PASSWORD")
         )
         return conn
     except Exception as e:
-        print(f"Error connecting to database: {e}")
+        print(f"Error connecting to database at {host}: {e}")
+        # Try fallback to default if not already tried
+        if host != "localhost":
+            try:
+                print("Retrying with localhost...")
+                conn = psycopg2.connect(
+                    host="localhost",
+                    port=os.getenv("POSTGRES_PORT") or os.getenv("DB_PORT") or 5432,
+                    database=os.getenv("POSTGRES_DB") or os.getenv("DB_NAME") or "postgres",
+                    user=user,
+                    password=os.getenv("POSTGRES_PASSWORD") or os.getenv("DB_PASSWORD")
+                )
+                return conn
+            except Exception as e2:
+                print(f"Error connecting to localhost fallback: {e2}")
         return None
 
 def get_domain(url):
@@ -111,6 +135,9 @@ def _resolve_companies(conn, companies_map):
         # 2. Insert missing
         missing_symbols = [s for s in symbols if s not in resolved]
         if missing_symbols:
+            # Prepare values: (name, symbol, current_page, is_processed, last_error, created_at, updated_at)
+            # We urge explicit columns to match the actual table schema
+            # Assuming table has: name, symbol
             values = [(companies_map[s], s) for s in missing_symbols]
             
             execute_values(
