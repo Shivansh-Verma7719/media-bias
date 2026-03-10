@@ -35,64 +35,200 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(threadName)s - %(message)s"
 )
 
+import psycopg2
+import psycopg2.extras
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+
+# Load environment variables
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL must be set in .env")
+
 # ==========================================
 # STORAGE ABSTRACTION
 # ==========================================
+def get_domain(url):
+    try:
+        return urlparse(url).netloc.replace('www.', '')
+    except:
+        return None
+
 class DataSink:
     """Base class for data storage to allow easy switching to a DB."""
     def save(self, rows):
         raise NotImplementedError("Save method must be implemented by subclasses.")
 
-class CSVDataSink(DataSink):
-    """CSV implementation of the DataSink with thread-safe writing."""
-    def __init__(self, filename):
-        self.filename = filename
-        self.lock = threading.Lock()
-        self.headers_written = False
+class PostgresDataSink(DataSink):
+    """PostgreSQL implementation of DataSink for indian_cos schema."""
+    def __init__(self, db_url, companies_cache):
+        self.db_url = db_url
+        self.companies_cache = companies_cache # List of dicts with id, name, terms
+
+    def _get_connection(self):
+        conn = psycopg2.connect(self.db_url)
+        conn.autocommit = True
+        return conn
 
     def save(self, rows):
         if not rows:
             return
             
-        with self.lock:
-            mode = 'a' if os.path.exists(self.filename) else 'w'
-            with open(self.filename, mode, newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=rows[0].keys())
-                if not self.headers_written and mode == 'w':
-                    writer.writeheader()
-                    self.headers_written = True
-                writer.writerows(rows)
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            # 1. Map articles to companies based on terms in organizations
+            articles_to_insert = []
+            domains_to_insert = set()
+            
+            for row in rows:
+                url = row['url']
+                domain = get_domain(url)
+                if domain:
+                    domains_to_insert.add(domain)
+                
+                # Convert GDELT date (YYYYMMDDHHMMSS) to timestamp string or use as is
+                # BigQuery DATE from gkg_partitioned is usually YYYY-MM-DD for the partition, but BigQuery timestamp string
+                published_at = None
+                try:
+                    # Depending on the exact BigQuery output format, we might need to parse it. 
+                    # If it's a date object from BQ client, we can convert it. 
+                    if isinstance(row['date'], str):
+                        # Assuming it's already a suitable string if it came directly from DATE cast
+                        published_at = row['date']
+                    else:
+                        published_at = row['date'].strftime('%Y-%m-%d %H:%M:%S')
+                except Exception:
+                    pass
+
+                orgs = row['organizations'].lower() if row['organizations'] else ""
+                
+                # Find matching company
+                matched_company_id = None
+                for company in self.companies_cache:
+                    for term in company['terms']:
+                        # The regex already matched, but we do a simple string match here to find WHICH company
+                        # Orgs string from GDELT is usually comma separated or semicolon separated
+                        if f"{term}" in orgs:
+                            matched_company_id = company['id']
+                            break
+                    if matched_company_id:
+                        break
+                        
+                if matched_company_id:
+                    articles_to_insert.append({
+                        'title': url.split('/')[-1][:200], # Fallback title
+                        'url': url,
+                        'source': domain,
+                        'published_at': published_at,
+                        'company_id': matched_company_id,
+                        'domain': domain # For media_outlet_id lookup later
+                    })
+
+            if not articles_to_insert:
+                return
+
+            # 2. Insert/Resolve Media Outlets
+            if domains_to_insert:
+                media_query = """
+                    INSERT INTO indian_cos.media_outlets (domain, name) 
+                    VALUES %s 
+                    ON CONFLICT (domain) DO NOTHING;
+                """
+                psycopg2.extras.execute_values(
+                    cursor,
+                    media_query,
+                    [(d, d) for d in domains_to_insert],
+                    page_size=100
+                )
+
+            # Re-fetch media outlet mappings
+            cursor.execute("SELECT domain, id FROM indian_cos.media_outlets WHERE domain = ANY(%s)", (list(domains_to_insert),))
+            domain_to_id = {row[0]: row[1] for row in cursor.fetchall()}
+
+            # 3. Insert Articles
+            records = []
+            for art in articles_to_insert:
+                records.append((
+                    art['title'],
+                    None, # content
+                    art['url'],
+                    art['source'],
+                    art['published_at'],
+                    domain_to_id.get(art['domain']),
+                    art['company_id']
+                ))
+
+            article_query = """
+                INSERT INTO indian_cos.articles (
+                    title, content, url, source, published_at, 
+                    media_outlet_id, company_id
+                ) VALUES %s
+                ON CONFLICT (url) DO NOTHING;
+            """
+            
+            psycopg2.extras.execute_values(
+                cursor,
+                article_query,
+                records,
+                page_size=100
+            )
+
+        except Exception as e:
+            logging.error(f"Error saving to database: {e}")
+        finally:
+            cursor.close()
+            conn.close()
 
 # ==========================================
 # PIPELINE LOGIC
 # ==========================================
-def load_search_terms(csv_path):
-    """Extracts company names, aliases, and extra terms to build a search regex."""
-    terms = set()
+def load_search_terms_from_db():
+    """Extracts unprocessed companies, aliases, and extra terms from DB to build a regex pattern and cache."""
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
     try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                # Add main company name
-                if row.get('company_name'):
-                    terms.add(row['company_name'].lower().strip())
-                # Add aliases
-                if row.get('aliases'):
-                    for alias in row['aliases'].split('|'):
-                        if alias.strip():
-                            terms.add(alias.lower().strip())
-                # Add extra terms
-                if row.get('extra_terms'):
-                    for term in row['extra_terms'].split('|'):
-                        if term.strip():
-                            terms.add(term.lower().strip())
-    except Exception as e:
-        logging.error(f"Failed to load CSV: {e}")
+        # Fetch fully from indian_cos.companies where is_processed = false
+        cursor.execute("SELECT id, name, symbol FROM indian_cos.companies WHERE is_processed = False;")
+        companies = cursor.fetchall()
         
-    # Clean up empty strings and create a regex pattern
-    valid_terms = [t for t in terms if len(t) > 2] # Ignore tiny fragments
-    regex_pattern = r'\b(' + '|'.join(valid_terms) + r')\b'
-    return regex_pattern
+        all_regex_terms = set()
+        companies_cache = []
+        
+        for row in companies:
+            c_id = row['id']
+            name = row['name'].lower().strip() if row['name'] else ""
+            symbol = row['symbol'].lower().strip() if row['symbol'] else ""
+            
+            company_terms = set([name, symbol])
+            company_terms = [t for t in company_terms if len(t) > 2] # Clean up tiny fragments
+            
+            if company_terms:
+                companies_cache.append({
+                    'id': c_id,
+                    'name': name,
+                    'terms': company_terms
+                })
+                all_regex_terms.update(company_terms)
+                
+        # Create a combined regex pattern
+        valid_terms = list(all_regex_terms)
+        if not valid_terms:
+             return r'\b(NO_MATCHING_DATA_FORCE_FAIL)\b', []
+             
+        regex_pattern = r'\b(' + '|'.join(valid_terms) + r')\b'
+        return regex_pattern, companies_cache
+        
+    except Exception as e:
+        logging.error(f"Failed to load search terms from DB: {e}")
+        return r'', []
+    finally:
+        cursor.close()
+        conn.close()
 
 def generate_date_chunks(start_date, end_date, chunk_days):
     """Yields tuple of (start, end) dates for partitioning queries."""
@@ -183,13 +319,17 @@ def main():
     console = Console()
     console.print(Panel.fit("[bold magenta]GDELT BigQuery Pipeline[/bold magenta]\nInitializing...", border_style="cyan"))
 
-    # 1. Init Data Sink
-    data_sink = CSVDataSink(CSV_OUTPUT_FILE)
+    # 2. Build Regex and load cache from DB
+    console.print("[yellow]Loading unprocessed companies from DB and building regex...[/yellow]")
+    regex_pattern, companies_cache = load_search_terms_from_db()
+    logging.info(f"Loaded search regex. Length: {len(regex_pattern)} characters. Cached {len(companies_cache)} companies.")
     
-    # 2. Build Regex from CSV
-    console.print("[yellow]Loading companies and building regex...[/yellow]")
-    regex_pattern = load_search_terms(CSV_INPUT_FILE)
-    logging.info(f"Loaded search regex. Length: {len(regex_pattern)} characters.")
+    if not companies_cache:
+        console.print("[bold red]No unprocessed companies found in the database. Exiting.[/bold red]")
+        return
+        
+    # 1. Init Data Sink
+    data_sink = PostgresDataSink(DATABASE_URL, companies_cache)
     
     # 3. Create Date Chunks
     chunks = list(generate_date_chunks(START_DATE, END_DATE, CHUNK_SIZE_DAYS))

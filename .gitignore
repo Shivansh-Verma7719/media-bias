@@ -20,3 +20,5 @@ venv
 logs/
 
 data/backups/
+
+ism-gdelt-key.json
