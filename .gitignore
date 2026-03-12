@@ -13,7 +13,16 @@ cdk.out
 .env
 env
 venv
+venv*/
 .env.example
+
+# Local generated files
+nifty_data/
+nifty_pipeline.py
+fetch_nifty_stocks.py
+nifty/
+*.dump
+deliverables/
 
 # Logs
 *.log
