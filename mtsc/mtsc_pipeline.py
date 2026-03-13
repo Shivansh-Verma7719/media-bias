@@ -10,9 +10,9 @@ tsc = TargetSentimentClassifier()
 
 from helpers import find_company_in_title, get_first_paragraph, split_on_aspect, choose_input_text
 
-DB_URL = os.environ.get("DATABASE_URL")
+DB_URL = os.environ.get("POOLER_DATABASE_URL")
 if not DB_URL:
-    print("ERROR: DATABASE_URL not found in environment.")
+    print("ERROR: POOLER_DATABASE_URL not found in environment.")
     sys.exit(1)
 
 CONFIDENCE_THRESHOLD = 0.9
