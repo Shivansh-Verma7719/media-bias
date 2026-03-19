@@ -21,13 +21,12 @@ CSV_INPUT_FILE = "trial/nifty50.csv"
 CSV_OUTPUT_FILE = "gdelt_articles.csv"
 LOG_FILE = "pipeline.log"
 CHECKPOINT_FILE = "gdelt/pipeline_checkpoint.json"  # Tracks last completed chunk end date
-PROJECT_ID = "spotit-480021" # Replace with your project ID
+PROJECT_ID = "media-bias-ism" # Replace with your project ID
 WORKER_THREADS = 6 # BigQuery free tier handles 5-10 concurrent queries well
 START_DATE = "2015-01-01"
 END_DATE = "2025-12-31"
-CHUNK_SIZE_DAYS = 7  # 7-day chunks: fewer queries, same partition pruning (change 6)
-MAXIMUM_BYTES_BILLED = 5 * 10**9  # Hard cap per query
-DRY_RUN_BYTE_LIMIT = 5 * 10**9   # Skip chunks estimated above 5 GB (change 7)
+CHUNK_SIZE_DAYS = 1 # Number of days each thread will query at once
+MAXIMUM_BYTES_BILLED = 10**9
 
 # ==========================================
 # LOGGING SETUP
@@ -112,50 +111,25 @@ class PostgresDataSink(DataSink):
             articles_to_insert = []
             domains_to_insert = set()
             
-            import re
-
             for row in rows:
                 url = row['url']
                 domain = get_domain(url)
                 if domain:
                     domains_to_insert.add(domain)
                 
-                # 1. Capture/Parse published_at (fixed in previous step)
+                # Convert GDELT date (YYYYMMDDHHMMSS) to timestamp string or use as is
+                # BigQuery DATE from gkg_partitioned is usually YYYY-MM-DD for the partition, but BigQuery timestamp string
                 published_at = None
-                raw_date = row.get('date')
-                if raw_date:
-                    try:
-                        if isinstance(raw_date, (int, float)):
-                            d_str = str(int(raw_date))
-                            if len(d_str) == 14:
-                                published_at = f"{d_str[:4]}-{d_str[4:6]}-{d_str[6:8]} {d_str[8:10]}:{d_str[10:12]}:{d_str[12:14]}"
-                            elif len(d_str) == 8:
-                                published_at = f"{d_str[:4]}-{d_str[4:6]}-{d_str[6:8]} 00:00:00"
-                        elif hasattr(raw_date, 'strftime'):
-                            published_at = raw_date.strftime('%Y-%m-%d %H:%M:%S')
-                        elif isinstance(raw_date, str):
-                            published_at = raw_date
-                    except Exception:
-                        pass
-                
-                # 2. Extract Title (Crucial)
-                # Try Extras XML first, then cleaned URL fragment
-                title = None
-                extras = row.get('extras')
-                if extras and isinstance(extras, str):
-                    title_match = re.search(r'<PAGE_TITLE>(.*?)</PAGE_TITLE>', extras, re.IGNORECASE)
-                    if title_match:
-                        title = title_match.group(1).strip()
-                
-                if not title:
-                    # Better fallback from URL: clean up hyphens/underscores/extension
-                    fragment = url.split('/')[-1].split('?')[0].split('.')[0]
-                    if fragment:
-                        title = fragment.replace('-', ' ').replace('_', ' ').strip().capitalize()
+                try:
+                    # Depending on the exact BigQuery output format, we might need to parse it. 
+                    # If it's a date object from BQ client, we can convert it. 
+                    if isinstance(row['date'], str):
+                        # Assuming it's already a suitable string if it came directly from DATE cast
+                        published_at = row['date']
                     else:
-                        title = domain or "Untitled GDELT Article"
-                
-                title = title[:400] # DB safety
+                        published_at = row['date'].strftime('%Y-%m-%d %H:%M:%S')
+                except Exception:
+                    pass
 
                 orgs = row['organizations'].lower() if row['organizations'] else ""
                 
@@ -163,6 +137,8 @@ class PostgresDataSink(DataSink):
                 matched_company_id = None
                 for company in self.companies_cache:
                     for term in company['terms']:
+                        # The regex already matched, but we do a simple string match here to find WHICH company
+                        # Orgs string from GDELT is usually comma separated or semicolon separated
                         if f"{term}" in orgs:
                             matched_company_id = company['id']
                             break
@@ -171,12 +147,12 @@ class PostgresDataSink(DataSink):
                         
                 if matched_company_id:
                     articles_to_insert.append({
-                        'title': title,
+                        'title': url.split('/')[-1][:200], # Fallback title
                         'url': url,
                         'source': domain,
                         'published_at': published_at,
                         'company_id': matched_company_id,
-                        'domain': domain
+                        'domain': domain # For media_outlet_id lookup later
                     })
 
             if not articles_to_insert:
@@ -214,7 +190,7 @@ class PostgresDataSink(DataSink):
                 ))
 
             article_query = """
-                INSERT INTO indian_cos.articles_fixed (
+                INSERT INTO indian_cos.articles (
                     title, content, url, source, published_at, 
                     media_outlet_id, company_id
                 ) VALUES %s
@@ -238,47 +214,45 @@ class PostgresDataSink(DataSink):
 # PIPELINE LOGIC
 # ==========================================
 def load_search_terms_from_db():
-    """Extracts unprocessed companies from DB.
-    Returns a flat list of pre-lowercased terms (change 3, 8) and a companies cache.
-    The regex pattern is no longer used; terms are passed as an array parameter to BigQuery.
-    """
+    """Extracts unprocessed companies, aliases, and extra terms from DB to build a regex pattern and cache."""
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
+    
     try:
+        # Fetch fully from indian_cos.companies where is_processed = false
         cursor.execute("SELECT id, name, symbol FROM indian_cos.companies WHERE is_processed = False;")
         companies = cursor.fetchall()
-
-        all_terms = set()
+        
+        all_regex_terms = set()
         companies_cache = []
-
+        
         for row in companies:
             c_id = row['id']
-            # Pre-lowercase once here (change 8) — never repeated at query time
             name = row['name'].lower().strip() if row['name'] else ""
             symbol = row['symbol'].lower().strip() if row['symbol'] else ""
-
-            company_terms = [t for t in {name, symbol} if len(t) > 2]
-
+            
+            company_terms = set([name, symbol])
+            company_terms = [t for t in company_terms if len(t) > 2] # Clean up tiny fragments
+            
             if company_terms:
                 companies_cache.append({
                     'id': c_id,
                     'name': name,
                     'terms': company_terms
                 })
-                all_terms.update(company_terms)
-
-        # Return flat list of terms (used as BigQuery array parameter) + cache
-        valid_terms = sorted(all_terms)  # deterministic order
+                all_regex_terms.update(company_terms)
+                
+        # Create a combined regex pattern
+        valid_terms = list(all_regex_terms)
         if not valid_terms:
-            logging.warning("No valid search terms found — nothing to query.")
-            return [], []
-
-        return valid_terms, companies_cache
-
+             return r'\b(NO_MATCHING_DATA_FORCE_FAIL)\b', []
+             
+        regex_pattern = r'\b(' + '|'.join(valid_terms) + r')\b'
+        return regex_pattern, companies_cache
+        
     except Exception as e:
         logging.error(f"Failed to load search terms from DB: {e}")
-        return [], []
+        return r'', []
     finally:
         cursor.close()
         conn.close()
@@ -296,97 +270,50 @@ def generate_date_chunks(start_date, end_date, chunk_days):
         yield (current.strftime("%Y-%m-%d"), chunk_end.strftime("%Y-%m-%d"))
         current = chunk_end + timedelta(days=1)
 
-def query_gdelt_chunk(client, start_date, end_date, company_terms):
-    """Executes the BigQuery search for a specific date chunk.
-
-    Optimizations applied (see request):
-      1  UNNEST token matching instead of REGEXP_CONTAINS
-      2  _PARTITIONDATE instead of _PARTITIONTIME (proper partition pruning)
-      3  Terms passed as ArrayQueryParameter
-      4  Only 4 columns selected (DATE, DocumentIdentifier, V2Organizations, V2Tone)
-      5  URL pre-filter (NOT NULL + STARTS_WITH http)
-      7  Dry-run byte estimation — skip chunks > DRY_RUN_BYTE_LIMIT
-      9  Coarse SQL filter; exact matching done in Python (DataSink.save)
-     10  use_query_cache=True
-    """
-    # Organization-based matching: V2DocumentTitle does not exist in gkg_partitioned.
-    # Filter on org tokens via UNNEST (original working approach).
+def query_gdelt_chunk(client, start_date, end_date, regex_pattern):
+    """Executes the BigQuery search for a specific date chunk."""
+    # We query the partitioned table to heavily restrict data scanned ($$$ saver)
     query = """
-        WITH terms AS (
-            SELECT term FROM UNNEST(@terms_array) AS term
-        )
-
-        SELECT
-            DATE AS date,
-            DocumentIdentifier AS url,
-            V2Organizations AS organizations,
-            Extras AS extras
-        FROM
-            `gdelt-bq.gdeltv2.gkg_partitioned`,
-            UNNEST(SPLIT(LOWER(V2Organizations), ';')) AS org
-        WHERE
-            _PARTITIONDATE BETWEEN @start_date AND @end_date
-            AND V2Organizations IS NOT NULL
-            AND DocumentIdentifier IS NOT NULL
-            AND STARTS_WITH(DocumentIdentifier, 'http')
-            AND EXISTS (
-                SELECT 1
-                FROM terms
-                WHERE SPLIT(org, ',')[SAFE_OFFSET(0)] LIKE CONCAT('%', term, '%')
-            )
+        SELECT 
+            DATE as date,
+            DocumentIdentifier as url,
+            V2Organizations as organizations,
+            V2Tone as tone
+        FROM 
+            `gdelt-bq.gdeltv2.gkg_partitioned`
+        WHERE 
+            _PARTITIONTIME >= TIMESTAMP(@start_date) 
+            AND _PARTITIONTIME <= TIMESTAMP(@end_date)
+            AND REGEXP_CONTAINS(LOWER(V2Organizations), @regex_pattern)
     """
-
-    # Change 2: pass dates as DATE scalars, not STRING
-    # Change 3: pass terms as an array parameter
+    
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
-            bigquery.ScalarQueryParameter("start_date",  "DATE", start_date),
-            bigquery.ScalarQueryParameter("end_date",    "DATE", end_date),
-            bigquery.ArrayQueryParameter("terms_array",  "STRING", company_terms),
+            bigquery.ScalarQueryParameter("start_date", "STRING", start_date),
+            bigquery.ScalarQueryParameter("end_date", "STRING", end_date),
+            bigquery.ScalarQueryParameter("regex_pattern", "STRING", regex_pattern),
         ],
-        maximum_bytes_billed=MAXIMUM_BYTES_BILLED,
-        use_query_cache=True,  # change 10: cache repeated queries (e.g. retries)
+        maximum_bytes_billed= 5 * 10**9
     )
-
+    
     try:
-        # Change 7: dry-run byte estimation before real execution
-        dry_config = bigquery.QueryJobConfig(
-            query_parameters=job_config.query_parameters,
-            dry_run=True,
-            use_query_cache=False,
-        )
-        dry_job = client.query(query, job_config=dry_config)
-        estimated_bytes = dry_job.total_bytes_processed
-        if estimated_bytes and estimated_bytes > DRY_RUN_BYTE_LIMIT:
-            logging.warning(
-                f"Chunk {start_date}–{end_date}: dry-run estimated "
-                f"{estimated_bytes / 1e9:.2f} GB > limit. Skipping."
-            )
-            return []
-
         start_time = time.time()
         query_job = client.query(query, job_config=job_config)
-        results = query_job.result()  # Waits for job to complete
-
+        results = query_job.result() # Waits for job to complete
+        
         rows = []
         for row in results:
             rows.append({
-                "date":          row.date,
-                "url":           row.url,
+                "date": row.date,
+                "url": row.url,
                 "organizations": row.organizations,
-                "extras":        getattr(row, 'extras', None)
+                "tone": row.tone
             })
-
+            
         exec_time = time.time() - start_time
         speed = len(rows) / exec_time if exec_time > 0 else 0
-        bytes_billed = getattr(query_job, 'total_bytes_billed', None)
-        gb_billed = f"{bytes_billed / 1e9:.3f} GB" if bytes_billed else "unknown"
-        logging.info(
-            f"Chunk {start_date} to {end_date}: {len(rows)} articles in "
-            f"{exec_time:.2f}s ({speed:.2f} rows/s) | billed: {gb_billed}"
-        )
+        logging.info(f"Chunk {start_date} to {end_date}: Found {len(rows)} articles in {exec_time:.2f}s ({speed:.2f} articles/sec)")
         return rows
-
     except GoogleAPIError as e:
         logging.error(f"BigQuery API Error for {start_date} to {end_date}: {e}")
         return []
@@ -394,19 +321,16 @@ def query_gdelt_chunk(client, start_date, end_date, company_terms):
         logging.error(f"Unexpected error for {start_date} to {end_date}: {e}")
         return []
 
-def worker_task(chunk, company_terms, data_sink, progress, task_id, stats, start_time, client):
-    """Worker function to process a chunk, save data, and update UI.
-
-    Change 11: client is passed in (created once per thread outside this function)
-    so we avoid opening a new BigQuery connection on every chunk.
-    """
+def worker_task(chunk, regex_pattern, data_sink, progress, task_id, stats, start_time):
+    """Worker function to process a chunk, save data, and update UI."""
     start_date, end_date = chunk
-
+    client = bigquery.Client(project=PROJECT_ID)
+    
     # Update UI to show processing
     progress.update(task_id, description=f"[cyan]Querying {start_date} to {end_date}...")
-
-    rows = query_gdelt_chunk(client, start_date, end_date, company_terms)
-
+    
+    rows = query_gdelt_chunk(client, start_date, end_date, regex_pattern)
+    
     if rows:
         data_sink.save(rows)
         with stats["lock"]:
@@ -420,12 +344,8 @@ def worker_task(chunk, company_terms, data_sink, progress, task_id, stats, start
     # Calculate live speed
     elapsed = time.time() - start_time
     current_speed = stats["total_rows"] / elapsed if elapsed > 0 else 0
-
-    progress.update(
-        task_id, advance=1,
-        speed=f"{current_speed:.2f}",
-        description=f"[green]Completed {start_date} to {end_date}"
-    )
+            
+    progress.update(task_id, advance=1, speed=f"{current_speed:.2f}", description=f"[green]Completed {start_date} to {end_date}")
     return len(rows)
 
 def main():
@@ -441,12 +361,12 @@ def main():
         console.print("[yellow]No checkpoint found — starting from the beginning.[/yellow]")
         logging.info("No checkpoint found. Starting fresh from START_DATE.")
 
-    # 2. Load terms and company cache from DB (no more regex — change 3, 8)
-    console.print("[yellow]Loading unprocessed companies from DB and building term list...[/yellow]")
-    company_terms, companies_cache = load_search_terms_from_db()
-    logging.info(f"Loaded {len(company_terms)} unique search terms. Cached {len(companies_cache)} companies.")
+    # 2. Build Regex and load cache from DB
+    console.print("[yellow]Loading unprocessed companies from DB and building regex...[/yellow]")
+    regex_pattern, companies_cache = load_search_terms_from_db()
+    logging.info(f"Loaded search regex. Length: {len(regex_pattern)} characters. Cached {len(companies_cache)} companies.")
     
-    if not companies_cache or not company_terms:
+    if not companies_cache:
         console.print("[bold red]No unprocessed companies found in the database. Exiting.[/bold red]")
         return
         
@@ -491,26 +411,15 @@ def main():
     start_time = time.time()
     overall_task = progress.add_task("[bold blue]Overall Pipeline Progress", total=total_chunks, speed="0.00")
     
-    # Change 11: Create one BigQuery client per thread, reused across all its chunks.
-    # We pre-build a pool of clients equal to WORKER_THREADS so no worker ever
-    # instantiates a new client inside the hot path.
-    bq_clients = [bigquery.Client(project=PROJECT_ID) for _ in range(WORKER_THREADS)]
-
     # 5. Execute Thread Pool
     with Live(progress, refresh_per_second=10):
         with ThreadPoolExecutor(max_workers=WORKER_THREADS) as executor:
             futures = []
-            for i, chunk in enumerate(chunks):
-                # Round-robin assign a pre-built client to each chunk
-                assigned_client = bq_clients[i % WORKER_THREADS]
+            for chunk in chunks:
                 futures.append(
-                    executor.submit(
-                        worker_task,
-                        chunk, company_terms, data_sink, progress,
-                        overall_task, stats, start_time, assigned_client
-                    )
+                    executor.submit(worker_task, chunk, regex_pattern, data_sink, progress, overall_task, stats, start_time)
                 )
-
+            
             for future in as_completed(futures):
                 try:
                     future.result()

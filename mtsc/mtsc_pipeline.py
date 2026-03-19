@@ -16,8 +16,8 @@ if not DB_URL:
     sys.exit(1)
 
 CONFIDENCE_THRESHOLD = 0.9
-OUTPUT_CSV   = "sampling/mtsc_results.csv"
-OUTPUT_EXCEL = "sampling/mtsc_results.xlsx"
+OUTPUT_CSV   = "results/mtsc_results.csv"
+OUTPUT_EXCEL = "results/mtsc_results.xlsx"
 
 
 # Step 1: Pull & filter articles from DB
@@ -32,7 +32,7 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
 
     rows_out  = []
     seen      = set()   # (company_id, title_key) for dedup
-    stats     = dict(fetched=0, no_match=0, dupes=0, kept=0)
+    stats     = dict(fetched=0, dupes=0, kept=0)
 
     for comp in companies:
         company_id   = comp["id"]
@@ -53,15 +53,9 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
         fetched = cur.fetchall()
         stats["fetched"] += len(fetched)
 
-        kept = no_match = dupes = 0
+        kept = dupes = 0
         for row in fetched:
             title = (row["title"] or "").strip()
-
-            # Company name must be in the title
-            matched_name = find_company_in_title(title, company_name)
-            if not matched_name:
-                no_match += 1
-                continue
 
             # Deduplicate
             key = (company_id, re.sub(r'\s+', ' ', title.lower().strip()))
@@ -83,16 +77,14 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
             })
             kept += 1
 
-        stats["no_match"] += no_match
         stats["dupes"]    += dupes
         stats["kept"]     += kept
         print(f"  [{ticker}] fetched={len(fetched):,} | kept={kept:,} | "
-              f"no_title_match={no_match:,} | dupes={dupes}")
+              f"dupes={dupes}")
 
     conn.close()
 
     print(f"\n  Total fetched:       {stats['fetched']:,}")
-    print(f"  No title match:      {stats['no_match']:,}")
     print(f"  Duplicates removed:  {stats['dupes']:,}")
     print(f"  Clean articles:      {stats['kept']:,}")
     return pd.DataFrame(rows_out)
