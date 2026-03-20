@@ -31,3 +31,5 @@ logs/
 data/backups/
 
 ism-gdelt-key.json
+# Large result files
+results/*.csv
