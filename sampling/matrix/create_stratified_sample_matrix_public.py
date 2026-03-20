@@ -28,6 +28,73 @@ def main() -> None:
     print('Connecting to database...')
     conn = psycopg2.connect(db_url)
 
+    diagnostics_query = """
+    WITH sample_filtered AS (
+        SELECT
+            a.id,
+            a.company_id,
+            LOWER(TRIM(REGEXP_REPLACE(COALESCE(a.title, ''), '\\s+', ' ', 'g'))) AS title_norm,
+            a.published_at
+        FROM public.articles_sample a
+        JOIN public.top_companies c ON a.company_id = c.id
+        WHERE a.published_at IS NOT NULL
+          AND COALESCE(TRIM(a.title), '') <> ''
+          AND (
+                LOWER(a.title) LIKE '%' || LOWER(c.name) || '%'
+                OR LOWER(a.title) LIKE '%' || LOWER(c.symbol) || '%'
+          )
+    ),
+    sample_deduped AS (
+        SELECT
+            id,
+            ROW_NUMBER() OVER (
+                PARTITION BY company_id, title_norm
+                ORDER BY published_at DESC, id DESC
+            ) AS rn
+        FROM sample_filtered
+    ),
+    strat_filtered AS (
+        SELECT
+            a.id,
+            a.company_id,
+            LOWER(TRIM(REGEXP_REPLACE(COALESCE(a.title, ''), '\\s+', ' ', 'g'))) AS title_norm,
+            a.published_at
+        FROM public.articles_stratified a
+        JOIN public.top_companies c ON a.company_id = c.id
+        WHERE a.published_at IS NOT NULL
+          AND COALESCE(TRIM(a.title), '') <> ''
+          AND (
+                LOWER(a.title) LIKE '%' || LOWER(c.name) || '%'
+                OR LOWER(a.title) LIKE '%' || LOWER(c.symbol) || '%'
+          )
+    ),
+    strat_deduped AS (
+        SELECT
+            id,
+            ROW_NUMBER() OVER (
+                PARTITION BY company_id, title_norm
+                ORDER BY published_at DESC, id DESC
+            ) AS rn
+        FROM strat_filtered
+    )
+    SELECT
+        (SELECT COUNT(*) FROM public.articles_sample) AS sample_total,
+        (SELECT COUNT(*) FROM public.articles_stratified) AS stratified_total,
+        (SELECT COUNT(*) FROM sample_deduped WHERE rn = 1) AS sample_filtered_deduped,
+        (SELECT COUNT(*) FROM strat_deduped WHERE rn = 1) AS stratified_filtered_deduped;
+    """
+
+    diag_cur = conn.cursor()
+    diag_cur.execute(diagnostics_query)
+    sample_total, stratified_total, sample_filtered_deduped, stratified_filtered_deduped = diag_cur.fetchone()
+    diag_cur.close()
+
+    print('Diagnostics:')
+    print(f'  articles_sample total rows: {sample_total}')
+    print(f'  articles_stratified total rows: {stratified_total}')
+    print(f'  sample after filter+dedupe: {sample_filtered_deduped}')
+    print(f'  stratified after filter+dedupe: {stratified_filtered_deduped}')
+
     query = """
     WITH filtered AS (
         SELECT
@@ -38,7 +105,7 @@ def main() -> None:
             CAST(EXTRACT(YEAR FROM a.published_at) AS INTEGER) AS year,
             LOWER(TRIM(REGEXP_REPLACE(COALESCE(a.title, ''), '\\s+', ' ', 'g'))) AS title_norm,
             a.published_at
-        FROM public.articles_sample a
+        FROM public.articles_stratified a
         JOIN public.top_companies c
             ON a.company_id = c.id
         WHERE a.published_at IS NOT NULL
