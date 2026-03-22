@@ -1,0 +1,243 @@
+3M
+AIG
+AMD
+AT&T
+AbbVie
+Abbott
+Accenture
+Adani
+Adobe
+Advanced Micro Devices
+Aflac
+Airbnb
+Alphabet
+Altria
+Amazon
+American Express
+American Tower
+Amex
+Amgen
+Amphenol
+Analog Devices
+Aon
+Apollo Global
+Apple
+Applied Materials
+Arista Networks
+AutoZone
+Autodesk
+Axis Bank
+BNY Mellon
+Bajaj
+Baker Hughes
+Bank of America
+Becton Dickinson
+Berkshire
+Berkshire Hathaway
+BlackRock
+Blackstone
+Boeing
+Booking
+Booking Holdings
+Boston Scientific
+Bristol Myers
+Bristol Myers Squibb
+Broadcom
+CME Group
+CVS
+CVS Health
+Capital One
+Carrier
+Caterpillar
+Charles Schwab
+Chevron
+Chipotle
+Chubb
+Cigna
+Cintas
+Cisco
+Citi
+Citigroup
+Coca-Cola
+Cognizant
+Coinbase
+Colgate-Palmolive
+Comcast
+ConocoPhillips
+Constellation Energy
+Corning
+Costco
+CrowdStrike
+Cummins
+Danaher
+Datadog
+Dell
+Delta
+Delta Air Lines
+Diamondback
+Diamondback Energy
+Disney
+Dominion
+Dominion Energy
+DoorDash
+Duke Energy
+Eaton
+Ecolab
+Electronic Arts
+Elevance Health
+Eli Lilly
+Emerson
+Emerson Electric
+Equinix
+Exelon
+Exxon
+ExxonMobil
+Facebook
+Fastenal
+FedEx
+Ford
+Fortinet
+Freeport-McMoRan
+GE Aerospace
+GE Vernova
+Garmin
+General Dynamics
+General Motors
+Gilead
+Gilead Sciences
+Goldman
+Goldman Sachs
+Google
+HCA Healthcare
+HCL
+HDFC
+Hilton
+Home Depot
+Honeywell
+IBM
+ICICI
+ITC
+Illinois Tool Works
+Infosys
+Intel
+Interactive Brokers
+Intercontinental Exchange
+Intuit
+Intuitive Surgical
+J&J
+JPMorgan
+JPMorgan Chase
+John Deere
+Johnson & Johnson
+Johnson Controls
+KKR
+Keurig Dr Pepper
+Kotak
+Kroger
+L3Harris
+Lam Research
+Las Vegas Sands
+Linde
+Lockheed Martin
+Lowe's
+Mahindra
+Marathon Petroleum
+Marriott
+Marsh McLennan
+Maruti
+Mastercard
+McDonald's
+McKesson
+Medtronic
+Merck
+MetLife
+Meta
+Micron
+Micron Technology
+Microsoft
+Moody's
+Morgan Stanley
+Motorola
+Motorola Solutions
+NTPC
+NXP
+NXP Semiconductors
+Nasdaq
+Netflix
+Newmont
+NextEra
+NextEra Energy
+Nike
+Norfolk Southern
+Northrop Grumman
+Nvidia
+ONEOK
+Occidental
+Occidental Petroleum
+Oracle
+PNC Financial
+Palantir
+Palo Alto
+Palo Alto Networks
+Parker Hannifin
+PayPal
+Pepsi
+PepsiCo
+Pfizer
+Philip Morris
+Phillips 66
+Procter & Gamble
+Progressive
+Prologis
+Qualcomm
+RTX
+Raytheon
+Regeneron
+Reliance
+Reliance Industries
+Robinhood
+Rockwell Automation
+Ross Stores
+Royal Caribbean
+S&P Global
+SBI
+Salesforce
+Schlumberger
+Seagate
+ServiceNow
+Sherwin-Williams
+Southern Company
+Starbucks
+Stryker
+T-Mobile
+TCS
+Take-Two Interactive
+Target
+Tata Consultancy
+Tata Motors
+Tesla
+Texas Instruments
+Thermo Fisher
+TransDigm
+Truist Financial
+UPS
+Uber
+Union Pacific
+United Rentals
+UnitedHealth
+Valero
+Valero Energy
+Verizon
+Vertex Pharmaceuticals
+Visa
+Walmart
+Walt Disney
+Waste Management
+Wells Fargo
+Western Digital
+Williams Companies
+Wipro
+Workday
+Yum
+Yum! Brands
+Zoetis
