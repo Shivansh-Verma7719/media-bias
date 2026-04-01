@@ -41,76 +41,30 @@ def build_pattern(company_names):
     return re.compile(pattern_str, re.IGNORECASE)
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch and pre-filter titles from DB.")
-    parser.add_argument("--output", "-o", type=str, default="00_filtered_3k.csv")
-    parser.add_argument("--companies", "-c", type=str, default="company_names.txt")
-    parser.add_argument("--target", "-t", type=int, default=3000, help="Target number of filtered titles")
-    parser.add_argument("--batch_size", "-b", type=int, default=10000, help="Rows to fetch per DB call")
-    parser.add_argument("--num_segments", "-n", type=int, default=20, help="Number of DB segments to sample from")
-    parser.add_argument("--tricky", action="store_true", help="Fetch tricky irrelevant articles for hard negative mining")
-    parser.add_argument("--exclude", "-e", type=str, default=None, help="CSV file of already seen IDs to exclude")
+    parser = argparse.ArgumentParser(description="Fetch a random sample of titles from DB.")
+    parser.add_argument("--output", "-o", type=str, default="00_filtered_sample.csv")
+    parser.add_argument("--target", "-t", type=int, default=4000, help="Number of titles to sample")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
-    sb = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))
-    company_names = load_company_names(args.companies)
-    company_pattern = build_pattern(company_names)
-    print(f"Loaded {len(company_names)} company names.")
-    if args.tricky:
-        print("Mode: TRICKY — targeting consumer/deal/irrelevant articles.")
-    else:
-        print("Mode: GENERAL — random diverse sample.")
-
-    # Load existing IDs to exclude
-    existing_ids = set()
-    if args.exclude:
-        for f in args.exclude.split(','):
-            f = f.strip()
-            if os.path.exists(f):
-                df_ex = pd.read_csv(f, usecols=['id'])
-                existing_ids.update(df_ex['id'].astype(str).tolist())
-    print(f"Excluding {len(existing_ids)} already seen IDs.")
-
-    # Spread offsets across DB for diversity
     random.seed(args.seed)
-    total_db_rows = 3_800_000
-    segment_size = total_db_rows // args.num_segments
-    offsets = [i * segment_size + random.randint(0, segment_size // 2) for i in range(args.num_segments)]
+    sb = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))
 
+    total_db_rows = 483_514
+    batch_size = 500
+    n_batches = (args.target + batch_size - 1) // batch_size
+    # Pick random start offsets, each batch fetches 500 consecutive rows
+    offsets = sorted(random.sample(range(total_db_rows - batch_size), n_batches))
+
+    print(f"Fetching {args.target} titles in {n_batches} batches of {batch_size}...")
     collected = []
-    seen_ids = set(existing_ids)
-
-    with tqdm(total=args.target, desc="Collecting titles") as pbar:
-        for offset in offsets:
-            if len(collected) >= args.target:
-                break
-
-            r = sb.table('articles_stratified') \
-                  .select('id,title,pos_score,neutral_score,neg_score,company_id') \
-                  .not_.is_('pos_score', 'null') \
-                  .not_.is_('title', 'null') \
-                  .range(offset, offset + args.batch_size - 1) \
-                  .execute()
-
-            for row in r.data:
-                if str(row['id']) in seen_ids:
-                    continue
-                title = str(row.get('title', ''))
-
-                has_company = company_pattern.search(title)
-                if not has_company:
-                    continue
-
-                if args.tricky:
-                    # Only collect if it also matches a tricky pattern
-                    if not TRICKY_PATTERNS.search(title):
-                        continue
-
-                collected.append(row)
-                seen_ids.add(str(row['id']))
-                pbar.update(1)
-                if len(collected) >= args.target:
-                    break
+    for offset in tqdm(offsets, desc="Fetching batches"):
+        r = sb.table('articles_no_title_deduped') \
+              .select('id,title,pos_score,neutral_score,neg_score,company_id') \
+              .not_.is_('title', 'null') \
+              .range(offset, offset + batch_size - 1) \
+              .execute()
+        collected.extend(r.data)
 
     random.shuffle(collected)
     collected = collected[:args.target]

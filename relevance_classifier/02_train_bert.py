@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
-from transformers import DistilBertTokenizer, DistilBertForSequenceClassification, AdamW
+from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 from transformers import get_linear_schedule_with_warmup
+from torch.optim import AdamW
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, classification_report
 from tqdm import tqdm

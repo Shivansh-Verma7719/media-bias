@@ -111,9 +111,13 @@ def main():
     df['predicted_target'] = preds
     df['confidence_score'] = probs
     
-    # Map back to human readable labels
+    # Map back to human readable labels, with confidence threshold
+    CONFIDENCE_THRESHOLD = 0.75  # Below this → 'uncertain', not hard-classified
     label_map = {1: 'relevant', 0: 'irrelevant'}
-    df['predicted_label'] = df['predicted_target'].map(label_map)
+    df['predicted_label'] = [
+        label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
+        for p, c in zip(preds, probs)
+    ]
     
     # Show stats
     print("\nInference Complete.")

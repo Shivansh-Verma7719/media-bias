@@ -20,6 +20,7 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 DB_BATCH_SIZE = 5000      # Rows fetched from DB per request
 INFERENCE_BATCH_SIZE = 128  # Titles per BERT forward pass
 MAX_LEN = 128
+CONFIDENCE_THRESHOLD = 0.75  # Below this → 'uncertain', not hard-classified
 
 class TitleDataset(Dataset):
     def __init__(self, titles, tokenizer):
@@ -107,7 +108,7 @@ def main():
 
     # Count total for progress bar
     print("Counting total rows...")
-    count_resp = sb.table('articles_stratified').select('id', count='exact').limit(1).execute()
+    count_resp = sb.table('articles_no_title_deduped').select('id', count='exact').limit(1).execute()
     total_rows = count_resp.count
     print(f"  Total articles: {total_rows:,}")
 
@@ -118,7 +119,7 @@ def main():
     with tqdm(total=total_rows, initial=total_processed, desc="Inference", unit="articles") as pbar:
         while True:
             # Fetch batch from DB
-            resp = sb.table('articles_stratified') \
+            resp = sb.table('articles_no_title_deduped') \
                       .select('id,title,url,source,published_at,company_id,media_outlet_id,pos_score,neutral_score,neg_score') \
                       .not_.is_('title', 'null') \
                       .range(offset, offset + args.db_batch - 1) \
@@ -138,7 +139,10 @@ def main():
                 # Run BERT inference
                 preds, confs = run_inference(model, tokenizer, titles, device)
 
-                df['predicted_label'] = [label_map[p] for p in preds]
+                df['predicted_label'] = [
+                    label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
+                    for p, c in zip(preds, confs)
+                ]
                 df['confidence_score'] = confs
                 df['company_symbol'] = df['company_id'].apply(
                     lambda x: company_map.get(str(x), {}).get('symbol', '') if x else '')
@@ -152,7 +156,7 @@ def main():
                             'predicted_label', 'confidence_score']
                 df[out_cols].to_csv(args.output, mode='a', header=False, index=False)
 
-                n_relevant = sum(1 for p in preds if p == 1)
+                n_relevant = sum(1 for p, c in zip(preds, confs) if p == 1 and c >= CONFIDENCE_THRESHOLD)
                 total_relevant += n_relevant
                 total_processed += len(rows)
                 processed_ids.update(df['id'].astype(str).tolist())
