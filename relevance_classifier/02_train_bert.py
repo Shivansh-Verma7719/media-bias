@@ -178,7 +178,7 @@ def main():
         model = DistilBertForSequenceClassification.from_pretrained(PRE_TRAINED_MODEL_NAME, num_labels=2)
         model = model.to(device)
         
-        optimizer = AdamW(model.parameters(), lr=2e-5, correct_bias=False)
+        optimizer = AdamW(model.parameters(), lr=2e-5)
         total_steps = len(train_loader) * args.epochs
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
