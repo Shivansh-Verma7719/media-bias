@@ -112,22 +112,27 @@ def main():
     total_rows = count_resp.count
     print(f"  Total articles: {total_rows:,}")
 
-    offset = 0
+    # Use keyset pagination on id to avoid gaps with .range()
+    last_id = 0
     total_processed = len(processed_ids)
     total_relevant = 0
 
     with tqdm(total=total_rows, initial=total_processed, desc="Inference", unit="articles") as pbar:
         while True:
-            # Fetch batch from DB
+            # Fetch batch from DB ordered by id for stable pagination
             resp = sb.table('articles_no_title_deduped') \
                       .select('id,title,url,source,published_at,company_id,media_outlet_id,pos_score,neutral_score,neg_score') \
                       .not_.is_('title', 'null') \
-                      .range(offset, offset + args.db_batch - 1) \
+                      .gt('id', last_id) \
+                      .order('id') \
+                      .limit(args.db_batch) \
                       .execute()
 
             rows = resp.data
             if not rows:
                 break
+
+            last_id = rows[-1]['id']
 
             # Skip already processed
             rows = [r for r in rows if str(r['id']) not in processed_ids]
@@ -164,7 +169,7 @@ def main():
                 pbar.set_postfix({
                     'relevant': total_relevant,
                     'relevant%': f'{100*total_relevant/max(total_processed,1):.1f}%',
-                    'offset': offset
+                    'last_id': last_id
                 })
 
             offset += args.db_batch
