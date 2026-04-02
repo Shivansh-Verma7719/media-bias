@@ -5,6 +5,7 @@ relevance inference on each batch, and saves results incrementally to CSV.
 Resumes from checkpoint if interrupted.
 """
 import os
+import re
 import sys
 import argparse
 import pandas as pd
@@ -21,6 +22,32 @@ DB_BATCH_SIZE = 5000      # Rows fetched from DB per request
 INFERENCE_BATCH_SIZE = 128  # Titles per BERT forward pass
 MAX_LEN = 128
 CONFIDENCE_THRESHOLD = 0.75  # Below this → 'uncertain', not hard-classified
+
+# Post-filter: titles matching these patterns are forced to 'irrelevant'
+# regardless of BERT prediction. Targets consumer/deal content that BERT
+# misclassifies as relevant (e.g. "Walmart+ 50% off for Black Friday").
+# Patterns are deliberately specific to minimise false positives.
+POST_FILTER = re.compile(
+    r'(\d+\s*%\s*off'                        # "50% off", "20 % off"
+    r'|\$\s*\d+\s*off'                        # "$10 off"
+    r'|only\s+\$\s*\d+'                       # "only $49"
+    r'|save\s+\$\s*\d+'                       # "save $20"
+    r'|deals?\s+of\s+the\s+day'              # "deals of the day"
+    r'|best\s+.{0,40}\s+deals?'              # "best headphone deals"
+    r'|buying\s+guide'                        # "buying guide"
+    r'|gift\s+(guide|ideas?|list)'           # "gift guide", "gift ideas"
+    r'|black\s+friday\s+.{0,40}(deal|sale|offer|sav|discount|bargain)'
+    r'|cyber\s+monday'                        # almost always consumer
+    r'|prime\s+day'                           # Amazon Prime Day deals
+    r'|hands[\s\-]on\s+(review|preview|with)'# "hands-on review"
+    r'|unboxing'                              # unboxing videos/articles
+    r'|review:\s'                             # "Review: iPhone 15"
+    r'|vs\.?\s+.{0,30}:\s+which'             # "X vs Y: which is better"
+    r'|record\s+low\s+price'                 # "record low price"
+    r'|lowest\s+ever\s+price'               # "lowest ever price"
+    r')',
+    re.IGNORECASE
+)
 
 class TitleDataset(Dataset):
     def __init__(self, titles, tokenizer):
@@ -144,9 +171,15 @@ def main():
                 # Run BERT inference
                 preds, confs = run_inference(model, tokenizer, titles, device)
 
-                df['predicted_label'] = [
+                # Apply confidence threshold then post-filter
+                labels = [
                     label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
                     for p, c in zip(preds, confs)
+                ]
+                # Override: force consumer/deal titles to irrelevant regardless of BERT
+                df['predicted_label'] = [
+                    'irrelevant' if POST_FILTER.search(str(t)) else l
+                    for t, l in zip(df['title'], labels)
                 ]
                 df['confidence_score'] = confs
                 df['company_symbol'] = df['company_id'].apply(

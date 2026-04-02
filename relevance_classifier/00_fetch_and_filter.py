@@ -50,6 +50,12 @@ def main():
     random.seed(args.seed)
     sb = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))
 
+    # Load company map for name lookup (needed for few-shot annotation)
+    print("Loading company map...")
+    co_resp = sb.table('companies').select('id,symbol,name').execute()
+    company_map = {str(row['id']): row['name'] for row in co_resp.data}
+    print(f"  {len(company_map)} companies loaded.")
+
     total_db_rows = 483_514
     batch_size = 500
     n_batches = (args.target + batch_size - 1) // batch_size
@@ -70,6 +76,10 @@ def main():
     collected = collected[:args.target]
 
     df = pd.DataFrame(collected)
+    # Attach company_name — required by the few-shot annotation script
+    df['company_name'] = df['company_id'].apply(
+        lambda x: company_map.get(str(x), '') if pd.notna(x) else ''
+    )
     df.to_csv(args.output, index=False)
     print(f"\nSaved {len(df)} titles to {args.output}")
     print("\nSample titles:")
