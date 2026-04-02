@@ -172,7 +172,6 @@ def main():
                     'last_id': last_id
                 })
 
-            offset += args.db_batch
 
     print(f"\nDone. Total processed: {total_processed:,}")
     print(f"Relevant: {total_relevant:,} ({100*total_relevant/max(total_processed,1):.1f}%)")
