@@ -25,6 +25,7 @@ jusText==3.0.2
 lxml==6.0.2
 lxml_html_clean==0.4.4
 markdown-it-py==4.0.0
+mediacloud
 mdurl==0.1.2
 multidict==6.7.1
 numpy==2.4.3
