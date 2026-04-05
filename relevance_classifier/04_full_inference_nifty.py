@@ -49,6 +49,43 @@ POST_FILTER = re.compile(
     re.IGNORECASE
 )
 
+# Analyst firms in the NIFTY universe that publish research on other stocks.
+# Articles where they act as analyst (not corporate subject) → irrelevant for them.
+ANALYST_FIRMS = {
+    'HDFC Bank', 'ICICI Bank', 'Kotak Mahindra Bank', 'Axis Bank',
+    'State Bank of India', 'Motilal Oswal', 'Emkay Global',
+}
+
+ANALYST_ACTION_RE = re.compile(
+    r'\b(upgrades?|downgrades?'
+    r'|raises?\s+(?:its\s+)?(?:price\s+)?target'
+    r'|cuts?\s+(?:its\s+)?(?:price\s+)?target'
+    r'|maintains?\s+(?:its\s+)?(?:buy|sell|neutral|hold|overweight|underweight)'
+    r'|initiates?\s+(?:coverage|buy|sell|neutral|hold|overweight|underweight)'
+    r'|reiterates?\s+(?:buy|sell|neutral|hold|overweight|underweight)'
+    r'|boosts?\s+(?:price\s+)?target|lowers?\s+(?:price\s+)?target'
+    r'|lifts?\s+(?:price\s+)?target|slashes?\s+(?:price\s+)?target'
+    r'|trims?\s+(?:price\s+)?target|bumps?\s+(?:price\s+)?target)\b',
+    re.IGNORECASE
+)
+
+
+def apply_filters(title: str, label: str, company_name: str) -> str:
+    """Apply all post-inference filters. Returns the final label."""
+    t = str(title)
+
+    # 1. Consumer/deal content (global)
+    if POST_FILTER.search(t):
+        return 'irrelevant'
+
+    # 2. Analyst-firm filter
+    if company_name in ANALYST_FIRMS:
+        firm_re = re.compile(re.escape(company_name), re.IGNORECASE)
+        if firm_re.search(t) and ANALYST_ACTION_RE.search(t):
+            return 'irrelevant'
+
+    return label
+
 
 def get_conn():
     tenant_id = os.getenv('POOLER_TENANT_ID', 'your-tenant-id')
@@ -189,20 +226,23 @@ def main():
 
                 preds, confs = run_inference(model, tokenizer, titles, device)
 
-                # Confidence threshold + post-filter
-                labels = [
-                    label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
-                    for p, c in zip(preds, confs)
-                ]
-                df['predicted_label'] = [
-                    'irrelevant' if POST_FILTER.search(str(t)) else l
-                    for t, l in zip(df['title'], labels)
-                ]
-                df['confidence_score'] = confs
+                # Resolve company names first — needed by apply_filters
                 df['company_symbol'] = df['company_id'].apply(
                     lambda x: company_map.get(x, {}).get('symbol', '') if x else '')
                 df['company_name'] = df['company_id'].apply(
                     lambda x: company_map.get(x, {}).get('name', '') if x else '')
+
+                # Apply confidence threshold
+                labels = [
+                    label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
+                    for p, c in zip(preds, confs)
+                ]
+                # Apply all post-inference filters
+                df['predicted_label'] = [
+                    apply_filters(t, l, c)
+                    for t, l, c in zip(df['title'], labels, df['company_name'])
+                ]
+                df['confidence_score'] = confs
 
                 out_cols = ['id', 'title', 'url', 'source', 'published_at',
                             'company_id', 'company_symbol', 'company_name',
