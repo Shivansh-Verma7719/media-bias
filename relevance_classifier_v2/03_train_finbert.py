@@ -155,7 +155,7 @@ def main():
         train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
         val_dl   = DataLoader(val_ds,   batch_size=args.batch_size, shuffle=False)
 
-        model = BertForSequenceClassification.from_pretrained(PRE_TRAINED_MODEL, num_labels=2)
+        model = BertForSequenceClassification.from_pretrained(PRE_TRAINED_MODEL, num_labels=2, ignore_mismatched_sizes=True)
         model = model.to(device)
 
         optimizer = AdamW(model.parameters(), lr=2e-5)
