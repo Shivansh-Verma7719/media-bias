@@ -10,11 +10,15 @@ import torch
 import pandas as pd
 import numpy as np
 from torch.utils.data import DataLoader, Dataset
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from sklearn.metrics import classification_report, confusion_matrix
 
 MAX_LEN = 128
-CONFIDENCE_THRESHOLD = 0.65   # lowered from 0.75 to reduce uncertain skips
+# Asymmetric thresholds: higher bar to call something relevant.
+# Standard practice for imbalanced binary classification — adjusts decision
+# boundary to favour precision on the minority class.
+RELEVANT_THRESHOLD   = 0.75   # P(relevant) must exceed this to predict relevant
+IRRELEVANT_THRESHOLD = 0.50   # P(irrelevant) must exceed this to predict irrelevant
 
 
 class TitleDataset(Dataset):
@@ -26,36 +30,28 @@ class TitleDataset(Dataset):
         return len(self.titles)
 
     def __getitem__(self, idx):
-        enc = self.tokenizer.encode_plus(
+        enc = self.tokenizer(
             str(self.titles[idx]),
-            add_special_tokens=True,
             max_length=MAX_LEN,
             padding='max_length',
             truncation=True,
-            return_attention_mask=True,
-            return_token_type_ids=False,
             return_tensors='pt',
         )
-        return {
-            'input_ids':      enc['input_ids'].flatten(),
-            'attention_mask': enc['attention_mask'].flatten(),
-        }
+        return {k: v.squeeze(0) for k, v in enc.items()}
 
 
 def run_inference(model, tokenizer, titles, device):
     ds = TitleDataset(titles, tokenizer)
     dl = DataLoader(ds, batch_size=64, shuffle=False)
     model.eval()
-    preds, confs = [], []
+    rel_probs = []
     with torch.no_grad():
         for batch in dl:
-            ids  = batch['input_ids'].to(device)
-            mask = batch['attention_mask'].to(device)
-            out  = model(input_ids=ids, attention_mask=mask)
+            inputs = {k: v.to(device) for k, v in batch.items()}
+            out = model(**inputs)
             probs = torch.nn.functional.softmax(out.logits, dim=-1)
-            preds.extend(torch.argmax(probs, dim=1).cpu().tolist())
-            confs.extend(torch.max(probs, dim=1).values.cpu().tolist())
-    return preds, confs
+            rel_probs.extend(probs[:, 1].cpu().tolist())
+    return rel_probs
 
 
 def main():
@@ -67,29 +63,28 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Loading model from {args.model_path}  |  device={device}")
 
-    tokenizer = BertTokenizer.from_pretrained(args.model_path)
-    model = BertForSequenceClassification.from_pretrained(args.model_path).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_path)
+    model = AutoModelForSequenceClassification.from_pretrained(args.model_path).to(device)
 
     df = pd.read_csv(args.test)
     df = df.dropna(subset=['title', 'label']).copy()
     df['label'] = df['label'].str.strip().str.lower()
     df = df[df['label'].isin(['relevant', 'irrelevant'])]
 
-    preds, confs = run_inference(model, tokenizer, df['title'].tolist(), device)
-    label_map = {1: 'relevant', 0: 'irrelevant'}
-
-    df['pred_raw']   = [label_map[p] for p in preds]
-    df['confidence'] = confs
+    rel_probs = run_inference(model, tokenizer, df['title'].tolist(), device)
+    df['p_relevant'] = rel_probs
     df['predicted']  = [
-        label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
-        for p, c in zip(preds, confs)
+        'relevant'   if p >= RELEVANT_THRESHOLD   else
+        'irrelevant' if p <= (1 - IRRELEVANT_THRESHOLD) else
+        'uncertain'
+        for p in rel_probs
     ]
 
     uncertain = df[df['predicted'] == 'uncertain']
     scored    = df[df['predicted'] != 'uncertain']
 
     print(f"\nTotal: {len(df)}  |  Scored: {len(scored)}  |  Uncertain: {len(uncertain)}")
-    print(f"Confidence threshold: {CONFIDENCE_THRESHOLD}")
+    print(f"Thresholds: relevant≥{RELEVANT_THRESHOLD}  irrelevant≥{IRRELEVANT_THRESHOLD}")
 
     y_true = scored['label'].tolist()
     y_pred = scored['predicted'].tolist()
@@ -109,17 +104,17 @@ def main():
     fn = scored[(scored['label'] == 'relevant')   & (scored['predicted'] == 'irrelevant')]
 
     print(f"\n── False Positives ({len(fp)}) ──────────────────────────────")
-    for _, r in fp.sort_values('confidence', ascending=False).iterrows():
-        print(f"  conf={r['confidence']:.2f} [{r.get('company_name','')}] {r['title'][:80]}")
+    for _, r in fp.sort_values('p_relevant', ascending=False).iterrows():
+        print(f"  p_rel={r['p_relevant']:.3f} [{r.get('company_name','')}] {r['title'][:80]}")
 
     print(f"\n── False Negatives ({len(fn)}) ──────────────────────────────")
-    for _, r in fn.sort_values('confidence', ascending=False).iterrows():
-        print(f"  conf={r['confidence']:.2f} [{r.get('company_name','')}] {r['title'][:80]}")
+    for _, r in fn.sort_values('p_relevant', ascending=False).iterrows():
+        print(f"  p_rel={r['p_relevant']:.3f} [{r.get('company_name','')}] {r['title'][:80]}")
 
     if len(uncertain) > 0:
         print(f"\n── Uncertain (skipped) ({len(uncertain)}) ─────────────────────────")
-        for _, r in uncertain.sort_values('confidence').iterrows():
-            print(f"  conf={r['confidence']:.2f} [{r.get('company_name','')}] {r['title'][:80]}")
+        for _, r in uncertain.sort_values('p_relevant', ascending=False).iterrows():
+            print(f"  p_rel={r['p_relevant']:.3f} [{r.get('company_name','')}] {r['title'][:80]}")
 
 
 if __name__ == "__main__":

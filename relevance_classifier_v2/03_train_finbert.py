@@ -1,25 +1,22 @@
 """
-Stage 3: Fine-tune FinBERT (ProsusAI/finbert) on the combined training set.
+Stage 3: Fine-tune a transformer classifier on the combined training set.
 Uses stratified k-fold CV and saves the best checkpoint.
 
-Two training modes:
-  --gold_only   Train on gold-labeled rows only (source == 'gold_manual').
-                Use this to establish a clean baseline F1 before adding
-                LLM pseudo-labels. Report this number in the paper.
-  (default)     Train on all rows (gold + pseudo-labels / LLM).
+Model-agnostic: pass any HuggingFace model via --base_model.
+Recommended models to compare:
+  ProsusAI/finbert          (financial domain, 110M params — original)
+  microsoft/deberta-v3-base (stronger architecture, 86M params — try this)
+  roberta-base              (general, 125M params)
 
 Usage:
-  # Gold-only baseline (for paper)
-  python 03_train_finbert.py -i 04_training_data_verified.csv -s model_gold_only --gold_only
-
-  # Full training set
-  python 03_train_finbert.py -i 04_training_data_verified.csv -s model_full
+  python 03_train_finbert.py -i combined_gold.csv -s model_deberta --gold_only
+  python 03_train_finbert.py -i combined_gold.csv -s model_finbert --gold_only --base_model ProsusAI/finbert
 """
 import argparse
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import get_linear_schedule_with_warmup
 from torch.optim import AdamW
 from sklearn.model_selection import StratifiedKFold
@@ -29,7 +26,7 @@ from tqdm import tqdm
 import pandas as pd
 import os
 
-PRE_TRAINED_MODEL = 'ProsusAI/finbert'
+DEFAULT_MODEL = 'microsoft/deberta-v3-base'
 
 
 class TitleDataset(Dataset):
@@ -43,21 +40,16 @@ class TitleDataset(Dataset):
         return len(self.titles)
 
     def __getitem__(self, idx):
-        enc = self.tokenizer.encode_plus(
+        enc = self.tokenizer(
             str(self.titles[idx]),
-            add_special_tokens=True,
             max_length=self.max_len,
             padding='max_length',
             truncation=True,
-            return_attention_mask=True,
-            return_token_type_ids=False,
             return_tensors='pt',
         )
-        return {
-            'input_ids':      enc['input_ids'].flatten(),
-            'attention_mask': enc['attention_mask'].flatten(),
-            'labels':         torch.tensor(self.labels[idx], dtype=torch.long),
-        }
+        item = {k: v.squeeze(0) for k, v in enc.items()}
+        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
+        return item
 
 
 def train_epoch(model, loader, optimizer, scheduler, device, criterion):
@@ -65,11 +57,10 @@ def train_epoch(model, loader, optimizer, scheduler, device, criterion):
     total_loss = 0
     for batch in tqdm(loader, desc="  Train", leave=False):
         optimizer.zero_grad()
-        ids   = batch['input_ids'].to(device)
-        mask  = batch['attention_mask'].to(device)
-        lbls  = batch['labels'].to(device)
-        out   = model(input_ids=ids, attention_mask=mask)
-        loss  = criterion(out.logits, lbls)
+        labels = batch.pop('labels').to(device)
+        inputs = {k: v.to(device) for k, v in batch.items()}
+        out = model(**inputs)
+        loss = criterion(out.logits, labels)
         total_loss += loss.item()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -83,14 +74,13 @@ def eval_epoch(model, loader, device):
     all_preds, all_labels, losses = [], [], []
     with torch.no_grad():
         for batch in loader:
-            ids  = batch['input_ids'].to(device)
-            mask = batch['attention_mask'].to(device)
-            lbls = batch['labels'].to(device)
-            out  = model(input_ids=ids, attention_mask=mask, labels=lbls)
+            labels = batch.pop('labels').to(device)
+            inputs = {k: v.to(device) for k, v in batch.items()}
+            out = model(**inputs, labels=labels)
             losses.append(out.loss.item())
             preds = torch.argmax(out.logits, dim=1)
             all_preds.extend(preds.cpu().tolist())
-            all_labels.extend(lbls.cpu().tolist())
+            all_labels.extend(labels.cpu().tolist())
     acc = sum(p == l for p, l in zip(all_preds, all_labels)) / len(all_labels)
     f1  = f1_score(all_labels, all_preds, pos_label=1, average='binary')
     return acc, np.mean(losses), f1, all_preds, all_labels
@@ -100,13 +90,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input",           "-i", type=str, required=True)
     parser.add_argument("--model_save_path", "-s", type=str, default="best_model")
+    parser.add_argument("--base_model",      "-M", type=str, default=DEFAULT_MODEL,
+                        help="HuggingFace model name (default: microsoft/deberta-v3-base)")
     parser.add_argument("--batch_size",      "-b", type=int, default=16)
-    parser.add_argument("--epochs",          "-e", type=int, default=4)
+    parser.add_argument("--epochs",          "-e", type=int, default=6)
     parser.add_argument("--kfolds",          "-k", type=int, default=5)
     parser.add_argument("--max_len",         "-m", type=int, default=128)
     parser.add_argument("--gold_only",             action="store_true",
-                        help="Train on gold_manual rows only (baseline mode)")
+                        help="Train on gold_manual rows only")
     args = parser.parse_args()
+
+    print(f"Base model: {args.base_model}")
 
     df = pd.read_csv(args.input).dropna(subset=['title', 'label'])
     label_map = {'relevant': 1, 'irrelevant': 0}
@@ -118,7 +112,7 @@ def main():
         if 'source' not in df.columns:
             raise ValueError("--gold_only requires a 'source' column in the CSV")
         df = df[df['source'] == 'gold_manual'].copy()
-        print(f"GOLD-ONLY BASELINE MODE: {len(df)} gold samples")
+        print(f"GOLD-ONLY MODE: {len(df)} gold samples")
     else:
         print(f"FULL TRAINING MODE: {len(df)} samples")
 
@@ -127,7 +121,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Device: {device}")
 
-    tokenizer = BertTokenizer.from_pretrained(PRE_TRAINED_MODEL)
+    tokenizer = AutoTokenizer.from_pretrained(args.base_model)
     titles  = df['title'].to_numpy()
     targets = df['target'].to_numpy()
 
@@ -146,6 +140,11 @@ def main():
             classes=np.unique(train_targets),
             y=train_targets
         )
+        # Cap weight ratio at 1.5 — fully balanced (~2:1) causes the model to
+        # over-predict relevant when the true relevant rate is ~10-15%.
+        if len(class_weights) == 2 and class_weights[1] / class_weights[0] > 1.5:
+            class_weights[1] = class_weights[0] * 1.5
+        print(f"  Class weights: irr={class_weights[0]:.3f} rel={class_weights[1]:.3f}")
         criterion = torch.nn.CrossEntropyLoss(
             weight=torch.tensor(class_weights, dtype=torch.float).to(device)
         )
@@ -155,7 +154,11 @@ def main():
         train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
         val_dl   = DataLoader(val_ds,   batch_size=args.batch_size, shuffle=False)
 
-        model = BertForSequenceClassification.from_pretrained(PRE_TRAINED_MODEL, num_labels=2, ignore_mismatched_sizes=True)
+        model = AutoModelForSequenceClassification.from_pretrained(
+            args.base_model,
+            num_labels=2,
+            ignore_mismatched_sizes=True,
+        )
         model = model.to(device)
 
         optimizer = AdamW(model.parameters(), lr=2e-5)
@@ -181,19 +184,20 @@ def main():
                     print(f"  ★ New best F1={val_f1:.4f} — saving to {args.model_save_path}")
                     model.save_pretrained(args.model_save_path)
                     tokenizer.save_pretrained(args.model_save_path)
-                    # Save classification report for best fold
                     report = classification_report(
                         reals, preds,
                         target_names=['irrelevant', 'relevant'],
                         digits=3
                     )
                     with open(os.path.join(args.model_save_path, 'best_fold_report.txt'), 'w') as f:
-                        f.write(f"Fold {fold+1}, Epoch {epoch+1}\n\n{report}")
+                        f.write(f"Base model: {args.base_model}\n"
+                                f"Fold {fold+1}, Epoch {epoch+1}\n\n{report}")
 
         fold_f1s.append(fold_best_f1)
         print(f"  Fold {fold+1} best F1: {fold_best_f1:.4f}")
 
     print("\n" + "="*50)
+    print(f"Base model: {args.base_model}")
     print("Cross-Validation F1 Results")
     print("="*50)
     for i, f in enumerate(fold_f1s):
