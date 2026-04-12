@@ -21,7 +21,7 @@ id,title,company_name,label,source
 782429,Harvey Weinstein Taps Trump’s Travel Ban for New ‘Lion’ Oscar Messaging,Visa Inc.,irrelevant,gold_manual
 7366870,here's everything I'd buy at Walmart's Black Friday sale,Walmart,irrelevant,gold_manual
 4813282,Microsoft just introduced an ambitious subscription plan that makes the Xbox the best deal in gaming,Microsoft,relevant,gold_manual
-7935361,Intel’s Stock Stock Rallied 91% This Year. Here’s What Drives It Higher in 2024.,Intel,relevant,gold_manual
+7935361,Intel’s Stock Stock Rallied 91% This Year. Here’s What Drives It Higher in 2024.,Intel,irrelevant,gold_manual
 426333,Shooting at Walmart in El Paso: multiple fatalities,Walmart,irrelevant,gold_manual
 7047614,‘This is why I don’t like Goodwill’: Shopper finds Walmart clearance sweater tagged at $3. Then she sees how much Goodwill is selling it for,Walmart,irrelevant,gold_manual
 5207105,GM Strike after a week: Sales hold up while parts shortages loom,General Motors,relevant,gold_manual
@@ -45,11 +45,11 @@ id,title,company_name,label,source
 3576276,"MetLife gets '26 WC final, USMNT kicks off in L.A.",AT&T,irrelevant,gold_manual
 4693982,"Gugu Mbatha-Raw, Richard Madden to Star in Netflix Thriller ‘Trinity’",Netflix,irrelevant,gold_manual
 3136150,"Spurs brace for red-hot Davis, Pelicans",AT&T,irrelevant,gold_manual
-3977873,"Netflix's Grand, Daring, Maybe Crazy Plan to Conquer the World",Netflix,relevant,gold_manual
+3977873,"Netflix's Grand, Daring, Maybe Crazy Plan to Conquer the World",Netflix,irrelevant,gold_manual
 5144297,Lordstown shifts gear to shakier future after GM announcement,General Motors,irrelevant,gold_manual
 437672,Skillz Hires Airbnb Executive Ian Lee As CFO,Airbnb,irrelevant,gold_manual
 6667230,Uber lawyer says class action trial in California could set a risky...,Uber,relevant,gold_manual
-226236,"Chobani partners with Airbnb, MasterCard to help end refugee crisis",Airbnb,relevant,gold_manual
+226236,"Chobani partners with Airbnb, MasterCard to help end refugee crisis",Airbnb,irrelevant,gold_manual
 3486973,"Democrats question TV carriers' decisions to host Fox, OAN and Newsmax, citing 'misinformation'",AT&T,irrelevant,gold_manual
 4061011,Why Did Netflix Decide to Move Forward With a Final Season of House of Cards?,Netflix,irrelevant,gold_manual
 6969880,Prosecutors: South Carolina man killed Uber rider in 2019,Uber,irrelevant,gold_manual
@@ -75,7 +75,7 @@ id,title,company_name,label,source
 3615230,New on Netflix in November 2025 — The Full List of Movies and TV Shows,Netflix,irrelevant,gold_manual
 4187894,Microsoft’s iPhone keyboard takes aim at Google with new built-in search,Microsoft,irrelevant,gold_manual
 147514,"Walmart is selling a $110 Coca-Cola mini fridge for only $50, and it has a built-in Bluetooth speaker",Walmart,irrelevant,gold_manual
-499306,"Watch Out Walmart, Amazon Is Making Inroads In Grocery",Walmart,relevant,gold_manual
+499306,"Watch Out Walmart, Amazon Is Making Inroads In Grocery",Walmart,irrelevant,gold_manual
 876363,"Trading GE after earnings. Plus, the trade on Kroger & Novartis",Visa Inc.,irrelevant,gold_manual
 2330953,"McDonald's workers, teachers rally in separate suburban May Day events",McDonald's,irrelevant,gold_manual
 3561075,Lakers fall to Spurs in their California Classic finale,AT&T,irrelevant,gold_manual
@@ -89,10 +89,10 @@ id,title,company_name,label,source
 9207244,Morgan Stanley Analyst Sees Long-term Growth Opportunities in Undervalued FIS Stock,Morgan Stanley,irrelevant,gold_manual
 4661164,This Is How Much Netflix We're All Watching Every Day,Netflix,irrelevant,gold_manual
 8117741,Athletics: Kenya's Korir misses out on visa for world championships,Visa Inc.,irrelevant,gold_manual
-410976,Airbnb releases Enhanced Cleaning Protocol handbook,Airbnb,relevant,gold_manual
+410976,Airbnb releases Enhanced Cleaning Protocol handbook,Airbnb,irrelevant,gold_manual
 7306492,Skanska sells remaining stake in Bank of America Tower downtown,Bank of America,irrelevant,gold_manual
 3418018,Samsung’s Galaxy Z Flip 3 is up to $500 off at Best Buy,AT&T,irrelevant,gold_manual
-5122139,Morgan Stanley Restricts Coverage as Marchionne Eyes GM Deal,General Motors,relevant,gold_manual
+5122139,Morgan Stanley Restricts Coverage as Marchionne Eyes GM Deal,General Motors,irrelevant,gold_manual
 3283425,Honoree tours Easterseals facilities,AT&T,irrelevant,gold_manual
 7866688,Announcing Android Cloud Gaming Media Processing Delivery Solutions Based on the New Intel Data Center GPU Codenamed Arctic Sound-M,Intel,relevant,gold_manual
 4635592,"Security startup Synack scores $21M investment from Microsoft, HPE and Singtel",Microsoft,irrelevant,gold_manual
@@ -106,10 +106,10 @@ id,title,company_name,label,source
 1004065,Milwaukee movies off the grid: April 21-23,Visa Inc.,irrelevant,gold_manual
 6532294,"Uber safety driver of fatal self-driving crash was watching Hulu, not the road",Uber,irrelevant,gold_manual
 6147129,California labor commission rules Uber drivers are employees,Uber,relevant,gold_manual
-11910991,Stifel Maintains Buy Rating for FedEx: Here's What You Need To Know,FedEx,relevant,gold_manual
+11910991,Stifel Maintains Buy Rating for FedEx: Here's What You Need To Know,FedEx,irrelevant,gold_manual
 8630124,Regulator Blasts Wells Fargo for Deceptive Auto Insurance Program,Wells Fargo,relevant,gold_manual
-3092975,The DOJ's AT&T-Time Warner case is political: Bibb,AT&T,relevant,gold_manual
-7044782,"LIVESTREAMING SOCIAL COMMERCE PROVIDER, TALKSHOPLIVE, TEAMS UP WITH WALMART",Walmart,relevant,gold_manual
+3092975,The DOJ's AT&T-Time Warner case is political: Bibb,AT&T,irrelevant,gold_manual
+7044782,"LIVESTREAMING SOCIAL COMMERCE PROVIDER, TALKSHOPLIVE, TEAMS UP WITH WALMART",Walmart,irrelevant,gold_manual
 2944401,"Five thoughts: Texas Tech football announces 2016 schedule, including early road test, jam-packed finish",AT&T,irrelevant,gold_manual
 10535791,Netflix Q2 Earnings Preview: Can the Streaming Giant's Run Continue?,Netflix,relevant,gold_manual
 920242,EVTC Stock Price - Evertec Inc. Stock Quote (U.S.: NYSE),Visa Inc.,irrelevant,gold_manual
@@ -135,11 +135,11 @@ id,title,company_name,label,source
 4378828,Justin Timberlake's new Netflix trailer will rock your body,Netflix,irrelevant,gold_manual
 4349266,"Facebook denies giving Spotify, Netflix, other tech giants wider access to data without user permission",Netflix,irrelevant,gold_manual
 3292775,5G networks are almost upon us. Will you be an early adopter?,AT&T,irrelevant,gold_manual
-5144159,Trump says new auto tariffs being mulled after GM restructuring,General Motors,relevant,gold_manual
+5144159,Trump says new auto tariffs being mulled after GM restructuring,General Motors,irrelevant,gold_manual
 1573662,A Starbucks drive-thru could soon serve City College and Land Park,Starbucks,irrelevant,gold_manual
 10409194,Goldman Sachs bought Commerzbank's claim in Saudi's biggest debt...,Goldman Sachs,relevant,gold_manual
 4762085,Netflix Sets Screening Series ‘1975: Fifty Is the New Hollywood’ at Los Angeles’ Egyptian Theatre,Netflix,irrelevant,gold_manual
-5354364,Andretti Partnering With GM For F1 Entry,General Motors,irrelevant,gold_manual
+5354364,Andretti Partnering With GM For F1 Entry,General Motors,relevant,gold_manual
 7340044,Intel's president on why it's critical to steer girls toward tech,Intel,irrelevant,gold_manual
 4480445,Get Microsoft Office 2019 on sale for just A$30 — pay once and use it forever,Microsoft,irrelevant,gold_manual
 2952771,Meet the humans of the world’s biggest tech show,AT&T,irrelevant,gold_manual
@@ -159,7 +159,7 @@ id,title,company_name,label,source
 10457319,Goldman Sachs believes Trump's tariffs leave U.S. in an 'event-driven' bear market,Goldman Sachs,irrelevant,gold_manual
 5320381,LG Chem shares slide amid electric vehicle battery-fire probe with GM,General Motors,relevant,gold_manual
 3226507,Best and worst moments from the Redskins’ 38-14 loss to the Cowboys,AT&T,irrelevant,gold_manual
-4019523,Microsoft Still Facing Xbox 360 Lawsuit Surrounding Scratched Discs,Microsoft,relevant,gold_manual
+4019523,Microsoft Still Facing Xbox 360 Lawsuit Surrounding Scratched Discs,Microsoft,irrelevant,gold_manual
 10117724,Goldman Sachs to invest $184 million in Brazil storage company: executive,Goldman Sachs,relevant,gold_manual
 3075475,AT&T-Time Warner Merger: Justice Department Not Stopping Acquisition,AT&T,relevant,gold_manual
 6492152,Uber identifies items most commonly left behind,Uber,irrelevant,gold_manual
@@ -167,7 +167,7 @@ id,title,company_name,label,source
 1755612,Starbucks Barista Fired for Writing 'Pig' on Police Officers' Drinks,Starbucks,irrelevant,gold_manual
 3468327,Marco Antonio Solís and Los Bukis Reunite For First Time in 25 Years For Three Shows,AT&T,irrelevant,gold_manual
 3543591,Karl Malone's 'Pedophile' Past Resurfaces After NBA Taps Him to Judge Dunk Contest,AT&T,irrelevant,gold_manual
-7141014,Walmart outlines stages of back-to-office plan,Walmart,relevant,gold_manual
+7141014,Walmart outlines stages of back-to-office plan,Walmart,irrelevant,gold_manual
 8578567,Australia could deny Ye a visa because of his antisemitic remarks,Visa Inc.,irrelevant,gold_manual
 2967602,Sports On the Air - April 10,AT&T,irrelevant,gold_manual
 133852,Walmart's ‘Beautiful’ and 'Sturdy' $110 Floor Lamp Is on Sale for Just $38,Walmart,irrelevant,gold_manual
@@ -178,7 +178,7 @@ id,title,company_name,label,source
 7257856,Bank of America Sees 10% Further Upside for European Equities by Third-Quarter,Bank of America,irrelevant,gold_manual
 10448571,argenx to Present at Goldman Sachs 46th Annual Global Healthcare Conference,Goldman Sachs,irrelevant,gold_manual
 7292401,Walmart to Stop Offering Single-Use Bags,Walmart,relevant,gold_manual
-6135324,"City council in Portland, Oregon, gives approval for Uber to operate",Uber,relevant,gold_manual
+6135324,"City council in Portland, Oregon, gives approval for Uber to operate",Uber,irrelevant,gold_manual
 10135625,BRIEF-Janus Capital Group Q3 earnings per share $0.22,Goldman Sachs,irrelevant,gold_manual
 3208638,At Least 60 Stores Will Keep Their Doors Closed On Thanksgiving Day 2018 — See The List,AT&T,irrelevant,gold_manual
 3118082,Big shows headed to the San Antonio area,AT&T,irrelevant,gold_manual
@@ -192,14 +192,14 @@ id,title,company_name,label,source
 213904,Who is Bradford James Gille? What we know about Walmart stabbing suspect,Walmart,irrelevant,gold_manual
 8440699,Plan to end work permits for spouses of skilled visa workers leaves Minnesota families in limbo,Visa Inc.,irrelevant,gold_manual
 4324681,"Accenture, EY, Google, Microsoft And Other Leaders Find Great Value In Employees With Disabilities",Microsoft,irrelevant,gold_manual
-32369,Walmart’s new green product label is the most misleading yet,Walmart,relevant,gold_manual
+32369,Walmart’s new green product label is the most misleading yet,Walmart,irrelevant,gold_manual
 6139001,"Uber Accused of Ripping Off Ideas, and Everything Else You Missed",Uber,irrelevant,gold_manual
 1064479,Lawmakers Question Libra Amid Facebook Privacy Concerns,Visa Inc.,irrelevant,gold_manual
 4241388,Microsoft’s Windows 10 Creators Update will launch April 11,Microsoft,relevant,gold_manual
 6743837,"Walmart holiday quarter sales rise, ecommerce jumped 43 percent",Walmart,relevant,gold_manual
 2962231,YouTube tunes into T-Mobile's Binge On at last,AT&T,irrelevant,gold_manual
 4979994,Court rules GM is shielded from death claims by bankruptcy,General Motors,relevant,gold_manual
-10296433,The CEO of Goldman Sachs cryptically tweeted about the bank's post-Brexit plans in the UK,Goldman Sachs,relevant,gold_manual
+10296433,The CEO of Goldman Sachs cryptically tweeted about the bank's post-Brexit plans in the UK,Goldman Sachs,irrelevant,gold_manual
 6632045,#DeleteUber: company automates account removal due to demand,Uber,irrelevant,gold_manual
 580999,Is Walmart open on Thanksgiving in Milwaukee? Hours today Black Friday,Walmart,irrelevant,gold_manual
 2958646,Phil Mickelson: Golfer's trophy drought continues,AT&T,irrelevant,gold_manual
@@ -231,7 +231,7 @@ id,title,company_name,label,source
 8346622,"TwinSpires offer code for Preakness Stakes 2025: Get up to $400 in bonus funds, site review, promos",Visa Inc.,irrelevant,gold_manual
 7344791,"Bank of America grants $250,000 to fine arts museum",Bank of America,irrelevant,gold_manual
 4621624,Game of Thrones Creators David Benioff and D.B. Weiss Sign Massive Overall Deal With Netflix,Netflix,relevant,gold_manual
-7534699,Cramer: I have faith others can take charge at Intel after Brian Krzanich's ouster,Intel,relevant,gold_manual
+7534699,Cramer: I have faith others can take charge at Intel after Brian Krzanich's ouster,Intel,irrelevant,gold_manual
 3569678,Speed Read: Comedian Maria Bamford Takes Us Inside Her Darkest Thoughts,AT&T,irrelevant,gold_manual
 10144227,Why Bernie Sanders should talk A LOT more about Hillary Clinton and Goldman Sachs,Goldman Sachs,irrelevant,gold_manual
 3318928,Doubts Linger About CBS-Viacom Merger,AT&T,irrelevant,gold_manual
