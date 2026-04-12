@@ -49,6 +49,91 @@ POST_FILTER = re.compile(
     re.IGNORECASE
 )
 
+# Sources that produce near-zero relevant financial news for S&P companies.
+# Mostly sports, entertainment, and lifestyle outlets that mention companies
+# only in sponsorship or celebrity contexts.
+SOURCE_BLOCKLIST = {
+    'axs.com', 'bleacherreport.com', 'cbssports.com', 'sbnation.com',
+    'sportingnews.com', 'foxsports.com', 'espn.com', 'fansided.com',
+    'nbcsports.com', 'hollywoodlife.com', 'deadspin.com', 'usmagazine.com',
+    'radaronline.com', 'pitchfork.com', 'monstersandcritics.com',
+}
+
+# Analyst firms: these companies publish research ON other stocks.
+# Articles where they act as analyst (not as the corporate subject) should
+# be irrelevant for the analyst firm itself.
+# e.g. "Goldman Sachs upgrades Tesla to Buy" → irrelevant for Goldman Sachs.
+ANALYST_FIRMS = {
+    'Goldman Sachs', 'Morgan Stanley', 'JPMorgan Chase', 'Bank of America',
+    'Wells Fargo', 'Citigroup', 'UBS', 'Barclays',
+}
+
+# Matches analyst actions in titles — used with ANALYST_FIRMS check.
+ANALYST_ACTION_RE = re.compile(
+    r'\b(upgrades?|downgrades?'
+    r'|raises?\s+(?:its\s+)?(?:price\s+)?target'
+    r'|cuts?\s+(?:its\s+)?(?:price\s+)?target'
+    r'|maintains?\s+(?:its\s+)?(?:buy|sell|neutral|hold|overweight|underweight)'
+    r'|initiates?\s+(?:coverage|buy|sell|neutral|hold|overweight|underweight)'
+    r'|reiterates?\s+(?:buy|sell|neutral|hold|overweight|underweight)'
+    r'|boosts?\s+(?:price\s+)?target|lowers?\s+(?:price\s+)?target'
+    r'|lifts?\s+(?:price\s+)?target|slashes?\s+(?:price\s+)?target'
+    r'|trims?\s+(?:price\s+)?target|bumps?\s+(?:price\s+)?target)\b',
+    re.IGNORECASE
+)
+
+# Per-company exclusion patterns for ambiguous company names.
+# If a title matches the exclusion pattern for that company, force irrelevant.
+# "Visa" appears in thousands of immigration articles; "Intel" in spy/military ones.
+COMPANY_EXCLUSIONS = {
+    'Visa Inc.': re.compile(
+        r'\b(immigration|immigrant|work\s+visa|student\s+visa|travel\s+visa'
+        r'|tourist\s+visa|H-?1B|green\s+card|deportat|border\s+patrol'
+        r'|customs|asylum|refugee|visa\s+application|visa\s+requirement'
+        r'|visa\s+renewal|visa\s+ban|entry\s+visa|exit\s+visa|transit\s+visa'
+        r'|visa\s+free|visa\s+waiver)\b',
+        re.IGNORECASE
+    ),
+    'Intel': re.compile(
+        r'\b(military\s+intel(?:ligence)?|intelligence\s+agenc'
+        r'|CIA\s+intel|NSA\s+intel|spy|espionage|gather(?:ing)?\s+intel'
+        r'|street\s+intel|competitive\s+intel(?:ligence)?)\b',
+        re.IGNORECASE
+    ),
+    'Target': re.compile(
+        r'\b(military\s+target|bombing\s+target|airstrike\s+target'
+        r'|missile\s+target|shooting\s+target|target\s+practice'
+        r'|archery\s+target|sniper\s+target)\b',
+        re.IGNORECASE
+    ),
+}
+
+
+def apply_filters(title: str, label: str, source: str, company_name: str) -> str:
+    """Apply all post-inference filters in priority order. Returns the final label."""
+    t = str(title)
+
+    # 1. Consumer/deal content (global)
+    if POST_FILTER.search(t):
+        return 'irrelevant'
+
+    # 2. Source blocklist (sports, entertainment, lifestyle)
+    if str(source).lower() in SOURCE_BLOCKLIST:
+        return 'irrelevant'
+
+    # 3. Analyst-firm filter: company is acting as analyst, not as subject.
+    #    Requires both the company name AND an analyst action verb in the title.
+    if company_name in ANALYST_FIRMS:
+        firm_re = re.compile(re.escape(company_name), re.IGNORECASE)
+        if firm_re.search(t) and ANALYST_ACTION_RE.search(t):
+            return 'irrelevant'
+
+    # 4. Company disambiguation: ambiguous names in non-financial contexts.
+    if company_name in COMPANY_EXCLUSIONS and COMPANY_EXCLUSIONS[company_name].search(t):
+        return 'irrelevant'
+
+    return label
+
 class TitleDataset(Dataset):
     def __init__(self, titles, tokenizer):
         self.titles = titles
@@ -171,21 +256,26 @@ def main():
                 # Run BERT inference
                 preds, confs = run_inference(model, tokenizer, titles, device)
 
-                # Apply confidence threshold then post-filter
-                labels = [
-                    label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
-                    for p, c in zip(preds, confs)
-                ]
-                # Override: force consumer/deal titles to irrelevant regardless of BERT
-                df['predicted_label'] = [
-                    'irrelevant' if POST_FILTER.search(str(t)) else l
-                    for t, l in zip(df['title'], labels)
-                ]
-                df['confidence_score'] = confs
+                # Resolve company names first — needed by apply_filters
                 df['company_symbol'] = df['company_id'].apply(
                     lambda x: company_map.get(str(x), {}).get('symbol', '') if x else '')
                 df['company_name'] = df['company_id'].apply(
                     lambda x: company_map.get(str(x), {}).get('name', '') if x else '')
+
+                # Apply confidence threshold
+                labels = [
+                    label_map[p] if c >= CONFIDENCE_THRESHOLD else 'uncertain'
+                    for p, c in zip(preds, confs)
+                ]
+                # Apply all post-inference filters (consumer/deal, source blocklist,
+                # analyst-firm, company disambiguation)
+                df['predicted_label'] = [
+                    apply_filters(t, l, s, c)
+                    for t, l, s, c in zip(
+                        df['title'], labels, df['source'], df['company_name']
+                    )
+                ]
+                df['confidence_score'] = confs
 
                 # Keep only output columns
                 out_cols = ['id', 'title', 'url', 'source', 'published_at',

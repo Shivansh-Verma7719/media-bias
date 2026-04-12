@@ -7,6 +7,7 @@ from transformers import get_linear_schedule_with_warmup
 from torch.optim import AdamW
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, classification_report
+from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
 import os
 import argparse
@@ -42,33 +43,32 @@ class TitleDataset(Dataset):
             'labels': torch.tensor(label, dtype=torch.long)
         }
 
-def train_epoch(model, dataloader, optimizer, scheduler, device):
+def train_epoch(model, dataloader, optimizer, scheduler, device, criterion):
     model = model.train()
     total_loss = 0
-    
+
     for batch in tqdm(dataloader, desc="Training", leave=False):
         optimizer.zero_grad()
-        
+
         input_ids = batch['input_ids'].to(device)
         attention_mask = batch['attention_mask'].to(device)
         labels = batch['labels'].to(device)
-        
+
         outputs = model(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            labels=labels
         )
-        
-        loss = outputs.loss
+
+        # Use class-weighted loss to handle relevant/irrelevant imbalance
+        loss = criterion(outputs.logits, labels)
         total_loss += loss.item()
         loss.backward()
-        
-        # Clip the norm of the gradients to 1.0.
+
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        
+
         optimizer.step()
         scheduler.step()
-        
+
     return total_loss / len(dataloader)
 
 def eval_model(model, dataloader, device):
@@ -162,34 +162,38 @@ def main():
         train_titles, val_titles = titles[train_idx], titles[val_idx]
         train_targets, val_targets = targets[train_idx], targets[val_idx]
         
-        # Calculate class weights for imbalance
-        class_counts = np.bincount(train_targets)
-        weights = 1. / class_counts
-        # For simplicity, we won't implement a weighted sampler here, but instead rely on DistilBERT. 
-        # If severe class imbalance exists (e.g. 90-10), consider adding BalancedSampler to DataLoader.
-        
+        # Class-weighted loss to handle relevant/irrelevant imbalance
+        class_weights = compute_class_weight(
+            class_weight='balanced',
+            classes=np.unique(train_targets),
+            y=train_targets
+        )
+        criterion = torch.nn.CrossEntropyLoss(
+            weight=torch.tensor(class_weights, dtype=torch.float).to(device)
+        )
+
         train_dataset = TitleDataset(train_titles, train_targets, tokenizer, args.max_len)
         val_dataset = TitleDataset(val_titles, val_targets, tokenizer, args.max_len)
-        
+
         train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
-        
+
         # Init model for this fold
         model = DistilBertForSequenceClassification.from_pretrained(PRE_TRAINED_MODEL_NAME, num_labels=2)
         model = model.to(device)
-        
+
         optimizer = AdamW(model.parameters(), lr=2e-5)
         total_steps = len(train_loader) * args.epochs
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
-            num_warmup_steps=0,
+            num_warmup_steps=int(total_steps * 0.1),  # 10% warmup
             num_training_steps=total_steps
         )
         
         fold_best_acc = 0
         
         for epoch in range(args.epochs):
-            train_loss = train_epoch(model, train_loader, optimizer, scheduler, device)
+            train_loss = train_epoch(model, train_loader, optimizer, scheduler, device, criterion)
             val_acc, val_loss, preds, reals = eval_model(model, val_loader, device)
             
             print(f"Epoch {epoch+1}/{args.epochs} | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
