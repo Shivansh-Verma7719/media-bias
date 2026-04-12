@@ -28,7 +28,7 @@ markdown-it-py==4.0.0
 mediacloud
 mdurl==0.1.2
 multidict==6.7.1
-numpy==2.4.3
+numpy
 packaging==26.0
 pandas==3.0.1
 propcache==0.4.1
@@ -51,3 +51,5 @@ typing_extensions==4.15.0
 tzlocal==5.3.1
 urllib3==2.6.3
 yarl==1.23.0
+psycopg2
+dotenv

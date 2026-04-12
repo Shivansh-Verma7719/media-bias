@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.55in]{geometry}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath, amssymb}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\pdfstringdefDisableCommands{%
+  \def\beta{beta}%
+  \def\tau{tau}%
+  \def\mathbb#1{#1}%
+  \def\mathrm#1{#1}%
+}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+\begin{center}
+{\LARGE \textbf{Media Bias ISM}}\\
+\vspace{0.15em}
+{\normalsize RQ Methods Report}\\
+\end{center}
+\vspace{0.2em}
+\hrule
+\vspace{0.5em}
+\setstretch{1.05}
+\small
+
+\subsection*{Common Time Windows}
+\begin{itemize}[leftmargin=1.5em]
+\item Pre-period: 2015-01-01 to 2019-12-31.
+\item Post-period: 2020-01-01 to 2025-12-31.
+\end{itemize}
+
+\subsection*{Common Data Inputs}
+Default database source is configurable with hardcoded fallback:
+\begin{itemize}[leftmargin=1.5em]
+\item Default schema: \texttt{public}
+\item Default table: \texttt{articles\_no\_title\_deduped}
+\end{itemize}
+Article fields used across RQ pipelines: firm id, publication date, and NewsMTSC scores.
+
+\section*{RQ1}
+\textbf{Question.} How has media reporting bias toward S\&P 500 firms changed after the 2020 recession shock?
+
+\subsection*{Variable Construction}
+For article $a$ of firm $i$ on date $t$, with MTSC probabilities $(p_a^+, p_a^-, p_a^0)$, keep high-confidence observations only:
+\[
+\max\{p_a^+, p_a^-, p_a^0\} \ge \tau,\quad \tau=0.90\;\text{(default)}.
+\]
+Define article stance component and firm-day outcome:
+\[
+s_a = p_a^+ - p_a^-,
+\qquad
+\text{bias}_{it} = \frac{1}{|\mathcal{A}_{it}|}\sum_{a\in\mathcal{A}_{it}} s_a,
+\]
+where $\mathcal{A}_{it}$ is the set of qualifying articles for firm $i$ on day $t$.
+
+Controls:
+\begin{itemize}[leftmargin=1.5em]
+\item $\text{vol}_{it}=|\mathcal{A}_{it}|$ (firm-day article volume)
+\item $\text{vix}_t$ (daily market uncertainty)
+\end{itemize}
+
+Shock indicator:
+\[
+\text{Post}_t = \mathbb{1}[t\ge\text{2020-01-01}].
+\]
+
+\subsection*{Baseline Model (Firm FE)}
+\[
+\text{bias}_{it} = \alpha_i + \beta\,\text{Post}_t + \gamma_1\,\text{vol}_{it} + \gamma_2\,\text{vix}_t + \varepsilon_{it}.
+\]
+$\beta$ is the main estimand: average within-firm post-2020 shift in stance.
+
+\subsection*{Estimator and Inference}
+Within transform by firm means, then OLS:
+\[
+\hat{\theta}=(\tilde{X}^{\top}\tilde{X})^{-1}\tilde{X}^{\top}\tilde{y},\quad
+\theta=(\beta,\gamma_1,\gamma_2)^{\top}.
+\]
+Robust HC1 covariance:
+\[
+\widehat{\Var}(\hat{\theta}) = \frac{n}{n-K}(\tilde{X}^{\top}\tilde{X})^{-1}
+\left(\sum_{j=1}^{n}\hat{u}_j^2\tilde{x}_j\tilde{x}_j^{\top}\right)
+(\tilde{X}^{\top}\tilde{X})^{-1}.
+\]
+Two-sided normal-approx p-values:
+\[
+p_k = 2\,\Phi(-|t_k|),\quad t_k=\frac{\hat{\theta}_k}{\widehat{\mathrm{SE}}(\hat{\theta}_k)}.
+\]
+
+\subsection*{Identification Conditions}
+\begin{enumerate}[leftmargin=1.5em]
+\item Conditional within-firm parallel trends after controls.
+\item Controls are not post-treatment bad controls in the identification sense.
+\item \textbf{Stable measurement process:} NewsMTSC score mapping is comparable over time.
+\end{enumerate}
+
+\subsection*{Pre-Period Diagnostic and Fallback Trigger}
+Compute firm pre means:
+\[
+\mu_i^{\mathrm{pre}} = \frac{1}{T_i^{\mathrm{pre}}}\sum_{t \in \mathrm{pre}}\text{bias}_{it}.
+\]
+Track min, max, range, and standard deviation across firms. If range exceeds tolerance (default 0.02), run SCDiD fallback.
+
+\subsection*{SCDiD Fallback (Compact)}
+\begin{itemize}[leftmargin=1.5em]
+\item For each firm $i$, estimate donor weights from pre period:
+\[
+\hat{w}_i=\arg\min_w\|y_{\mathrm{pre}}-X_{\mathrm{pre}}w\|_2^2,
+\]
+then truncate negatives and renormalize.
+\item Build post synthetic path $\hat{y}^{\mathrm{syn}}_{it}=X_{\mathrm{post},t}\tilde{w}_i$.
+\item Firm effect:
+\[
+\hat{\tau}_i=\frac{1}{T_i^{\mathrm{post}}}\sum_{t\in\mathrm{post}}(y_{it}-\hat{y}^{\mathrm{syn}}_{it}).
+\]
+\item Aggregate fallback effect:
+\[
+\hat{\tau}_{\mathrm{SCDiD}}=\frac{1}{N^*}\sum_{i=1}^{N^*}\hat{\tau}_i,
+\quad
+\widehat{\mathrm{SE}}=\frac{s_{\hat{\tau}}}{\sqrt{N^*}}.
+\]
+\end{itemize}
+
+\subsection*{Fallback Eligibility}
+A firm is included in fallback only if it has:
+\begin{itemize}[leftmargin=1.5em]
+\item at least 180 observed pre-period days,
+\item at least 180 observed post-period days,
+\item sufficient donor coverage for synthetic fitting.
+\end{itemize}
+
+\end{document}

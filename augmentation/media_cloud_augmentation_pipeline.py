@@ -1,6 +1,5 @@
 import datetime as dt
 import hashlib
-import json
 import os
 import re
 import sys
@@ -37,9 +36,10 @@ except ImportError as exc:  # pragma: no cover
 # -----------------------------
 # Global pipeline configuration
 # -----------------------------
-SCHEMA_NAME = "indian_cos"
-TARGET_TABLE = "articles_stratified"
-COMPANIES_TABLE = "companies"
+SCHEMA_NAME = "public"
+TARGET_TABLE = "articles_no_title_deduped"
+COMPANIES_TABLE = "top_companies"
+COMPANIES_METADATA_COLUMN = "metadata"
 
 COMPANIES_ID_COLUMN = "id"
 COMPANIES_NAME_COLUMN = "name"
@@ -62,6 +62,8 @@ RETRY_BACKOFF_SECONDS = 2
 DRY_RUN = False
 PRINT_EVERY_N_PAGES = 2
 USE_RICH_MODE = "auto"  # Options: auto, on, off
+SKIP_COMPLETED_COMPANIES = True
+FORCE_RERUN = False
 
 
 def render_live_dashboard(state: Dict) -> Group:
@@ -142,6 +144,96 @@ def print_company_summary(symbol: str, company_rollup: Dict[str, int]) -> None:
         f"dup_out={company_rollup['duplicate_filtered_out']} "
         f"candidate={company_rollup['candidate_new']} inserted={company_rollup['inserted']}"
     )
+
+
+def build_run_key() -> str:
+    return f"{SCHEMA_NAME}.{TARGET_TABLE}:{COLLECTION_MODE}:{START_YEAR}-{END_YEAR}"
+
+
+def should_force_rerun() -> bool:
+    raw = os.getenv("AUGMENT_FORCE_RERUN", str(FORCE_RERUN)).strip().lower()
+    return raw in {"1", "true", "yes", "on"}
+
+
+def _as_metadata_dict(value) -> Dict:
+    if isinstance(value, dict):
+        return value
+    return {}
+
+
+def is_company_completed_for_run(metadata: Dict, run_key: str) -> bool:
+    run_meta = metadata.get("augmentation", {}).get(run_key, {})
+    return bool(run_meta.get("completed", False))
+
+
+def upsert_company_metadata(
+    conn,
+    company: Dict,
+    run_key: str,
+    *,
+    year: Optional[int] = None,
+    year_status: Optional[str] = None,
+    year_stats: Optional[Dict] = None,
+    year_error: Optional[str] = None,
+    complete_company: bool = False,
+    company_rollup: Optional[Dict] = None,
+) -> None:
+    metadata = _as_metadata_dict(company.get("metadata", {}))
+    metadata.setdefault("augmentation", {})
+    run_meta = metadata["augmentation"].setdefault(
+        run_key,
+        {
+            "schema": SCHEMA_NAME,
+            "table": TARGET_TABLE,
+            "collection_mode": COLLECTION_MODE,
+            "start_year": START_YEAR,
+            "end_year": END_YEAR,
+            "status": "in_progress",
+            "completed": False,
+            "years": {},
+            "totals": {},
+            "updated_at": None,
+        },
+    )
+
+    now_iso = dt.datetime.utcnow().isoformat() + "Z"
+    run_meta["updated_at"] = now_iso
+
+    if year is not None and year_status is not None:
+        year_key = str(year)
+        year_payload = {
+            "status": year_status,
+            "updated_at": now_iso,
+        }
+        if year_stats is not None:
+            year_payload["stats"] = year_stats
+        if year_error is not None:
+            year_payload["error"] = year_error
+        run_meta.setdefault("years", {})[year_key] = year_payload
+
+    if company_rollup is not None:
+        run_meta["totals"] = company_rollup
+
+    if complete_company:
+        run_meta["status"] = "completed"
+        run_meta["completed"] = True
+
+    with conn.cursor() as cur:
+        query = sql.SQL(
+            """
+            UPDATE {schema}.{companies}
+            SET {metadata_col} = %s
+            WHERE {id_col} = %s
+            """
+        ).format(
+            schema=sql.Identifier(SCHEMA_NAME),
+            companies=sql.Identifier(COMPANIES_TABLE),
+            metadata_col=sql.Identifier(COMPANIES_METADATA_COLUMN),
+            id_col=sql.Identifier(COMPANIES_ID_COLUMN),
+        )
+        cur.execute(query, (Json(metadata), company["id"]))
+
+    company["metadata"] = metadata
 
 
 def resolve_db_url() -> str:
@@ -249,17 +341,86 @@ def get_target_columns(conn, schema_name: str, table_name: str) -> Set[str]:
         return {row[0] for row in cur.fetchall()}
 
 
-def fetch_companies(conn) -> List[Dict]:
+def get_column_metadata(conn, schema_name: str, table_name: str, column_name: str) -> Optional[Dict[str, str]]:
+    query = """
+        SELECT is_nullable, column_default
+        FROM information_schema.columns
+        WHERE table_schema = %s
+          AND table_name = %s
+          AND column_name = %s
+    """
+    with conn.cursor() as cur:
+        cur.execute(query, (schema_name, table_name, column_name))
+        row = cur.fetchone()
+
+    if not row:
+        return None
+
+    return {
+        "is_nullable": row[0],
+        "column_default": row[1],
+    }
+
+
+def requires_manual_id_insert(conn, schema_name: str, table_name: str, target_columns: Set[str]) -> bool:
+    if "id" not in target_columns:
+        return False
+
+    meta = get_column_metadata(conn, schema_name, table_name, "id")
+    if not meta:
+        return False
+
+    # If id has a default (typically sequence/identity) or allows nulls, omit it from insert.
+    if meta["column_default"] is not None:
+        return False
+    if (meta["is_nullable"] or "").upper() == "YES":
+        return False
+
+    return True
+
+
+def reserve_id_block(conn, schema_name: str, table_name: str, count: int) -> int:
+    if count <= 0:
+        return 1
+
+    with conn.cursor() as cur:
+        # Serialize id allocation within this table for safety.
+        cur.execute(
+            sql.SQL("LOCK TABLE {schema}.{table} IN SHARE ROW EXCLUSIVE MODE").format(
+                schema=sql.Identifier(schema_name),
+                table=sql.Identifier(table_name),
+            )
+        )
+        cur.execute(
+            sql.SQL("SELECT COALESCE(MAX(id), 0) + 1 FROM {schema}.{table}").format(
+                schema=sql.Identifier(schema_name),
+                table=sql.Identifier(table_name),
+            )
+        )
+        start_id = int(cur.fetchone()[0])
+
+    return start_id
+
+
+def fetch_companies(conn, include_metadata: bool) -> List[Dict]:
+    select_columns = [
+        sql.Identifier(COMPANIES_ID_COLUMN),
+        sql.Identifier(COMPANIES_NAME_COLUMN),
+        sql.Identifier(COMPANIES_SYMBOL_COLUMN),
+    ]
+    if include_metadata:
+        select_columns.append(sql.Identifier(COMPANIES_METADATA_COLUMN))
+
     query = sql.SQL(
         """
-        SELECT {id_col}, {name_col}, {symbol_col}
+        SELECT {select_cols}
         FROM {schema}.{companies}
         WHERE COALESCE(TRIM({name_col}::text), '') <> ''
           AND COALESCE(TRIM({symbol_col}::text), '') <> ''
         ORDER BY {symbol_col}
         """
     ).format(
-        id_col=sql.Identifier(COMPANIES_ID_COLUMN),
+        select_cols=sql.SQL(", ").join(select_columns),
         name_col=sql.Identifier(COMPANIES_NAME_COLUMN),
         symbol_col=sql.Identifier(COMPANIES_SYMBOL_COLUMN),
         schema=sql.Identifier(SCHEMA_NAME),
@@ -270,10 +431,13 @@ def fetch_companies(conn) -> List[Dict]:
         cur.execute(query)
         rows = cur.fetchall()
 
-    return [
-        {"id": row[0], "name": row[1], "symbol": row[2]}
-        for row in rows
-    ]
+    companies = []
+    for row in rows:
+        company = {"id": row[0], "name": row[1], "symbol": row[2]}
+        company["metadata"] = _as_metadata_dict(row[3]) if include_metadata else {}
+        companies.append(company)
+
+    return companies
 
 
 def fetch_existing_hashes(
@@ -433,8 +597,11 @@ def build_insert_rows(
     company_id: int,
     outlet_id_map: Dict[str, int],
     target_columns: Set[str],
+    include_manual_id: bool,
+    id_start: Optional[int],
 ) -> Tuple[List[str], List[Tuple]]:
     preferred_order = [
+        "id",
         "title",
         "content",
         "url",
@@ -447,11 +614,14 @@ def build_insert_rows(
     ]
 
     insert_columns = [c for c in preferred_order if c in target_columns]
+    if not include_manual_id:
+        insert_columns = [c for c in insert_columns if c != "id"]
 
     rows: List[Tuple] = []
-    for art in candidates:
+    for idx, art in enumerate(candidates):
         domain = extract_domain(art.get("url"))
         row_map = {
+            "id": (id_start + idx) if (include_manual_id and id_start is not None) else None,
             "title": art.get("title"),
             "content": None,
             "url": art.get("url"),
@@ -488,7 +658,18 @@ def insert_articles(
             domains_with_names[domain] = art.get("media_name") or domain
 
     outlet_id_map = resolve_media_outlet_ids(conn, domains_with_names, target_columns)
-    insert_columns, rows = build_insert_rows(candidates, company_id, outlet_id_map, target_columns)
+
+    manual_id_mode = requires_manual_id_insert(conn, SCHEMA_NAME, TARGET_TABLE, target_columns)
+    id_start = reserve_id_block(conn, SCHEMA_NAME, TARGET_TABLE, len(candidates)) if manual_id_mode else None
+
+    insert_columns, rows = build_insert_rows(
+        candidates,
+        company_id,
+        outlet_id_map,
+        target_columns,
+        include_manual_id=manual_id_mode,
+        id_start=id_start,
+    )
 
     if not insert_columns:
         raise ValueError(
@@ -608,8 +789,24 @@ def main() -> None:
         if not table_exists(conn, SCHEMA_NAME, COMPANIES_TABLE):
             raise ValueError(f"Companies table does not exist: {SCHEMA_NAME}.{COMPANIES_TABLE}")
 
+        company_columns = get_target_columns(conn, SCHEMA_NAME, COMPANIES_TABLE)
+        has_metadata_column = COMPANIES_METADATA_COLUMN in company_columns
+        run_key = build_run_key()
+
         target_columns = get_target_columns(conn, SCHEMA_NAME, TARGET_TABLE)
-        companies = fetch_companies(conn)
+        companies = fetch_companies(conn, include_metadata=has_metadata_column)
+
+        if has_metadata_column and SKIP_COMPLETED_COMPANIES and not should_force_rerun():
+            filtered_companies = []
+            skipped = 0
+            for company in companies:
+                if is_company_completed_for_run(company.get("metadata", {}), run_key):
+                    skipped += 1
+                    continue
+                filtered_companies.append(company)
+            companies = filtered_companies
+            if skipped > 0:
+                print(f"Skipping {skipped} companies already marked completed for run {run_key}")
 
         if not companies:
             print("No companies found. Exiting.")
@@ -665,6 +862,15 @@ def main() -> None:
                                 rate_limiter,
                                 target_columns,
                             )
+                            if has_metadata_column and not DRY_RUN:
+                                upsert_company_metadata(
+                                    conn,
+                                    company,
+                                    run_key,
+                                    year=year,
+                                    year_status="success",
+                                    year_stats=stats,
+                                )
                             if not DRY_RUN:
                                 conn.commit()
 
@@ -698,11 +904,39 @@ def main() -> None:
                             state["recent_errors"].appendleft(
                                 f"{company['symbol']} {year}: {str(exc)[:180]}"
                             )
+                            if has_metadata_column and not DRY_RUN:
+                                try:
+                                    upsert_company_metadata(
+                                        conn,
+                                        company,
+                                        run_key,
+                                        year=year,
+                                        year_status="error",
+                                        year_error=str(exc)[:500],
+                                    )
+                                    conn.commit()
+                                except Exception:
+                                    conn.rollback()
                             live.console.print(f"ERROR {company['symbol']} {year}: {exc}")
 
                         live.update(render_live_dashboard(state))
 
                     state["companies_done"] = idx
+                    if has_metadata_column and not DRY_RUN:
+                        try:
+                            upsert_company_metadata(
+                                conn,
+                                company,
+                                run_key,
+                                complete_company=True,
+                                company_rollup=company_rollup,
+                            )
+                            conn.commit()
+                        except Exception as meta_exc:
+                            conn.rollback()
+                            state["recent_errors"].appendleft(
+                                f"{company['symbol']} meta finalize: {str(meta_exc)[:180]}"
+                            )
                     print_company_summary(company["symbol"], company_rollup)
                     live.update(render_live_dashboard(state))
 
@@ -735,6 +969,15 @@ def main() -> None:
                             rate_limiter,
                             target_columns,
                         )
+                        if has_metadata_column and not DRY_RUN:
+                            upsert_company_metadata(
+                                conn,
+                                company,
+                                run_key,
+                                year=year,
+                                year_status="success",
+                                year_stats=stats,
+                            )
                         if not DRY_RUN:
                             conn.commit()
 
@@ -756,6 +999,19 @@ def main() -> None:
                         state["recent_errors"].appendleft(
                             f"{company['symbol']} {year}: {str(exc)[:180]}"
                         )
+                        if has_metadata_column and not DRY_RUN:
+                            try:
+                                upsert_company_metadata(
+                                    conn,
+                                    company,
+                                    run_key,
+                                    year=year,
+                                    year_status="error",
+                                    year_error=str(exc)[:500],
+                                )
+                                conn.commit()
+                            except Exception:
+                                conn.rollback()
                         print(f"ERROR {company['symbol']} {year}: {exc}")
 
                     # Plain live stats snapshot for nohup-friendly logs.
@@ -766,6 +1022,21 @@ def main() -> None:
                     )
 
                 state["companies_done"] = idx
+                if has_metadata_column and not DRY_RUN:
+                    try:
+                        upsert_company_metadata(
+                            conn,
+                            company,
+                            run_key,
+                            complete_company=True,
+                            company_rollup=company_rollup,
+                        )
+                        conn.commit()
+                    except Exception as meta_exc:
+                        conn.rollback()
+                        state["recent_errors"].appendleft(
+                            f"{company['symbol']} meta finalize: {str(meta_exc)[:180]}"
+                        )
                 print_company_summary(company["symbol"], company_rollup)
 
             state["status"] = "Completed"
