@@ -1,0 +1,17 @@
+RQ2 Regression Pipeline Summary
+========================================
+Rows in panel: 62,667
+Firms: 26
+Date range: 2015-12-01 to 2025-11-24
+
+Main FE result:
+  beta(Post): -0.000344
+  se(HC1):    0.000172
+  p-value:    0.045093
+
+Pre-period mean diagnostic:
+  firms:      24
+  range:      0.0019275660140748354
+  std:        0.0004169210906856414
+  means_equal (tol): True
+

@@ -1,0 +1,19 @@
+RQ1 Regression Pipeline Summary
+========================================
+Rows in panel: 31,575
+Firms: 22
+Date range: 2015-01-01 to 2025-11-12
+
+Main FE result:
+  beta(Post): 0.025762
+  se(HC1):    0.005212
+  p-value:    0.000001
+
+Pre-period mean diagnostic:
+  firms:      22
+  range:      0.7325232536707683
+  std:        0.15699772367775033
+  means_equal (tol): False
+
+SCDiD fallback:
+  {"available": true, "n_firms_used": 16, "avg_post_effect": -0.12205839929179985, "se_across_firms": 0.04152542276937109, "ci95_low": -0.2034482279197672, "ci95_high": -0.04066857066383252, "notes": "Firm-by-firm synthetic control fallback using donor firms to build post-period counterfactuals."}

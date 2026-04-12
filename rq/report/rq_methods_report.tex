@@ -40,20 +40,6 @@
 \setstretch{1.05}
 \small
 
-\subsection*{Common Time Windows}
-\begin{itemize}[leftmargin=1.5em]
-\item Pre-period: 2015-01-01 to 2019-12-31.
-\item Post-period: 2020-01-01 to 2025-12-31.
-\end{itemize}
-
-\subsection*{Common Data Inputs}
-Default database source is configurable with hardcoded fallback:
-\begin{itemize}[leftmargin=1.5em]
-\item Default schema: \texttt{public}
-\item Default table: \texttt{articles\_no\_title\_deduped}
-\end{itemize}
-Article fields used across RQ pipelines: firm id, publication date, and NewsMTSC scores.
-
 \section*{RQ1}
 \textbf{Question.} How has media reporting bias toward S\&P 500 firms changed after the 2020 recession shock?
 
@@ -145,5 +131,88 @@ A firm is included in fallback only if it has:
 \item at least 180 observed post-period days,
 \item sufficient donor coverage for synthetic fitting.
 \end{itemize}
+
+\subsection*{Results}
+\textbf{Sample and diagnostics.} The estimation panel contains 31,575 firm-day observations across 22 firms (2015-01-01 to 2025-11-12). Pre-period firm means are highly dispersed (range $=0.733$, SD $=0.157$), so the SCDiD fallback is activated.
+
+\begin{table}[ht]
+\centering
+\caption*{Table RQ1-A: Entity FE Regression (HC1 Robust SE)}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+\midrule
+Post & 0.0258 & 0.0052 & 4.9425 & 0.000001 & 0.0155 & 0.0360 \\
+Article Volume & -0.0028 & 0.0003 & -9.4603 & 0.000000 & -0.0033 & -0.0022 \\
+VIX & 0.0005 & 0.0004 & 1.4886 & 0.1366 & -0.0002 & 0.0012 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption*{Table RQ1-B: SCDiD Fallback Summary}
+\begin{tabular}{lrrr}
+\toprule
+Metric & Estimate & CI Low & CI High \\
+\midrule
+Avg. Post Effect & -0.1221 & -0.2034 & -0.0407 \\
+SE Across Firms & 0.0415 & -- & -- \\
+Firms Used & 16 & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Interpretation.} The baseline FE model indicates a positive post-2020 shift in daily stance. However, the fallback SCDiD estimate is negative, indicating direction sensitivity under strong pre-period imbalance. Report RQ1 as evidence of a structural shift with specification-dependent sign.
+
+\section*{RQ2}
+\textbf{Question.} Did the 2020 recession shock affect stock prices differently pre versus post, at the market level?
+
+\subsection*{Design Rationale}
+RQ2 is paired with RQ1. RQ1 tests whether media stance shifts after the shock, while RQ2 tests whether firm-level returns also shift. Both are required before claiming a structural media--market linkage in RQ3.
+
+\subsection*{Variable Construction}
+For firm $i$ and date $t$, daily return is computed from close prices:
+\[
+\text{return}_{it}=\frac{P_{it}-P_{i,t-1}}{P_{i,t-1}}.
+\]
+Shock indicator:
+\[
+\text{Post}_t=\mathbb{1}[t\ge\text{2020-01-01}].
+\]
+
+Controls:
+\begin{itemize}[leftmargin=1.5em]
+\item $\text{sp500\_return}_t$: absorbs market-wide bull-run and broad index drift.
+\item $\text{vix}_t$: absorbs volatility-regime shifts common to all firms.
+\end{itemize}
+
+\subsection*{Baseline Model (Firm FE)}
+\[
+\text{return}_{it}=\alpha_i+\beta\,\text{Post}_t+\gamma_1\,\text{sp500\_return}_t+\gamma_2\,\text{vix}_t+\varepsilon_{it}.
+\]
+As in RQ1, estimation uses entity fixed effects and HC1 robust standard errors.
+
+\subsection*{Identification and Fallback Rule}
+Pre-period firm means are evaluated as in RQ1. If cross-firm pre means are sufficiently equal, FE remains the primary estimate; otherwise SCDiD fallback is triggered.
+
+\subsection*{Results}
+\textbf{Sample and diagnostics.} The estimation panel contains 62,667 firm-day observations across 26 firms (2015-12-01 to 2025-11-24). Pre-period means are tightly clustered (range $=0.00193$, SD $=0.00042$), so fallback is \textbf{not} triggered.
+
+\begin{table}[ht]
+\centering
+\caption*{Table RQ2-A: Entity FE Regression (HC1 Robust SE)}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+\midrule
+Post & -0.000344 & 0.000172 & -2.0038 & 0.0451 & -0.000681 & -0.000008 \\
+S\&P 500 Return & 1.127576 & 0.010982 & 102.6767 & 0.0000 & 1.106052 & 1.149100 \\
+VIX & -0.000001 & 0.000020 & -0.0433 & 0.9654 & -0.000039 & 0.000038 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Interpretation.} Controlling for index return and VIX, the post-period shift in firm daily returns is negative and marginally significant (about $-0.034\%$ per day). The market-return control is strongly positive and highly significant, while VIX is not statistically significant in this specification.
 
 \end{document}

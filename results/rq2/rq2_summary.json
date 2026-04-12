@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "article_source": "public.articles_no_title_deduped",
+    "company_table": "top_companies",
+    "price_source": "public.stock_prices",
+    "market_source": "public.stock_prices:^GSPC",
+    "vix_source": "finance.vix_daily",
+    "pre_period": [
+      "2015-01-01",
+      "2019-12-31"
+    ],
+    "post_period": [
+      "2020-01-01",
+      "2025-12-31"
+    ]
+  },
+  "model": {
+    "formula": "daily_return_it = alpha_i + beta*post_t + gamma1*sp500_return_t + gamma2*vix_t + eps_it",
+    "estimator": "Entity fixed-effects OLS (within), HC1 robust SE",
+    "n_obs": 62667,
+    "n_regressors": 3,
+    "r2_within": 0.3188752590884735,
+    "main_beta_post": -0.00034400938812773844,
+    "main_beta_post_se": 0.0001716798723896083,
+    "main_beta_post_p": 0.04509319930503071
+  },
+  "diagnostics": {
+    "pre_period_means": {
+      "n_firms": 24,
+      "min": 0.00013845549956373985,
+      "max": 0.002066021513638575,
+      "range": 0.0019275660140748354,
+      "std": 0.0004169210906856414,
+      "means_equal": true,
+      "trigger_scdid": false
+    }
+  },
+  "fallback_scdid": null,
+  "coefficients": [
+    {
+      "variable": "post",
+      "coef": -0.00034400938812773844,
+      "se_hc1": 0.0001716798723896083,
+      "t_stat": -2.0037840390925243,
+      "p_value_norm_approx": 0.04509319930503071,
+      "ci95_low": -0.0006805019380113706,
+      "ci95_high": -7.516838244106181e-06
+    },
+    {
+      "variable": "sp500_return",
+      "coef": 1.1275759512943468,
+      "se_hc1": 0.010981814389560663,
+      "t_stat": 102.67665353789107,
+      "p_value_norm_approx": 0.0,
+      "ci95_low": 1.1060515950908079,
+      "ci95_high": 1.1491003074978858
+    },
+    {
+      "variable": "vix",
+      "coef": -8.515487015625482e-07,
+      "se_hc1": 1.9654847471642245e-05,
+      "t_stat": -0.04332512388056694,
+      "p_value_norm_approx": 0.965442364061525,
+      "ci95_low": -3.937504974598135e-05,
+      "ci95_high": 3.767195234285625e-05
+    }
+  ]
+}
