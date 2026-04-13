@@ -116,6 +116,16 @@ EXAMPLES (study these carefully — they cover boundary cases):
 ]
 """
 
+def extract_json_array(text: str) -> list:
+    """Robustly extract a JSON array from model output regardless of formatting."""
+    text = text.strip()
+    # Find the first '[' and last ']' to isolate the array
+    start = text.find('[')
+    end = text.rfind(']')
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError(f"No JSON array found in response: {text[:200]!r}")
+    return json.loads(text[start:end+1])
+
 def classify_batch(client, model_name, batch):
     items = [{"id": row["id"], "title": row["title"]} for row in batch]
     prompt = f"Classify these titles:\n{json.dumps(items, indent=2)}"
@@ -128,23 +138,18 @@ def classify_batch(client, model_name, batch):
         ],
         temperature=0.0,
     )
-    text = response.choices[0].message.content.strip()
+    text = response.choices[0].message.content
+    if not text or not text.strip():
+        raise ValueError("Model returned empty response")
 
-    # Strip markdown code fences if present
-    if text.startswith("```"):
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-    text = text.strip()
-
-    return json.loads(text)
+    return extract_json_array(text)
 
 def main():
     parser = argparse.ArgumentParser(description="Stage 1: Annotate titles using Groq API (zero-shot)")
     parser.add_argument("--input", "-i", type=str, required=True, help="Input CSV of pre-filtered titles")
     parser.add_argument("--output", "-o", type=str, required=True, help="Output CSV with annotations")
     parser.add_argument("--api_key", "-k", type=str, default=None, help="Groq API key (or set GROQ_API_KEY env var)")
-    parser.add_argument("--batch_size", "-b", type=int, default=50, help="Titles per API call")
+    parser.add_argument("--batch_size", "-b", type=int, default=5, help="Titles per API call")
     parser.add_argument("--model", "-m", type=str, default="llama-3.3-70b-versatile", help="Groq model to use")
     parser.add_argument("--title_col", type=str, default="title", help="Name of the title column")
     args = parser.parse_args()
@@ -180,7 +185,7 @@ def main():
     for i in tqdm(range(0, len(rows), args.batch_size), desc="Annotating", total=(len(rows) + args.batch_size - 1) // args.batch_size, unit="batch"):
         batch = rows[i:i + args.batch_size]
         batch_num = i // args.batch_size + 1
-        retries = 3
+        retries = 4
         for attempt in range(retries):
             try:
                 parsed = classify_batch(client, args.model, batch)
@@ -191,7 +196,8 @@ def main():
                 break
             except Exception as e:
                 if attempt < retries - 1:
-                    wait = 2 ** attempt * 5
+                    # Exponential backoff: 30s, 60s, 120s
+                    wait = 30 * (2 ** attempt)
                     tqdm.write(f"Batch {batch_num} failed (attempt {attempt+1}): {e}. Retrying in {wait}s...")
                     time.sleep(wait)
                 else:
@@ -212,7 +218,8 @@ def main():
                 f"Elapsed: {elapsed:.0f}s | ETA: {eta:.0f}s"
             )
 
-        time.sleep(0.5)
+        # 12s sleep keeps us ~25 batches/min = ~5k tokens/min, safely under 12k TPM
+        time.sleep(12)
 
     results_df = pd.DataFrame(results)
     results_df['id'] = results_df['id'].astype(str)

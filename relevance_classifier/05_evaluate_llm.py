@@ -54,7 +54,7 @@ RELEVANT — include if any of these apply:
    - SEC/DOJ/FTC probes or settlements involving the company as an institution
    - FDA approvals, rejections, or warning letters
    - Major government fines, sanctions, or tariffs directly targeting the company
-   - Class-action lawsuits (many plaintiffs against the company)
+   - Class-action lawsuits (must explicitly say "class-action" or involve a massive group; single-user lawsuits are IRRELEVANT)
 
 5. Brand & Reputation (material events only)
    - Officially signed celebrity/athlete endorsement DEALS or contract terminations
@@ -69,12 +69,12 @@ IRRELEVANT — exclude if any of these apply:
 1. Individual/Local Incidents
    - A single employee's lawsuit, arrest, or misconduct
    - A single store robbery, accident, or local incident
-   - One customer's complaint with no corporate response
+   - One customer's complaint or lawsuit (e.g., "Unhappy subscriber sues Netflix" -> IRRELEVANT)
 
-2. Consumer & Lifestyle Content
-   - Shopping guides, deal roundups, gift lists
-   - Product reviews or comparisons written for consumers
-   - Lifestyle articles that name-drop the brand
+2. Consumer, Blog & Lifestyle Content
+   - Shopping guides, deal roundups, holiday sales, "Black Friday", "% off", "$ off"
+   - Product reviews, beta testing, "how-to" articles, software tips (e.g. "Microsoft begs you to stop using IE" -> IRRELEVANT)
+   - Lifestyle journalism or listicles that name-drop the brand
 
 3. Passing Mentions & Context
    - Macro/industry articles where the company appears as one of several examples

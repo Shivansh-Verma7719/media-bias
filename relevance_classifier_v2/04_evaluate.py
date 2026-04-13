@@ -116,6 +116,40 @@ def main():
         for _, r in uncertain.sort_values('p_relevant', ascending=False).iterrows():
             print(f"  p_rel={r['p_relevant']:.3f} [{r.get('company_name','')}] {r['title'][:80]}")
 
+    # ── Threshold sweep ───────────────────────────────────────────────────────
+    print("\n" + "="*55)
+    print("Threshold Sweep (no uncertain bucket — hard classify)")
+    print(f"{'Threshold':>10}  {'Precision':>9}  {'Recall':>7}  {'F1':>7}  {'FP':>4}  {'FN':>4}  {'Scored':>7}")
+    print("-"*55)
+
+    from sklearn.metrics import precision_score, recall_score, f1_score as sk_f1
+
+    all_true  = df['label'].map({'relevant': 1, 'irrelevant': 0}).tolist()
+    all_probs = df['p_relevant'].tolist()
+
+    for thresh in [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.92, 0.95]:
+        preds = [1 if p >= thresh else 0 for p in all_probs]
+        tp = sum(t == 1 and p == 1 for t, p in zip(all_true, preds))
+        fp = sum(t == 0 and p == 1 for t, p in zip(all_true, preds))
+        fn = sum(t == 1 and p == 0 for t, p in zip(all_true, preds))
+        if tp + fp == 0:
+            prec = 0.0
+        else:
+            prec = tp / (tp + fp)
+        rec  = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        f1   = 2 * prec * rec / (prec + rec) if (prec + rec) > 0 else 0.0
+        print(f"{thresh:>10.2f}  {prec:>9.3f}  {rec:>7.3f}  {f1:>7.3f}  {fp:>4}  {fn:>4}  {len(df):>7}")
+
+    # ── True Positive p_rel distribution ─────────────────────────────────────
+    tp_rows = df[(df['label'] == 'relevant') & (df['p_relevant'] >= 0.50)]
+    print(f"\n── True Positive p_rel distribution (p≥0.50, n={len(tp_rows)}) ──")
+    buckets = [(0.50, 0.60), (0.60, 0.70), (0.70, 0.75), (0.75, 0.80),
+               (0.80, 0.85), (0.85, 0.90), (0.90, 0.95), (0.95, 1.01)]
+    for lo, hi in buckets:
+        n = ((tp_rows['p_relevant'] >= lo) & (tp_rows['p_relevant'] < hi)).sum()
+        bar = '█' * n
+        print(f"  [{lo:.2f}-{hi:.2f})  {n:>3}  {bar}")
+
 
 if __name__ == "__main__":
     main()

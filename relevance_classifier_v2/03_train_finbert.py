@@ -96,8 +96,6 @@ def main():
     parser.add_argument("--epochs",          "-e", type=int, default=6)
     parser.add_argument("--kfolds",          "-k", type=int, default=5)
     parser.add_argument("--max_len",         "-m", type=int, default=128)
-    parser.add_argument("--gold_only",             action="store_true",
-                        help="Train on gold_manual rows only")
     args = parser.parse_args()
 
     print(f"Base model: {args.base_model}")
@@ -107,14 +105,7 @@ def main():
     df['target'] = df['label'].str.lower().map(label_map)
     df = df.dropna(subset=['target'])
     df['target'] = df['target'].astype(int)
-
-    if args.gold_only:
-        if 'source' not in df.columns:
-            raise ValueError("--gold_only requires a 'source' column in the CSV")
-        df = df[df['source'] == 'gold_manual'].copy()
-        print(f"GOLD-ONLY MODE: {len(df)} gold samples")
-    else:
-        print(f"FULL TRAINING MODE: {len(df)} samples")
+    print(f"Training on {len(df)} samples")
 
     print(df['target'].value_counts())
 

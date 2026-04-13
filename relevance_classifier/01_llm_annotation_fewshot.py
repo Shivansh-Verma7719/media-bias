@@ -15,7 +15,7 @@ import random
 import pandas as pd
 from tqdm import tqdm
 import argparse
-from groq import Groq
+from openai import OpenAI
 
 # ── Hardcoded fallback examples (used when manual set has no coverage) ──────
 FALLBACK_EXAMPLES = [
@@ -66,7 +66,7 @@ RELEVANT — include if any of these apply:
    - SEC/DOJ/FTC probes or settlements involving the company as an institution
    - FDA approvals, rejections, or warning letters
    - Major government fines, sanctions, or tariffs directly targeting the company
-   - Class-action lawsuits (many plaintiffs against the company)
+   - Class-action lawsuits (must explicitly say "class-action" or involve a massive group; single-user lawsuits are IRRELEVANT)
 
 5. Brand & Reputation (material events only)
    - Officially signed celebrity/athlete endorsement DEALS or contract terminations
@@ -81,12 +81,12 @@ IRRELEVANT — exclude if any of these apply:
 1. Individual/Local Incidents
    - A single employee's lawsuit, arrest, or misconduct
    - A single store robbery, accident, or local incident
-   - One customer's complaint with no corporate response
+   - One customer's complaint or lawsuit (e.g., "Unhappy subscriber sues Netflix" -> IRRELEVANT)
 
-2. Consumer & Lifestyle Content
-   - Shopping guides, deal roundups, gift lists
-   - Product reviews or comparisons written for consumers
-   - Lifestyle articles that name-drop the brand
+2. Consumer, Blog & Lifestyle Content
+   - Shopping guides, deal roundups, holiday sales, "Black Friday", "% off", "$ off"
+   - Product reviews, beta testing, "how-to" articles, software tips (e.g. "Microsoft begs you to stop using IE" -> IRRELEVANT)
+   - Lifestyle journalism or listicles that name-drop the brand
 
 3. Passing Mentions & Context
    - Macro/industry articles where the company appears as one of several examples
@@ -224,8 +224,9 @@ def main():
     parser.add_argument("--output", "-o", type=str, required=True, help="Output CSV with annotations")
     parser.add_argument("--manual", type=str, required=True, help="Path to 300 manually labeled CSV")
     parser.add_argument("--api_key", "-k", type=str, default=None)
-    parser.add_argument("--batch_size", "-b", type=int, default=50)
-    parser.add_argument("--model", "-m", type=str, default="llama-3.3-70b-versatile")
+    parser.add_argument("--batch_size", "-b", type=int, default=5)
+    parser.add_argument("--model", "-m", type=str, default="qwen-3-235b-a22b-instruct-2507")
+    parser.add_argument("--base_url", type=str, default="https://api.cerebras.ai/v1")
     parser.add_argument("--n_examples", type=int, default=5, help="Number of examples per label side (max 5)")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
@@ -234,9 +235,9 @@ def main():
 
     api_key = args.api_key or os.getenv("GROQ_API_KEY")
     if not api_key:
-        raise ValueError("Provide Groq API key via --api_key or GROQ_API_KEY env var")
+        raise ValueError("Provide API key via --api_key or GROQ_API_KEY env var")
 
-    client = Groq(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url=args.base_url)
 
     # Load input
     print(f"Loading data from {args.input}...")
@@ -289,7 +290,7 @@ def main():
             for i in range(0, len(rows), args.batch_size):
                 batch = rows[i:i + args.batch_size]
                 batch_num = i // args.batch_size + 1
-                retries = 3
+                retries = 4
 
                 for attempt in range(retries):
                     try:
@@ -300,7 +301,8 @@ def main():
                         break
                     except Exception as e:
                         if attempt < retries - 1:
-                            wait = 2 ** attempt * 5
+                            # Exponential backoff: 30s, 60s, 120s
+                            wait = 30 * (2 ** attempt)
                             tqdm.write(f"{company_name} batch {batch_num} failed (attempt {attempt+1}): {e}. Retrying in {wait}s...")
                             time.sleep(wait)
                         else:
@@ -308,7 +310,8 @@ def main():
                             failed_batches.append(f"{company_name}:{batch_num}")
 
                 pbar.update(len(batch))
-                time.sleep(0.5)
+                # 12s sleep keeps us ~25 batches/min = ~5k tokens/min, safely under 12k TPM
+                time.sleep(12)
 
     # Merge back with original df
     results_df = pd.DataFrame(results)
