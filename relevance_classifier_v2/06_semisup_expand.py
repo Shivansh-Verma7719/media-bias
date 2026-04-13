@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from tqdm import tqdm
 
 
@@ -94,8 +94,8 @@ def main():
 
     # ── Load model ────────────────────────────────────────────────────────────
     print(f"Loading model from {args.model}...")
-    tokenizer = BertTokenizer.from_pretrained(args.model)
-    model     = BertForSequenceClassification.from_pretrained(args.model)
+    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    model     = AutoModelForSequenceClassification.from_pretrained(args.model)
     model     = model.to(device)
 
     # ── Load gold data ────────────────────────────────────────────────────────
@@ -175,7 +175,7 @@ def main():
     combined.to_csv(args.output, index=False)
     print(f"\nSaved to {args.output}")
     print(f"\nNext: re-train with the expanded set:")
-    print(f"  python 03_train_finbert.py -i {args.output} -s model_semisup")
+    print(f"  python 03_train_deberta.py -i {args.output} -s model_semisup")
 
 
 if __name__ == "__main__":
