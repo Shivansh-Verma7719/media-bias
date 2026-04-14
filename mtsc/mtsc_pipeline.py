@@ -19,6 +19,12 @@ CONFIDENCE_THRESHOLD = 0.9
 OUTPUT_CSV   = "results/mtsc_results.csv"
 OUTPUT_EXCEL = "results/mtsc_results.xlsx"
 
+DB_SCHEMA = os.environ.get("DB_SCHEMA", "public")
+TOP_COMPANIES_TABLE = "top_companies"
+ARTICLES_TABLE = "articles_no_title_deduped"
+TOP_COMPANIES_FQN = f'"{DB_SCHEMA}"."{TOP_COMPANIES_TABLE}"'
+ARTICLES_FQN = f'"{DB_SCHEMA}"."{ARTICLES_TABLE}"'
+
 
 # Step 1: Pull & filter articles from DB
 def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
@@ -27,7 +33,7 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
     conn = psycopg2.connect(DB_URL)
     cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    cur.execute("SELECT id, name, symbol FROM top_companies")
+    cur.execute(f"SELECT id, name, symbol FROM {TOP_COMPANIES_FQN}")
     companies = cur.fetchall()
 
     rows_out  = []
@@ -43,7 +49,7 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
         # Only fetch articles that haven't been scored yet
         cur.execute(f"""
             SELECT id, title, content, url, source, published_at
-            FROM   articles_stratified
+                        FROM   {ARTICLES_FQN}
             WHERE  company_id = %s
               AND  pos_score IS NULL
             ORDER  BY published_at DESC
@@ -178,8 +184,8 @@ def save_outputs(df: pd.DataFrame):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     
-    update_query = """
-        UPDATE articles_stratified 
+    update_query = f"""
+        UPDATE {ARTICLES_FQN}
         SET pos_score = %s, neutral_score = %s, neg_score = %s
         WHERE id = %s
     """
