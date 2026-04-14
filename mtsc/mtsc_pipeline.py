@@ -1,5 +1,6 @@
 import os, re, sys, argparse
 import psycopg2, psycopg2.extras
+from psycopg2 import sql
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -8,7 +9,7 @@ load_dotenv()
 from NewsSentiment import TargetSentimentClassifier
 tsc = TargetSentimentClassifier()
 
-from helpers import find_company_in_title, get_first_paragraph, split_on_aspect, choose_input_text
+from helpers import get_first_paragraph, split_on_aspect, choose_input_text
 
 DB_URL = os.environ.get("POOLER_DATABASE_URL")
 if not DB_URL:
@@ -16,14 +17,10 @@ if not DB_URL:
     sys.exit(1)
 
 CONFIDENCE_THRESHOLD = 0.9
-OUTPUT_CSV   = "results/mtsc_results.csv"
-OUTPUT_EXCEL = "results/mtsc_results.xlsx"
 
 DB_SCHEMA = os.environ.get("DB_SCHEMA", "public")
-TOP_COMPANIES_TABLE = "top_companies"
-ARTICLES_TABLE = "articles_no_title_deduped"
-TOP_COMPANIES_FQN = f'"{DB_SCHEMA}"."{TOP_COMPANIES_TABLE}"'
-ARTICLES_FQN = f'"{DB_SCHEMA}"."{ARTICLES_TABLE}"'
+TOP_COMPANIES_TABLE = os.environ.get("TOP_COMPANIES_TABLE", "top_companies")
+ARTICLES_TABLE = os.environ.get("ARTICLES_TABLE", "articles_no_title_deduped")
 
 
 # Step 1: Pull & filter articles from DB
@@ -33,66 +30,54 @@ def fetch_articles(sample_n: int | None = None) -> pd.DataFrame:
     conn = psycopg2.connect(DB_URL)
     cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    cur.execute(f"SELECT id, name, symbol FROM {TOP_COMPANIES_FQN}")
-    companies = cur.fetchall()
+    # Table is already title-checked and deduplicated upstream; fetch only unscored rows.
+    query = sql.SQL("""
+        SELECT
+            a.id,
+            a.company_id,
+            COALESCE(c.symbol, '') AS ticker,
+            COALESCE(c.name, '')   AS company_name,
+            a.title,
+            a.content,
+            a.url,
+            a.source,
+            a.published_at
+        FROM {}.{} a
+        LEFT JOIN {}.{} c ON c.id = a.company_id
+        WHERE a.pos_score IS NULL
+        ORDER BY a.published_at DESC
+    """).format(
+        sql.Identifier(DB_SCHEMA),
+        sql.Identifier(ARTICLES_TABLE),
+        sql.Identifier(DB_SCHEMA),
+        sql.Identifier(TOP_COMPANIES_TABLE),
+    )
 
-    rows_out  = []
-    seen      = set()   # (company_id, title_key) for dedup
-    stats     = dict(fetched=0, dupes=0, kept=0)
+    params = []
+    if sample_n:
+        query += sql.SQL(" LIMIT %s")
+        params.append(sample_n)
 
-    for comp in companies:
-        company_id   = comp["id"]
-        company_name = comp["name"]
-        ticker       = comp["symbol"]
+    cur.execute(query, tuple(params))
+    fetched = cur.fetchall()
 
-        limit_clause = f"LIMIT {sample_n}" if sample_n else ""
-        # Only fetch articles that haven't been scored yet
-        cur.execute(f"""
-            SELECT id, title, content, url, source, published_at
-                        FROM   {ARTICLES_FQN}
-            WHERE  company_id = %s
-              AND  pos_score IS NULL
-            ORDER  BY published_at DESC
-            {limit_clause}
-        """, (company_id,))
-
-        fetched = cur.fetchall()
-        stats["fetched"] += len(fetched)
-
-        kept = dupes = 0
-        for row in fetched:
-            title = (row["title"] or "").strip()
-
-            # Deduplicate
-            key = (company_id, re.sub(r'\s+', ' ', title.lower().strip()))
-            if key in seen:
-                dupes += 1
-                continue
-            seen.add(key)
-
-            rows_out.append({
-                "original_id":     row["id"],
-                "company_id":      company_id,
-                "ticker":          ticker,
-                "company_name":    company_name,
-                "title":           title,
-                "first_paragraph": get_first_paragraph(row.get("content") or ""),
-                "url":             row.get("url"),
-                "source":          row.get("source"),
-                "published_at":    str(row.get("published_at") or "")[:10],
-            })
-            kept += 1
-
-        stats["dupes"]    += dupes
-        stats["kept"]     += kept
-        print(f"  [{ticker}] fetched={len(fetched):,} | kept={kept:,} | "
-              f"dupes={dupes}")
+    rows_out = []
+    for row in fetched:
+        rows_out.append({
+            "original_id":     row["id"],
+            "company_id":      row["company_id"],
+            "ticker":          row["ticker"],
+            "company_name":    row["company_name"],
+            "title":           (row["title"] or "").strip(),
+            "first_paragraph": get_first_paragraph(row.get("content") or ""),
+            "url":             row.get("url"),
+            "source":          row.get("source"),
+            "published_at":    str(row.get("published_at") or "")[:10],
+        })
 
     conn.close()
 
-    print(f"\n  Total fetched:       {stats['fetched']:,}")
-    print(f"  Duplicates removed:  {stats['dupes']:,}")
-    print(f"  Clean articles:      {stats['kept']:,}")
+    print(f"\n  Unscored rows fetched: {len(rows_out):,}")
     return pd.DataFrame(rows_out)
 
 
@@ -173,10 +158,10 @@ def run_mtsc(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(results)
 
 
-# ── Step 3: Save outputs & Populate DB ────────────────────────────
-def save_outputs(df: pd.DataFrame):
+# ── Step 3: Populate DB scores only ────────────────────────────────
+def update_db_scores(df: pd.DataFrame):
     print("\n" + "=" * 60)
-    print("STEP 3: Saving outputs & Updating DB")
+    print("STEP 3: Updating DB with MTSC scores")
     print("=" * 60)
 
     # 1. Save to DB
@@ -184,11 +169,14 @@ def save_outputs(df: pd.DataFrame):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     
-    update_query = f"""
-        UPDATE {ARTICLES_FQN}
+    update_query = sql.SQL("""
+        UPDATE {}.{}
         SET pos_score = %s, neutral_score = %s, neg_score = %s
         WHERE id = %s
-    """
+    """).format(
+        sql.Identifier(DB_SCHEMA),
+        sql.Identifier(ARTICLES_TABLE),
+    )
     
     updates = []
     for row in df.itertuples(index=False):
@@ -205,39 +193,21 @@ def save_outputs(df: pd.DataFrame):
         cur.close()
         conn.close()
 
-
-    # 2. Save CSV / Excel
-    df_high = df[df["high_confidence"]].copy()
-
-    df.to_csv(OUTPUT_CSV, index=False)
-    print(f"Full CSV:  {OUTPUT_CSV}  ({len(df):,} rows)")
-
-    display_cols = [
-        "ticker", "company_name", "published_at", "title",
-        "prob_positive", "prob_negative", "prob_neutral",
-        "max_confidence", "stance", "source", "url",
-    ]
-
-    with pd.ExcelWriter(OUTPUT_EXCEL, engine="openpyxl") as writer:
-        df_high[display_cols].to_excel(
-            writer, sheet_name=f"High Confidence (>{CONFIDENCE_THRESHOLD})", index=False)
-        df[display_cols].to_excel(
-            writer, sheet_name="All Scored", index=False)
-        summary = (df_high.groupby(["ticker", "stance"])
-                   .size().unstack(fill_value=0))
-        summary["total"] = summary.sum(axis=1)
-        summary.to_excel(writer, sheet_name="Summary by Company")
-
-    print(f"Excel:     {OUTPUT_EXCEL}")
-
     print(f"Results Summary")
     print(f"Total scored:            {len(df):,}")
+    df_high = df[df["high_confidence"]]
     print(f"High confidence (>{CONFIDENCE_THRESHOLD}): {len(df_high):,}")
-    print(f"Ambiguous (rejected):    {len(df) - len(df_high):,}")
+    print(f"Low confidence:          {len(df) - len(df_high):,}")
     print(f"\nStance (high confidence):")
-    print(df_high["stance"].value_counts().to_string())
+    if df_high.empty:
+        print("None")
+    else:
+        print(df_high["stance"].value_counts().to_string())
     print(f"\nPer company:")
-    print(df_high.groupby("ticker")["stance"].value_counts().to_string())
+    if df_high.empty:
+        print("None")
+    else:
+        print(df_high.groupby("ticker")["stance"].value_counts().to_string())
 
 
 # Main
@@ -258,4 +228,4 @@ if __name__ == "__main__":
     if df_scored.empty:
         print("No articles were scored successfully. Check the error messages above.")
         sys.exit(1)
-    save_outputs(df_scored)
+    update_db_scores(df_scored)
