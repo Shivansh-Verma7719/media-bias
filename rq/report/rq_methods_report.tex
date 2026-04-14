@@ -8,6 +8,7 @@
 \usepackage{mathtools}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{float}
 
 \hypersetup{
   colorlinks=true,
@@ -97,47 +98,49 @@ p_k = 2\,\Phi(-|t_k|),\quad t_k=\frac{\hat{\theta}_k}{\widehat{\mathrm{SE}}(\hat
 \item \textbf{Stable measurement process:} NewsMTSC score mapping is comparable over time.
 \end{enumerate}
 
-\subsection*{Pre-Period Diagnostic and Fallback Trigger}
-Compute firm pre means:
-\[
-\mu_i^{\mathrm{pre}} = \frac{1}{T_i^{\mathrm{pre}}}\sum_{t \in \mathrm{pre}}\text{bias}_{it}.
-\]
-Track min, max, range, and standard deviation across firms. If range exceeds tolerance (default 0.02), run SCDiD fallback.
+\subsection*{Results: Confidence-Threshold Sensitivity}
+RQ1 was re-estimated three times with confidence thresholds $\tau\in\{0.0, 0.6, 0.9\}$.
+For each experiment, the table reports FE coefficients, article counts, and within-$R^2$.
 
-\subsection*{SCDiD Fallback (Compact)}
-\begin{itemize}[leftmargin=1.5em]
-\item For each firm $i$, estimate donor weights from pre period:
-\[
-\hat{w}_i=\arg\min_w\|y_{\mathrm{pre}}-X_{\mathrm{pre}}w\|_2^2,
-\]
-then truncate negatives and renormalize.
-\item Build post synthetic path $\hat{y}^{\mathrm{syn}}_{it}=X_{\mathrm{post},t}\tilde{w}_i$.
-\item Firm effect:
-\[
-\hat{\tau}_i=\frac{1}{T_i^{\mathrm{post}}}\sum_{t\in\mathrm{post}}(y_{it}-\hat{y}^{\mathrm{syn}}_{it}).
-\]
-\item Aggregate fallback effect:
-\[
-\hat{\tau}_{\mathrm{SCDiD}}=\frac{1}{N^*}\sum_{i=1}^{N^*}\hat{\tau}_i,
-\quad
-\widehat{\mathrm{SE}}=\frac{s_{\hat{\tau}}}{\sqrt{N^*}}.
-\]
-\end{itemize}
-
-\subsection*{Fallback Eligibility}
-A firm is included in fallback only if it has:
-\begin{itemize}[leftmargin=1.5em]
-\item at least 180 observed pre-period days,
-\item at least 180 observed post-period days,
-\item sufficient donor coverage for synthetic fitting.
-\end{itemize}
-
-\subsection*{Results}
-\textbf{Sample and diagnostics.} The estimation panel contains 31,575 firm-day observations across 22 firms (2015-01-01 to 2025-11-12). Pre-period firm means are highly dispersed (range $=0.733$, SD $=0.157$), so the SCDiD fallback is activated.
-
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\caption*{Table RQ1-A: Entity FE Regression (HC1 Robust SE)}
+\caption*{Table RQ1-A: FE Results at Confidence Threshold $\tau=0.0$}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+\midrule
+Post & 0.0208 & 0.0033 & 6.3568 & 0.000000 & 0.0144 & 0.0272 \\
+Article Volume & -0.0006 & 0.0001 & -7.8722 & 0.000000 & -0.0008 & -0.0005 \\
+VIX & 0.0002 & 0.0002 & 0.7053 & 0.4806 & -0.0003 & 0.0006 \\
+\midrule
+Raw Articles (after filters) & 462,788 & \multicolumn{5}{r}{} \\
+Firm-day Observations ($n$) & 49,136 & \multicolumn{5}{r}{} \\
+Within $R^2$ & 0.001792 & \multicolumn{5}{r}{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption*{Table RQ1-B: FE Results at Confidence Threshold $\tau=0.6$}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+\midrule
+Post & 0.0232 & 0.0036 & 6.4321 & 0.000000 & 0.0161 & 0.0302 \\
+Article Volume & -0.0009 & 0.0001 & -8.4881 & 0.000000 & -0.0011 & -0.0007 \\
+VIX & 0.0002 & 0.0002 & 0.6800 & 0.4965 & -0.0003 & 0.0006 \\
+\midrule
+Raw Articles (after filters) & 378,573 & \multicolumn{5}{r}{} \\
+Firm-day Observations ($n$) & 46,681 & \multicolumn{5}{r}{} \\
+Within $R^2$ & 0.002041 & \multicolumn{5}{r}{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption*{Table RQ1-C: FE Results at Confidence Threshold $\tau=0.9$}
 \begin{tabular}{lrrrrrr}
 \toprule
 Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
@@ -145,26 +148,17 @@ Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
 Post & 0.0258 & 0.0052 & 4.9425 & 0.000001 & 0.0155 & 0.0360 \\
 Article Volume & -0.0028 & 0.0003 & -9.4603 & 0.000000 & -0.0033 & -0.0022 \\
 VIX & 0.0005 & 0.0004 & 1.4886 & 0.1366 & -0.0002 & 0.0012 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[ht]
-\centering
-\caption*{Table RQ1-B: SCDiD Fallback Summary}
-\begin{tabular}{lrrr}
-\toprule
-Metric & Estimate & CI Low & CI High \\
 \midrule
-Avg. Post Effect & -0.1221 & -0.2034 & -0.0407 \\
-SE Across Firms & 0.0415 & -- & -- \\
-Firms Used & 16 & -- & -- \\
+Raw Articles (after filters) & 136,787 & \multicolumn{5}{r}{} \\
+Firm-day Observations ($n$) & 31,575 & \multicolumn{5}{r}{} \\
+Within $R^2$ & 0.002613 & \multicolumn{5}{r}{} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Interpretation.} The baseline FE model indicates a positive post-2020 shift in daily stance. However, the fallback SCDiD estimate is negative, indicating direction sensitivity under strong pre-period imbalance. Report RQ1 as evidence of a structural shift with specification-dependent sign.
+\textbf{Interpretation.} Across thresholds, the post coefficient remains positive and statistically significant. As the threshold increases, article coverage declines while the post effect magnitude increases slightly and within-$R^2$ rises modestly.
 
+\newpage
 \section*{RQ2}
 \textbf{Question.} Did the 2020 recession shock affect stock prices differently pre versus post, at the market level?
 
@@ -193,11 +187,8 @@ Controls:
 \]
 As in RQ1, estimation uses entity fixed effects and HC1 robust standard errors.
 
-\subsection*{Identification and Fallback Rule}
-Pre-period firm means are evaluated as in RQ1. If cross-firm pre means are sufficiently equal, FE remains the primary estimate; otherwise SCDiD fallback is triggered.
-
 \subsection*{Results}
-\textbf{Sample and diagnostics.} The estimation panel contains 62,667 firm-day observations across 26 firms (2015-12-01 to 2025-11-24). Pre-period means are tightly clustered (range $=0.00193$, SD $=0.00042$), so fallback is \textbf{not} triggered.
+\textbf{Sample and diagnostics.} The estimation panel contains 62,667 firm-day observations across 26 firms (2015-12-01 to 2025-11-24). Pre-period means are tightly clustered (range $=0.00193$, SD $=0.00042$).
 
 \begin{table}[ht]
 \centering

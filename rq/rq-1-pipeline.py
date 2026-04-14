@@ -110,6 +110,63 @@ def fetch_article_scores(
     return df
 
 
+def fetch_article_filter_diagnostics(
+    db_url: str,
+    schema: str,
+    table: str,
+    confidence_threshold: float,
+) -> dict[str, Any]:
+    schema = validate_identifier(schema, "schema")
+    table = validate_identifier(table, "table")
+
+    query = f"""
+        SELECT
+            COUNT(*) AS total_rows_date_window,
+            COUNT(*) FILTER (WHERE company_id IS NOT NULL) AS rows_with_company,
+            COUNT(*) FILTER (
+                WHERE pos_score IS NOT NULL
+                  AND neg_score IS NOT NULL
+                  AND neutral_score IS NOT NULL
+            ) AS rows_with_all_scores,
+            COUNT(*) FILTER (
+                WHERE company_id IS NOT NULL
+                  AND pos_score IS NOT NULL
+                  AND neg_score IS NOT NULL
+                  AND neutral_score IS NOT NULL
+            ) AS rows_company_and_scores,
+            COUNT(*) FILTER (
+                WHERE company_id IS NOT NULL
+                  AND pos_score IS NOT NULL
+                  AND neg_score IS NOT NULL
+                  AND neutral_score IS NOT NULL
+                  AND GREATEST(pos_score, neg_score, neutral_score) >= %s
+            ) AS rows_after_threshold,
+            COUNT(DISTINCT company_id) FILTER (
+                WHERE company_id IS NOT NULL
+                  AND pos_score IS NOT NULL
+                  AND neg_score IS NOT NULL
+                  AND neutral_score IS NOT NULL
+                  AND GREATEST(pos_score, neg_score, neutral_score) >= %s
+            ) AS firms_after_threshold
+        FROM {schema}.{table}
+        WHERE published_at::date BETWEEN %s AND %s
+    """
+
+    with psycopg2.connect(db_url) as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (confidence_threshold, confidence_threshold, PRE_START, POST_END))
+            row = cur.fetchone()
+
+    return {
+        "total_rows_date_window": int(row[0]),
+        "rows_with_company": int(row[1]),
+        "rows_with_all_scores": int(row[2]),
+        "rows_company_and_scores": int(row[3]),
+        "rows_after_threshold": int(row[4]),
+        "firms_after_threshold": int(row[5]),
+    }
+
+
 def build_daily_panel(raw_df: pd.DataFrame) -> pd.DataFrame:
     working = raw_df.copy()
     working["stance_component"] = working["pos_score"] - working["neg_score"]
@@ -281,7 +338,6 @@ def pre_period_mean_diagnostic(
             "range": np.nan,
             "std": np.nan,
             "means_equal": False,
-            "trigger_scdid": True,
         }
 
     spread = float(pre_means.max() - pre_means.min())
@@ -295,105 +351,16 @@ def pre_period_mean_diagnostic(
         "range": spread,
         "std": std,
         "means_equal": bool(means_equal),
-        "trigger_scdid": bool(not means_equal),
-    }
-
-
-def _synthetic_weights(x_pre: np.ndarray, y_pre: np.ndarray) -> np.ndarray:
-    # Unconstrained least squares, then project to simplex-like nonnegative weights.
-    w, *_ = np.linalg.lstsq(x_pre, y_pre, rcond=None)
-    w = np.clip(w, 0.0, None)
-    s = float(w.sum())
-    if s <= 0:
-        return np.ones(x_pre.shape[1]) / x_pre.shape[1]
-    return w / s
-
-
-def run_scdid_fallback(
-    panel: pd.DataFrame,
-    min_pre_days: int = 180,
-    min_post_days: int = 180,
-) -> dict[str, Any]:
-    pivot = panel.pivot_table(index="date", columns="company_id", values="daily_stance", aggfunc="mean")
-    pre_dates = pivot.index[(pivot.index >= pd.Timestamp(PRE_START)) & (pivot.index <= pd.Timestamp(PRE_END))]
-    post_dates = pivot.index[(pivot.index >= pd.Timestamp(POST_START)) & (pivot.index <= pd.Timestamp(POST_END))]
-
-    effects: list[float] = []
-    used_firms = 0
-
-    for firm in pivot.columns:
-        y_pre_full = pivot.loc[pre_dates, firm]
-        y_post_full = pivot.loc[post_dates, firm]
-
-        if y_pre_full.notna().sum() < min_pre_days or y_post_full.notna().sum() < min_post_days:
-            continue
-
-        donors = [c for c in pivot.columns if c != firm]
-        x_pre = pivot.loc[pre_dates, donors]
-        x_post = pivot.loc[post_dates, donors]
-
-        # Keep pre rows where treated is observed and enough donor signal exists.
-        valid_pre = y_pre_full.notna() & (x_pre.notna().sum(axis=1) >= 5)
-        if valid_pre.sum() < min_pre_days:
-            continue
-
-        x_pre_use = x_pre.loc[valid_pre].copy()
-        y_pre_use = y_pre_full.loc[valid_pre].to_numpy(dtype=float)
-
-        donor_means = x_pre_use.mean(axis=0)
-        x_pre_use = x_pre_use.fillna(donor_means)
-        x_pre_np = x_pre_use.to_numpy(dtype=float)
-
-        if x_pre_np.shape[1] == 0:
-            continue
-
-        w = _synthetic_weights(x_pre_np, y_pre_use)
-
-        x_post_use = x_post.fillna(donor_means)
-        y_post_use = y_post_full
-        valid_post = y_post_use.notna()
-        if valid_post.sum() < min_post_days:
-            continue
-
-        y_post_np = y_post_use.loc[valid_post].to_numpy(dtype=float)
-        x_post_np = x_post_use.loc[valid_post].to_numpy(dtype=float)
-
-        if x_post_np.shape[0] == 0:
-            continue
-
-        synth_post = x_post_np @ w
-        firm_effect = float(np.mean(y_post_np - synth_post))
-        effects.append(firm_effect)
-        used_firms += 1
-
-    if not effects:
-        return {
-            "available": False,
-            "message": "Insufficient data to compute SCDiD fallback.",
-        }
-
-    effects_arr = np.array(effects, dtype=float)
-    avg_effect = float(np.mean(effects_arr))
-    se = float(np.std(effects_arr, ddof=1) / math.sqrt(len(effects_arr))) if len(effects_arr) > 1 else np.nan
-
-    return {
-        "available": True,
-        "n_firms_used": int(used_firms),
-        "avg_post_effect": avg_effect,
-        "se_across_firms": se,
-        "ci95_low": float(avg_effect - 1.96 * se) if np.isfinite(se) else np.nan,
-        "ci95_high": float(avg_effect + 1.96 * se) if np.isfinite(se) else np.nan,
-        "notes": "Firm-by-firm synthetic control fallback using donor firms to build post-period counterfactuals.",
     }
 
 
 def write_outputs(
     output_dir: Path,
     panel: pd.DataFrame,
+    raw_articles: pd.DataFrame,
     fe_result: OLSResult,
     regressor_names: list[str],
     diagnostics: dict[str, Any],
-    scdid_result: dict[str, Any] | None,
     metadata: dict[str, Any],
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -432,40 +399,130 @@ def write_outputs(
         "diagnostics": {
             "pre_period_means": diagnostics,
         },
-        "fallback_scdid": scdid_result,
         "coefficients": coef_rows,
     }
 
     with open(output_dir / "rq1_summary.json", "w", encoding="ascii") as f:
         json.dump(payload, f, indent=2)
 
-    summary_lines = [
-        "RQ1 Regression Pipeline Summary",
-        "=" * 40,
-        f"Rows in panel: {len(panel):,}",
-        f"Firms: {panel['company_id'].nunique():,}",
-        f"Date range: {panel['date'].min().date()} to {panel['date'].max().date()}",
+    # Build expanded report stats.
+    panel_start = pd.Timestamp(panel["date"].min())
+    panel_end = pd.Timestamp(panel["date"].max())
+    panel_days_present = int(panel["date"].nunique())
+    panel_calendar_days = int((panel_end - panel_start).days + 1)
+    panel_firms = int(panel["company_id"].nunique())
+    firm_day_possible = int(panel_firms * panel_days_present)
+    firm_day_observed = int(len(panel))
+    firm_day_density = (
+        float(firm_day_observed / firm_day_possible) if firm_day_possible > 0 else float("nan")
+    )
+
+    total_articles = int(len(raw_articles))
+    panel_article_assignments = int(panel["article_volume"].sum())
+    avg_articles_per_firm_day = (
+        float(panel["article_volume"].mean()) if firm_day_observed > 0 else float("nan")
+    )
+    median_articles_per_firm_day = (
+        float(panel["article_volume"].median()) if firm_day_observed > 0 else float("nan")
+    )
+
+    pre_mask = (panel["date"] >= pd.Timestamp(PRE_START)) & (panel["date"] <= pd.Timestamp(PRE_END))
+    post_mask = (panel["date"] >= pd.Timestamp(POST_START)) & (panel["date"] <= pd.Timestamp(POST_END))
+    pre_panel = panel.loc[pre_mask]
+    post_panel = panel.loc[post_mask]
+
+    def _safe_mean(series: pd.Series) -> float:
+        return float(series.mean()) if len(series) > 0 else float("nan")
+
+    md_lines = [
+        "# RQ1 Regression Pipeline Summary",
         "",
-        "Main FE result:",
-        f"  beta(Post): {fe_result.beta[0]:.6f}",
-        f"  se(HC1):    {fe_result.se[0]:.6f}",
-        f"  p-value:    {fe_result.p_value[0]:.6f}",
+        "## Context",
         "",
-        "Pre-period mean diagnostic:",
-        f"  firms:      {diagnostics.get('n_firms')}",
-        f"  range:      {diagnostics.get('range')}",
-        f"  std:        {diagnostics.get('std')}",
-        f"  means_equal (tol): {diagnostics.get('means_equal')}",
+        "| Field | Value |",
+        "|---|---:|",
+        f"| Source table | {metadata.get('schema')}.{metadata.get('table')} |",
+        f"| Confidence threshold | {metadata.get('confidence_threshold')} |",
+        f"| VIX source | {metadata.get('vix_source')} |",
+        f"| Pre period | {PRE_START} to {PRE_END} |",
+        f"| Post period | {POST_START} to {POST_END} |",
         "",
+        "## Data Flow Counts",
+        "",
+        "| Stage | Count |",
+        "|---|---:|",
+        f"| Raw article rows after SQL filters | {total_articles:,} |",
+        f"| Raw firms after SQL filters | {raw_articles['company_id'].nunique():,} |",
+        f"| Total article assignments in panel | {panel_article_assignments:,} |",
+        f"| Firm-day rows in panel | {firm_day_observed:,} |",
+        f"| Firms in panel | {panel_firms:,} |",
+        "",
+        "## Time Coverage",
+        "",
+        "| Metric | Value |",
+        "|---|---:|",
+        f"| Panel start date | {panel_start.date()} |",
+        f"| Panel end date | {panel_end.date()} |",
+        f"| Distinct days with at least one firm observed | {panel_days_present:,} |",
+        f"| Calendar days from min to max | {panel_calendar_days:,} |",
+        f"| Observed firm-day rows | {firm_day_observed:,} |",
+        f"| Possible firm-day rows (firms x observed days) | {firm_day_possible:,} |",
+        f"| Firm-day density | {firm_day_density:.4f} |",
+        "",
+        "## Pre vs Post Panel Split",
+        "",
+        "| Split | Firm-day rows | Distinct firms | Distinct days | Mean daily stance | Mean article volume |",
+        "|---|---:|---:|---:|---:|---:|",
+        f"| Pre ({PRE_START} to {PRE_END}) | {len(pre_panel):,} | {pre_panel['company_id'].nunique():,} | {pre_panel['date'].nunique():,} | {_safe_mean(pre_panel['daily_stance']):.6f} | {_safe_mean(pre_panel['article_volume']):.3f} |",
+        f"| Post ({POST_START} to {POST_END}) | {len(post_panel):,} | {post_panel['company_id'].nunique():,} | {post_panel['date'].nunique():,} | {_safe_mean(post_panel['daily_stance']):.6f} | {_safe_mean(post_panel['article_volume']):.3f} |",
+        "",
+        "## Volume Distribution",
+        "",
+        "| Metric | Value |",
+        "|---|---:|",
+        f"| Avg articles per firm-day | {avg_articles_per_firm_day:.3f} |",
+        f"| Median articles per firm-day | {median_articles_per_firm_day:.3f} |",
+        f"| Min articles per firm-day | {int(panel['article_volume'].min()):,} |",
+        f"| Max articles per firm-day | {int(panel['article_volume'].max()):,} |",
+        "",
+        "## Main FE Result",
+        "",
+        "| Variable | Coef | SE (HC1) | t-stat | p-value (normal approx) | 95% CI low | 95% CI high |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
 
-    if scdid_result:
-        summary_lines.append("SCDiD fallback:")
-        summary_lines.append(f"  {json.dumps(scdid_result)}")
+    for i, name in enumerate(regressor_names):
+        md_lines.append(
+            f"| {name} | {fe_result.beta[i]:.6f} | {fe_result.se[i]:.6f} | {fe_result.t_stat[i]:.6f} | {fe_result.p_value[i]:.6g} | {fe_result.ci_low[i]:.6f} | {fe_result.ci_high[i]:.6f} |"
+        )
 
-    with open(output_dir / "rq1_summary.txt", "w", encoding="ascii") as f:
-        f.write("\n".join(summary_lines) + "\n")
+    md_lines.extend(
+        [
+            "",
+            "## Model Fit",
+            "",
+            "| Metric | Value |",
+            "|---|---:|",
+            f"| Estimator | Entity fixed-effects OLS (within), HC1 robust SE |",
+            f"| Observations | {fe_result.n_obs:,} |",
+            f"| Regressors | {fe_result.n_regressors:,} |",
+            f"| Within R2 | {fe_result.r2:.6f} |",
+            "",
+            "## Pre-Period Mean Diagnostic",
+            "",
+            "| Metric | Value |",
+            "|---|---:|",
+            f"| Firms | {diagnostics.get('n_firms')} |",
+            f"| Min firm pre mean | {diagnostics.get('min')} |",
+            f"| Max firm pre mean | {diagnostics.get('max')} |",
+            f"| Range | {diagnostics.get('range')} |",
+            f"| Std | {diagnostics.get('std')} |",
+            f"| Means equal (tolerance rule) | {diagnostics.get('means_equal')} |",
+        ]
+    )
 
+    with open(output_dir / "rq1_summary.md", "w", encoding="ascii") as f:
+        f.write("\n".join(md_lines) + "\n")
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="RQ1 FE regression pipeline for media bias shift around 2020 recession.")
@@ -475,7 +532,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--confidence-threshold",
         type=float,
-        default=0.90,
+        default=0.0,
         help="High-confidence threshold based on max(pos,neg,neutral)",
     )
     parser.add_argument(
@@ -500,12 +557,7 @@ def parse_args() -> argparse.Namespace:
         "--pre-mean-tolerance",
         type=float,
         default=0.02,
-        help="If pre-period firm mean range exceeds this value, trigger SCDiD fallback",
-    )
-    parser.add_argument(
-        "--skip-scdid",
-        action="store_true",
-        help="Skip SCDiD fallback even if diagnostic triggers",
+        help="Tolerance used to flag unequal pre-period firm means in diagnostics",
     )
     parser.add_argument(
         "--output-dir",
@@ -520,6 +572,14 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     db_url = resolve_db_url()
+
+    print("Computing SQL filter diagnostics...")
+    filter_diag = fetch_article_filter_diagnostics(
+        db_url=db_url,
+        schema=args.schema,
+        table=args.table,
+        confidence_threshold=args.confidence_threshold,
+    )
 
     print("Fetching article scores from database...")
     raw = fetch_article_scores(
@@ -551,11 +611,6 @@ def main() -> None:
     print("Running pre-period diagnostic...")
     diag = pre_period_mean_diagnostic(panel, tolerance=args.pre_mean_tolerance)
 
-    scdid_result = None
-    if diag.get("trigger_scdid") and not args.skip_scdid:
-        print("Pre-period means differ across firms: running SCDiD fallback...")
-        scdid_result = run_scdid_fallback(panel)
-
     metadata = {
         "schema": args.schema,
         "table": args.table,
@@ -563,16 +618,17 @@ def main() -> None:
         "vix_source": f"{args.vix_schema}.{args.vix_table}" if not args.vix_csv else args.vix_csv,
         "pre_period": [PRE_START, PRE_END],
         "post_period": [POST_START, POST_END],
+        "sql_filter_diagnostics": filter_diag,
     }
 
     print("Writing outputs...")
     write_outputs(
         output_dir=Path(args.output_dir),
         panel=panel,
+        raw_articles=raw,
         fe_result=fe_result,
         regressor_names=regressor_names,
         diagnostics=diag,
-        scdid_result=scdid_result,
         metadata=metadata,
     )
 
