@@ -33,3 +33,7 @@ data/backups/
 ism-gdelt-key.json
 # Large result files
 results/*.csv
+
+# Large inference outputs (too big for GitHub)
+relevance_classifier/full_predictions_*.csv
+relevance_classifier_v2/full_predictions_*.csv
