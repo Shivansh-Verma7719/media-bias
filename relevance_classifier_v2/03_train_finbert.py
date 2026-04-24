@@ -28,8 +28,22 @@ import os
 
 DEFAULT_MODEL = 'microsoft/deberta-v3-base'
 
-# Gold-labeled rows get 3x weight in loss — they are ground truth, synthetic adds coverage
-GOLD_WEIGHT = 3.0
+# Gold-labeled rows get 5x weight in loss — they are ground truth, synthetic adds coverage
+GOLD_WEIGHT = 5.0
+
+
+class FocalLoss(torch.nn.Module):
+    """Focal loss: down-weights easy correct examples, focuses on hard boundary cases.
+    gamma=0 reduces to standard cross-entropy. gamma=2 is the standard focal setting."""
+    def __init__(self, weight=None, gamma=2.0):
+        super().__init__()
+        self.weight = weight
+        self.gamma = gamma
+
+    def forward(self, logits, targets):
+        ce = torch.nn.functional.cross_entropy(logits, targets, weight=self.weight, reduction='none')
+        pt = torch.exp(-ce)
+        return ((1 - pt) ** self.gamma) * ce
 
 
 class TitleDataset(Dataset):
@@ -134,6 +148,8 @@ def main():
     parser.add_argument("--max_len",         "-m", type=int, default=128)
     parser.add_argument("--test_file",       "-t", type=str, default=None,
                         help="Optional: run threshold sweep on this CSV (title,label) after training")
+    parser.add_argument("--focal_gamma",     "-g", type=float, default=2.0,
+                        help="Focal loss gamma (0=standard CE, 2=standard focal). Default: 2.0")
     args = parser.parse_args()
 
     print(f"Base model: {args.base_model}")
@@ -186,11 +202,11 @@ def main():
         if len(class_weights) == 2 and class_weights[1] / class_weights[0] > 1.5:
             class_weights[1] = class_weights[0] * 1.5
         print(f"  Class weights: irr={class_weights[0]:.3f} rel={class_weights[1]:.3f}")
-        # reduction='none' so we can apply per-sample gold upweighting
-        criterion = torch.nn.CrossEntropyLoss(
-            weight=torch.tensor(class_weights, dtype=torch.float).to(device),
-            reduction='none',
-        )
+        cw_tensor = torch.tensor(class_weights, dtype=torch.float).to(device)
+        if args.focal_gamma > 0:
+            criterion = FocalLoss(weight=cw_tensor, gamma=args.focal_gamma)
+        else:
+            criterion = torch.nn.CrossEntropyLoss(weight=cw_tensor, reduction='none')
 
         train_ds = TitleDataset(train_titles, train_targets, tokenizer, args.max_len, train_weights)
         val_ds   = TitleDataset(val_titles,   val_targets,   tokenizer, args.max_len, val_weights)
