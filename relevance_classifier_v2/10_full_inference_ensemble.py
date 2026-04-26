@@ -35,7 +35,7 @@ from rule_adjuster import adjust_batch
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 DB_BATCH_SIZE        = 5000
-INFERENCE_BATCH_SIZE = 64
+INFERENCE_BATCH_SIZE = 256
 MAX_LEN              = 128
 ENSEMBLE_THRESHOLD   = 0.65
 
@@ -166,6 +166,7 @@ def load_models(model_paths: list[str], weights: list[float], device):
         tokenizers.append(AutoTokenizer.from_pretrained(path))
         m = AutoModelForSequenceClassification.from_pretrained(path).to(device)
         m.eval()
+        m = torch.quantization.quantize_dynamic(m, {torch.nn.Linear}, dtype=torch.qint8)
         models.append(m)
     return models, tokenizers, np.array(weights) / sum(weights)
 
