@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+import math
 import numpy as np
 import pandas as pd
 
@@ -17,7 +18,7 @@ RESULTS = ROOT / "results"
 
 def _normal_2sided_p(t_stat: np.ndarray) -> np.ndarray:
     abs_t = np.abs(t_stat)
-    return np.array([np.math.erfc(float(v) / np.sqrt(2.0)) for v in abs_t])
+    return np.array([math.erfc(float(v) / math.sqrt(2.0)) for v in abs_t])
 
 
 def _cluster_robust_inference(x_tilde: np.ndarray, resid: np.ndarray, clusters: pd.Series) -> dict | None:

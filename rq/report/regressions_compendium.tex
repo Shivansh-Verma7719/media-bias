@@ -46,46 +46,13 @@
 \setstretch{1.05}
 \small
 
-\section*{Overview}
-This document consolidates every regression specification estimated in the ISM Media Bias project on the cross-firm daily/event panels (2015--2025 S\&P 500 firms). The VAR / Granger time-series track for individual tickers is documented separately and is intentionally not included here. For each regression we record: (i) motivation, (ii) the equation, (iii) the estimation sample, (iv) the coefficient table with HC1 robust standard errors, and (v) an interpretation paragraph. A glossary, a cross-regression summary, an identification and robustness section, the open to-dos, and a variables index follow at the end.
-
-\section*{Glossary}\label{sec:glossary}
-\textbf{Project-specific terms.}
-\begin{description}[leftmargin=2em,style=nextline]
-\item[Stance / bias] The signed quantity $p^{+} - p^{-}$ assigned to an article--firm pair by NewsMTSC, where $p^{+}$ and $p^{-}$ are model probabilities for positive and negative stance toward the target firm. Bounded in $[-1, +1]$. Averaged across articles to form a daily firm-day score $\text{bias}_{it}$.
-\item[NewsMTSC] Hamborg and Donnay (2021) target-dependent stance classifier. Produces $(p^{+}, p^{-}, p^{0})$ per article--firm pair. ``Target-dependent'' means the score is specific to a named firm, not a generic article sentiment.
-\item[Confidence threshold ($\tau$)] Minimum $\max\{p^{+}, p^{-}, p^{0}\}$ required to retain an article--firm output. Default $\tau = 0$ (keep all). Sensitivity reported at $\tau \in \{0.0, 0.6, 0.9\}$.
-\item[Relevance classifier] DeBERTa-v3-base binary model that filters titles to those materially about the target firm. Used as a pre-stage before NewsMTSC stance scoring.
-\item[Post indicator] $\text{Post}_t = \mathbb{1}[t \ge 2020\text{-}01\text{-}01]$. Marks the 2020 recession breakpoint. Pre-period: 2015--2019. Post-period: 2020--2025.
-\item[Firm fixed effect ($\alpha_i$)] One intercept per firm, absorbs every time-invariant firm characteristic (sector, size, baseline coverage).
-\item[Time fixed effect ($\delta_t$)] One intercept per day (or per month for some specs), absorbs every firm-invariant time shock (Fed days, COVID waves, election cycles).
-\item[Two-way FE] Both $\alpha_i$ and $\delta_t$ in the same model. Stricter than one-way FE: the Post coefficient $\beta$ is identified only from within-firm-within-day deviations.
-\end{description}
-
-\textbf{Econometric and statistical terms.}
-\begin{description}[leftmargin=2em,style=nextline]
-\item[OLS] Ordinary Least Squares. Estimator that minimizes squared residuals.
-\item[DiD (Difference-in-Differences)] Compares the pre/post change in a treated group with the pre/post change in a control group. With universal treatment (everyone hit by the shock at the same time), DiD reduces to a within-firm pre/post comparison.
-\item[Parallel trends] For DiD to identify a causal effect, treated and control groups must have parallel pre-shock outcomes. Tested by examining pre-period event-study coefficients.
-\item[Event study] Generalizes DiD by replacing a single Post dummy with one dummy per period relative to the event. Coefficients $\beta_k$ at event-time $k$ trace out the dynamic path.
-\item[Reference bin] In an event study, the period whose dummy is omitted to avoid collinearity. All $\beta_k$ are interpreted relative to this reference. Standard choice $k=-1$.
-\item[HC1 robust standard error] Heteroscedasticity-consistent SE with small-sample correction $n/(n-K)$. Default uncertainty estimator when residuals are not homoscedastic.
-\item[Day-clustered SE] Cluster-robust SE with clusters defined at the day level. Robust to arbitrary within-day correlation across firms (useful when all firms share daily macro shocks).
-\item[Within $R^2$] $R^2$ after the fixed-effects within-transform. Measures variance explained within entities (firms), not overall variance.
-\item[$t$-statistic, $p$-value, 95\% CI] $t = \hat{\beta}/\widehat{SE}$; $p = 2\Phi(-|t|)$; $\text{CI} = [\hat{\beta} \pm 1.96 \widehat{SE}]$. Coefficient is significant at 5\% if CI excludes 0.
-\item[$F$-test] Tests joint significance of a group of coefficients. Used here to check whether 4{,}017 daily fixed effects together explain variation beyond what one-way firm FE explains.
-\item[BLUE / Gauss-Markov] An estimator is BLUE if errors have zero mean, constant variance, and no autocorrelation. Robust SEs are used when these fail.
-\item[Breusch-Pagan, Jarque-Bera, VIF, Durbin-Watson] Standard residual diagnostics (heteroscedasticity, normality, collinearity, serial correlation).
-\end{description}
-
 \section*{Project Motivation}\label{sec:motivation}
 The 2020 recession is a clean, universal, exogenous shock to every large-cap US firm. It removes the usual hard problem of finding a valid control group: every firm is treated simultaneously. That makes it a natural setting for testing pre/post structural changes in firm-level outcomes.
 
-The project asks a chain of three questions:
+The project asks a chain of two questions:
 \begin{enumerate}[leftmargin=1.7em]
 \item \textbf{RQ1.} Did the \emph{tone} of media coverage of S\&P 500 firms shift after Jan 2020?
 \item \textbf{RQ2.} Did firm-level \emph{returns} shift after Jan 2020 beyond what market co-movement explains?
-\item \textbf{RQ3.} If both shifted, did the \emph{relationship} between media tone and returns strengthen post-shock?
 \end{enumerate}
 
 \section*{Data and Variable Construction}\label{sec:data}
@@ -122,8 +89,7 @@ Track & Observations & Firms & Date / frequency \\
 \midrule
 RQ1 (daily stance) & 63{,}200 firm-days & 26 & 2015-01-01 to 2025-12-31 daily \\
 RQ2 (daily returns) & 62{,}667 firm-days & 26 & 2015-12-01 to 2025-11-24 daily \\
-RQ3.1 (price-shock events) & 69{,}248 / 64{,}112 events & 26 & 2015-12-01 to 2025-11-24 daily \\
-RQ3.2 (bias $\rightarrow$ return) & 140 (overall) & 26 & 2015-12-01 to 2025-11-24 daily \\
+% RQ3 rows removed
 \bottomrule
 \end{tabular}
 \end{table}
@@ -303,59 +269,9 @@ VIX & $-$0.000001 & 0.000020 & $-$0.043 & 0.965 & $-$0.000039 & 0.000038 \\
 \textbf{Interpretation.} Post-2020 daily returns are about 3.4 basis points lower on average than pre-2020, marginally significant ($p = 0.045$) after stripping out market index movement and volatility. The S\&P 500 coefficient of about 1.13 is a textbook market beta. VIX is essentially zero once the index return is in (the two are highly correlated and the index absorbs the volatility-regime signal).
 
 %================================
-\section*{RQ3.1 --- Event Study Around Extreme Price Shocks}\label{sec:rq3.1}
-\textbf{Motivation.} Test the reverse direction: do extreme \emph{price} moves coincide with shifts in media coverage? An event study centred on $\pm 2\sigma$ price-shock days asks whether the 10 days of stance \emph{after} a price shock differ from the 10 days \emph{before}. Significant change is evidence of a price-to-media channel.
-
-\textbf{Specification.} Paired-event $t$-test on the difference in mean stance between the 10-day windows before and after each $\pm 2\%$ daily return event, pooled across all firm-days that qualify.
-
-\begin{table}[H]
-\centering
-\caption*{Table RQ3.1: Media change around extreme price shocks}
-\begin{tabular}{lrrrrl}
-\toprule
-Event type & Sample size & Mean media change (10d) & $t$-stat & $p$-value & Verdict \\
-\midrule
-Positive price shock ($> +2\%$) & 69{,}248 & 0.003291 & 2.840 & 0.002 & significant \\
-Negative price shock ($< -2\%$) & 64{,}112 & 0.005229 & 4.374 & $< 10^{-5}$ & highly significant \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Interpretation.} Both directions show statistically significant media response to extreme price moves. The post-shock media-change is \emph{positive} in both directions and \emph{larger} for negative price shocks: tone reliably shifts up after a $-2\%$ day, plausibly reflecting analyst rebound coverage.
-
 %================================
-\section*{RQ3.2 --- Bias-to-Returns at Multiple Horizons}\label{sec:rq3.2}
-\textbf{Motivation.} The canonical question of the project: does media bias predict subsequent returns, and does the relationship depend on the sign of the bias signal? Estimated separately at four horizons (1, 5, 14, 30 days) and three regimes (Overall, Positive bias subset, Negative bias subset).
-
-\textbf{Specification.} For each (regime, horizon $h$) pair:
-\[
-\text{return}_{i,t+h} = \alpha + \beta\,\widetilde{\text{bias}}_{it} + \varepsilon_{it},
-\]
-where $\widetilde{\text{bias}}_{it}$ is the firm-demeaned bias and $h \in \{1, 5, 14, 30\}$ trading days ahead.
-
-\begin{table}[H]
-\centering
-\caption*{Table RQ3.2: Bias-to-future-return at multiple horizons (selected rows)}
-\begin{tabular}{llrrrl}
-\toprule
-Regime & Horizon & Coef. on bias & $p$-value & $n$ & Verdict \\
-\midrule
-Overall & 1-day  & $-$0.000682 & 0.471 & 140 & n.s. \\
-Overall & 5-day  & $-$0.000185 & 0.449 & 140 & n.s. \\
-Overall & 14-day & $-$0.000979 & 0.114 & 140 & marginal \\
-\textbf{Overall} & \textbf{30-day} & $\mathbf{-0.001352}$ & $\mathbf{2.55 \times 10^{-19}}$ & \textbf{140} & \textbf{highly significant} \\
-\midrule
-Positive bias & 1-day  & $-$0.003587 & 0.584 & 75 & n.s. \\
-Positive bias & 30-day & $-$0.002835 & 0.018 & 75 & significant \\
-\midrule
-Negative bias & 1-day  & $+$0.004406 & 0.364 & 61 & n.s. \\
-\textbf{Negative bias} & \textbf{14-day} & $\mathbf{-0.002897}$ & \textbf{0.005} & \textbf{61} & \textbf{significant} \\
-Negative bias & 30-day & $+$0.001670 & 0.660 & 61 & n.s. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Interpretation.} At short horizons (1--5 days) bias does not predict returns: the daily market is too noisy. At 14 days the negative-bias regime shows a significant negative effect ($-0.29\%$ further return over the next 14 days, $p = 0.005$). At 30 days the overall effect becomes \emph{very} highly significant ($p < 10^{-18}$): a one-unit bias-demean increase predicts a $-0.135\%$ return 30 days out, consistent with a contrarian or mean-reversion channel. Caveat: $n$ per regression is small (61--140) so the $p$-values rely on cross-event pooling, not firm-day granularity.
+% RQ3 (sections RQ3.1 and RQ3.2) removed per user request.
+%================================
 
 %================================
 \section*{Cross-Regression Summary}\label{sec:summary}
@@ -373,13 +289,12 @@ RQ1.3 & $F$-test on day FE & --- & $F = 1.13$, $p = 1.1 \times 10^{-8}$ & day FE
 RQ1.4 & Monthly event study & stance & Persistent post-shock uplift: $\beta_{+12} = +0.064$, $p < 10^{-3}$ & sig.\ (dynamic) \\
 RQ1.5 & MLR diagnostics & residuals & BP $p < 10^{-42}$; JB $p \approx 0$; VIF $\approx 1$ & HC1 SE justified \\
 RQ2.1 & Firm FE + Post + market + VIX & return & $\beta(\text{Post}) = -0.000344$, $p = 0.045$ & marginally sig. \\
-RQ3.1 & Event study around $\pm 2\sigma$ shocks & media change & $\mu = +0.0033$, $p = 0.002$ (up); $\mu = +0.0052$, $p < 10^{-5}$ (down) & sig.\ both directions \\
-RQ3.2 & Bias $\rightarrow$ return, 30-day overall & return & $\beta = -0.00135$, $p = 2.55 \times 10^{-19}$ & highly sig. \\
+% RQ3 rows removed from summary table
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Reading.} Static pre/post tests (RQ1.1, RQ2.1) are weak or marginal because they compress five post-shock years into a single dummy. Event-study specs (RQ1.4, RQ3.1) tell the real story: stance shifts gradually and locks in higher by year 1; media reliably reacts to extreme price moves. RQ3.2 at 30-day horizon gives the headline causal-style number ($p < 10^{-18}$).
+\textbf{Reading.} Static pre/post tests (RQ1.1, RQ2.1) are weak or marginal because they compress five post-shock years into a single dummy. Event-study specs (RQ1.4) tell the real story: stance shifts gradually and locks in higher by year 1; media reliably reacts to extreme price moves.
 
 %================================
 \section*{Identification and Robustness}\label{sec:robustness}
@@ -396,12 +311,7 @@ RQ3.2 & Bias $\rightarrow$ return, 30-day overall & return & $\beta = -0.00135$,
 \textbf{Relevance filtering.} Before NewsMTSC stance scoring, articles pass through a DeBERTa-v3-base relevance classifier with operating point chosen to satisfy precision $\ge 0.90$ (ensemble current best: $P = 0.944$, $R = 0.810$ on a 187-article held-out test set).
 
 %================================
-\section*{Open To-Dos}\label{sec:todos}
-\begin{enumerate}[leftmargin=1.7em]
-\item \textbf{Log-normalise volume.} Replace $\text{vol}_{it}$ with $\ln(1 + \text{vol}_{it})$ in the RQ1 specifications (RQ1.1, RQ1.2, RQ1.4). Compresses high-coverage outliers and converts the volume coefficient to an elasticity. \emph{Not yet re-estimated.}
-\item \textbf{Two-way FE on returns (RQ2).} Add day or month FE to RQ2.1 to mirror RQ1 and confirm the static Post estimate survives absorbing common time shocks. \emph{Pipeline supports it; not yet run.}
-\end{enumerate}
-
+% Open To-Dos removed per user request.
 %================================
 \section*{Variables Index}\label{sec:vars}
 \begin{table}[H]
@@ -443,8 +353,8 @@ $\widehat{\Var}$ & Estimated variance-covariance matrix & Glossary \\
 RQ1 pipeline: \texttt{rq/rq-1-pipeline.py}.
 RQ2 pipeline: \texttt{rq/rq-2-pipeline.py}.
 MLR diagnostics: \texttt{rq/mlr\_assumptions\_check.py}.
-STMA / RQ3 anomaly detection: \texttt{stma/anomaly\_det/}.
-\textit{Result files.} \texttt{results/rq1/}, \texttt{results/rq2/}, \texttt{stma/anomaly\_det/event\_study/}, \texttt{stma/visualizations/impact\_analysis/}.
-\textit{Time-series VAR / Granger track is documented separately in \texttt{VAR/} and is not included in this compendium.}}
+STMA anomaly detection: \texttt{stma/anomaly\_det/}.
+	extit{Result files.} \texttt{results/rq1/}, \texttt{results/rq2/}, \texttt{stma/anomaly\_det/event\_study/}, \texttt{stma/visualizations/impact\_analysis/}.
+	extit{Time-series VAR / Granger track is documented separately in \texttt{VAR/} and is not included in this compendium.}}
 
 \end{document}
