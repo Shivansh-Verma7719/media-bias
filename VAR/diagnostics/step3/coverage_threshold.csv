@@ -1,0 +1,17 @@
+ticker,pct_covered,longest_gap,gaps_type_c,passes,reason
+ABNB,99.7,2,0,True,OK
+AMZN,100.0,0,0,True,OK
+T,98.8,7,0,True,OK
+BA,100.0,0,0,True,OK
+BAC,99.7,1,0,True,OK
+GM,100.0,0,0,True,OK
+GS,99.8,1,0,True,OK
+INTC,100.0,0,0,True,OK
+MCD,100.0,0,0,True,OK
+MSFT,100.0,0,0,True,OK
+MS,100.0,0,0,True,OK
+SBUX,98.8,7,0,True,OK
+UBER,98.8,7,0,True,OK
+V,98.4,7,0,True,OK
+WMT,98.8,7,0,True,OK
+WFC,97.2,7,0,True,OK
