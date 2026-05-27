@@ -122,14 +122,14 @@ def main():
             try:
                 # Add enough lags beyond p
                 port_res = results.test_whiteness(nlags=chosen_lag + 10)
-                port_pval = port_res.pval
+                port_pval = port_res.pvalue
             except Exception:
                 port_pval = np.nan
                 
             # Jarque-Bera for normality
             try:
                 jb_res = results.test_normality()
-                jb_pval = jb_res.pval
+                jb_pval = jb_res.pvalue
             except Exception:
                 jb_pval = np.nan
                 
