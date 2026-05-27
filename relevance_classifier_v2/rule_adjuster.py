@@ -36,7 +36,7 @@ def adjust(title: str, company_name: str, p_rel: float) -> tuple[float, str]:
             "student visa", "work visa", "h-1b", "tourist visa",
             "eu visa", "visa-free", "visa applicat", "visa subpoena",
             "visa rules", "visa delays", "visa reform", "biometric visa",
-            "immigration visa", "travel visa",
+            "immigration visa", "travel visa", "ice", "deportation", "border",
         ]
         if _contains(t, *travel_visa_signals):
             return (0.05, "G19:visa_contamination")
