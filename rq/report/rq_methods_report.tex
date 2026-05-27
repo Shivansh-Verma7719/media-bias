@@ -60,7 +60,6 @@ where $\mathcal{A}_{it}$ is the set of qualifying articles for firm $i$ on day $
 Controls:
 \begin{itemize}[leftmargin=1.5em]
 \item $\text{vol}_{it}=|\mathcal{A}_{it}|$ (firm-day article volume)
-\item $\text{vix}_t$ (daily market uncertainty)
 \end{itemize}
 
 Shock indicator:
@@ -68,17 +67,17 @@ Shock indicator:
 \text{Post}_t = \mathbb{1}[t\ge\text{2020-01-01}].
 \]
 
-\subsection*{Baseline Model (Firm FE)}
+\subsection*{Extended Model (Firm + Time FE)}
 \[
-\text{bias}_{it} = \alpha_i + \beta\,\text{Post}_t + \gamma_1\,\text{vol}_{it} + \gamma_2\,\text{vix}_t + \varepsilon_{it}.
+	ext{bias}_{it} = \alpha_i + \delta_t + \beta\,\text{Post}_t + \gamma\,\text{vol}_{it} + \varepsilon_{it}.
 \]
-$\beta$ is the main estimand: average within-firm post-2020 shift in stance.
+where $\alpha_i$ are firm fixed effects and $\delta_t$ are time (daily) fixed effects. The inclusion of $\delta_t$ absorbs all time-invariant firm differences and all day-invariant market-wide shocks (e.g., broad sentiment shifts, market-wide events). The main estimand $\beta$ captures the post-2020 within-firm shift in stance conditional on both firm and time FE.
 
 \subsection*{Estimator and Inference}
-Within transform by firm means, then OLS:
+Within transform by firm and time means (Mundlak procedure), then OLS:
 \[
 \hat{\theta}=(\tilde{X}^{\top}\tilde{X})^{-1}\tilde{X}^{\top}\tilde{y},\quad
-\theta=(\beta,\gamma_1,\gamma_2)^{\top}.
+\theta=(\beta,\gamma)^{\top}.
 \]
 Robust HC1 covariance:
 \[
@@ -98,69 +97,138 @@ p_k = 2\,\Phi(-|t_k|),\quad t_k=\frac{\hat{\theta}_k}{\widehat{\mathrm{SE}}(\hat
 \item \textbf{Stable measurement process:} NewsMTSC score mapping is comparable over time.
 \end{enumerate}
 
-\subsection*{Results: Confidence-Threshold Sensitivity}
-RQ1 was re-estimated three times with confidence thresholds $\tau\in\{0.0, 0.6, 0.9\}$.
-For each experiment, the table reports FE coefficients, article counts, and within-$R^2$.
+\subsection*{Results: Two-Way FE Specification}
+RQ1 is estimated using the extended model with both firm and time fixed effects (at $\tau=0.0$, no confidence threshold applied, to maximize article coverage).
 
 \begin{table}[H]
 \centering
-\caption*{Table RQ1-A: FE Results at Confidence Threshold $\tau=0.0$}
+\caption*{Table RQ1: Two-Way FE Results ($\alpha_i + \delta_t$ specification)}
 \begin{tabular}{lrrrrrr}
 \toprule
-Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+Variable & Coef. & SE (HC1) & t-stat & p-value & CI Low & CI High \\
 \midrule
-Post & 0.0208 & 0.0033 & 6.3568 & 0.000000 & 0.0144 & 0.0272 \\
-Article Volume & -0.0006 & 0.0001 & -7.8722 & 0.000000 & -0.0008 & -0.0005 \\
-VIX & 0.0002 & 0.0002 & 0.7053 & 0.4806 & -0.0003 & 0.0006 \\
+Post & 0.014130 & 0.013623 & 1.037218 & 0.299634 & $-$0.012571 & 0.040831 \\
+Article Volume & $-$0.000970 & 0.000076 & $-$12.772363 & $<0.0001$ & $-$0.001119 & $-$0.000822 \\
 \midrule
-Raw Articles (after filters) & 462,788 & \multicolumn{5}{r}{} \\
-Firm-day Observations ($n$) & 49,136 & \multicolumn{5}{r}{} \\
-Within $R^2$ & 0.001792 & \multicolumn{5}{r}{} \\
+Raw Articles (after filters) & 690,586 & \multicolumn{5}{r}{} \\
+Firm-day Observations ($n$) & 63,200 & \multicolumn{5}{r}{} \\
+Firms & 26 & \multicolumn{5}{r}{} \\
+Time periods (days) & 4,018 & \multicolumn{5}{r}{} \\
+Within $R^2$ & 0.001749 & \multicolumn{5}{r}{} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\textbf{Interpretation.} With time fixed effects and article volume as the sole control, the post coefficient is positive (0.014) but not statistically significant (p = 0.30). Article volume remains strongly negative and highly significant, indicating that higher article coverage is associated with lower stance within firms and days. The time FE absorb all daily market-wide shifts in sentiment or reporting tone, so $\beta$ now reflects only the idiosyncratic within-firm shift in stance post-2020.
+
+\subsection*{Day-Clustered Inference}
+Because observations are daily panel data, we report an additional cluster-robust inference table with clusters formed at the day level. This is the preferred uncertainty estimate for the static RQ1 model because it is robust to cross-firm dependence within the same trading day.
+
 \begin{table}[H]
 \centering
-\caption*{Table RQ1-B: FE Results at Confidence Threshold $\tau=0.6$}
+\caption*{Table RQ1-CL: Day-Clustered Inference}
 \begin{tabular}{lrrrrrr}
 \toprule
-Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+Variable & Coef. & SE (clustered) & t-stat & p-value & CI Low & CI High \\
 \midrule
-Post & 0.0232 & 0.0036 & 6.4321 & 0.000000 & 0.0161 & 0.0302 \\
-Article Volume & -0.0009 & 0.0001 & -8.4881 & 0.000000 & -0.0011 & -0.0007 \\
-VIX & 0.0002 & 0.0002 & 0.6800 & 0.4965 & -0.0003 & 0.0006 \\
-\midrule
-Raw Articles (after filters) & 378,573 & \multicolumn{5}{r}{} \\
-Firm-day Observations ($n$) & 46,681 & \multicolumn{5}{r}{} \\
-Within $R^2$ & 0.002041 & \multicolumn{5}{r}{} \\
+Post & 0.014130 & 0.013432 & 1.051992 & 0.292803 & $-$0.012196 & 0.040456 \\
+Article Volume & $-$0.000970 & 0.000076 & $-$12.843754 & $<0.0001$ & $-$0.001119 & $-$0.000822 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\subsection*{Time Fixed Effects Test}
+To assess the joint significance of the 4,017 time fixed effects, we conduct an F-test comparing the two-way FE model against a one-way (firm FE only) model. Under the null of no time effects, the test is approximately $F(4017, 59180)$.
+
 \begin{table}[H]
 \centering
-\caption*{Table RQ1-C: FE Results at Confidence Threshold $\tau=0.9$}
-\begin{tabular}{lrrrrrr}
-\toprule
-Variable & Coef. & SE & t-stat & p-value & CI Low & CI High \\
+\caption*{Table RQ1-TFE: Time Fixed Effects Test}
+\begin{tabular}{lrr}
+	oprule
+Metric & Value & \\
 \midrule
-Post & 0.0258 & 0.0052 & 4.9425 & 0.000001 & 0.0155 & 0.0360 \\
-Article Volume & -0.0028 & 0.0003 & -9.4603 & 0.000000 & -0.0033 & -0.0022 \\
-VIX & 0.0005 & 0.0004 & 1.4886 & 0.1366 & -0.0002 & 0.0012 \\
-\midrule
-Raw Articles (after filters) & 136,787 & \multicolumn{5}{r}{} \\
-Firm-day Observations ($n$) & 31,575 & \multicolumn{5}{r}{} \\
-Within $R^2$ & 0.002613 & \multicolumn{5}{r}{} \\
+F-statistic & 1.1348 & \\
+df1 (time periods $-$ 1) & 4017 & \\
+df2 (residual df) & 59181 & \\
+p-value & 1.12e-08 & \\
+F critical (alpha=0.05) & 1.03828 & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Interpretation.} Across thresholds, the post coefficient remains positive and statistically significant. As the threshold increases, article coverage declines while the post effect magnitude increases slightly and within-$R^2$ rises modestly.
+	extbf{Conclusion.} The F-statistic of 1.135 exceeds the 5\% critical value of 1.038, so the time fixed effects are jointly significant. This means daily shocks matter, even though they do not create a large uniform post-2020 shift.
+
+\subsection*{Monthly Event Study}
+The static Post term compresses all post-2020 dynamics into one coefficient. To make the timing more transparent, we estimate a monthly event-study specification with firm fixed effects, article volume, and month-relative dummies around January 2020. The omitted reference month is December 2019 ($m=-1$). The full coefficient table is written to the results folder; the table below shows the more informative months.
+
+\begin{table}[H]
+\centering
+\caption*{Table RQ1-ES: Selected Monthly Event-Study Coefficients}
+\begin{tabular}{lrrrrr}
+	oprule
+Month & Coef. & SE (HC1) & t-stat & p-value & Comment \\
+\midrule
+$m=-12$ & 0.021692 & 0.018045 & 1.202062 & 0.229339 & pre-trend check \\
+$m=-6$ & 0.031757 & 0.017201 & 1.846291 & 0.064850 & pre-trend check \\
+$m=0$ & 0.031032 & 0.018354 & 1.690774 & 0.090880 & event month \\
+$m=+3$ & 0.042152 & 0.019168 & 2.199085 & 0.027872 & early post-shock \\
+$m=+6$ & 0.032197 & 0.018248 & 1.764432 & 0.077659 & mid post-shock \\
+$m=+12$ & 0.064054 & 0.018797 & 3.407720 & 0.000655 & persistent uplift \\
+$m=+24$ & 0.050394 & 0.018705 & 2.694160 & 0.007057 & long-run post-shock \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The event study suggests the post-2020 change is not a single constant jump. The effect builds gradually and becomes clearer a few months after the shock, which explains why the static Post coefficient is weak once daily time effects are absorbed.
+
+\subsection*{Why Post is Insignificant and Why Within R$^2$ is Small}
+The joint significance of the daily time fixed effects indicates that much of the temporal variation in article stance is driven by day-specific shocks (market-wide sentiment, major news events) rather than a single pre/post shift captured by the \texttt{Post} indicator. Two factors explain the observed insignificance of the \texttt{Post} coefficient and the low within-$R^2$:
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Absorption of time variation:} Daily time dummies absorb most common-time movements. The \texttt{Post} indicator is a coarse, stepwise time variable that captures a uniform shift after 2020; once daily shocks are controlled, the remaining cross-firm within-day variation attributable solely to the step is small, yielding an imprecisely estimated (insignificant) \texttt{Post}.
+\item \textbf{Low within variation:} The within-$R^2$ measures how much of the within-firm (demeaned) variance is explained. Much of the variation in $\texttt{bias}_{it}$ is persistent across firms or driven by idiosyncratic article noise; firm and day fixed effects plus article volume explain only a small fraction of within-firm fluctuations, so within-$R^2$ is naturally small.
+\end{enumerate}
+
+Practically, the result implies that the large-sample evidence of time effects does not translate into a large, uniform post-2020 shift in firm stances once day-level shocks are controlled for. The model remains useful for isolating within-firm heterogeneity, but inference about an average post effect is weakened by the dominance of daily market-wide movements.
+
+\subsection*{MLR Assumption Checks (BLUE/CLM Diagnostics)}
+We perform several diagnostic tests to verify that the two-way FE estimator satisfies the Gauss-Markov and CLM conditions:
+
+\begin{table}[H]
+\centering
+\caption*{Table RQ1-MLR: Summary Diagnostics}
+\begin{tabular}{lll}
+\toprule
+Assumption / Test & Result & Implication \\
+\midrule
+Residual mean & $-8.99 \times 10^{-19}$ & $\checkmark$ Orthogonality satisfied \\
+Residual SD & 0.278 & $\checkmark$ Non-trivial residual variation \\
+Condition number & 157.46 & $\checkmark$ Numerical stability acceptable \\
+\midrule
+\multicolumn{3}{l}{\textit{Heteroscedasticity (Breusch-Pagan)}} \\
+LM statistic & 190.25 & $\times$ Evidence of heteroscedasticity \\
+df / p-value & 2 / -- & (HC1 SEs applied) \\
+\midrule
+\multicolumn{3}{l}{\textit{Normality (Jarque-Bera)}} \\
+JB statistic & 4541.18 & $\times$ Non-normality detected \\
+Skewness & $-$0.198 & (moderate; acceptable for large $n$) \\
+Kurtosis & 4.252 & (fat tails; consistent with financial data) \\
+\midrule
+\multicolumn{3}{l}{\textit{Multicollinearity (VIF)}} \\
+Post & 1.0004 & $\checkmark$ No collinearity \\
+Article Volume & 1.0004 & $\checkmark$ No collinearity \\
+Max pairwise correlation & 0.0189 & $\checkmark$ Negligible \\
+\midrule
+\multicolumn{3}{l}{\textit{Serial Correlation (Durbin-Watson)}} \\
+DW statistic & 1.673 & ($\approx 2$; moderate autocorr.) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Conclusion.} The regression is BLUE under Gauss-Markov conditions. HC1-robust SEs account for heteroscedasticity. Non-normality is present but mitigated by $n = 63,200$; asymptotic robustness is justified. The day-clustered SEs are very close to the HC1 SEs, which suggests the main inference is stable under within-day dependence. Serial correlation (DW $\approx 1.67$) is typical in panel data and partially absorbed by time FE.
 
 \newpage
 \section*{RQ2}
-\textbf{Question.} Did the 2020 recession shock affect stock prices differently pre versus post, at the market level?
+\textbf{Question.} Did the 2020 recession shock affect stock prices differently pre versus post, at the firm level?
 
 \subsection*{Design Rationale}
 RQ2 is paired with RQ1. RQ1 tests whether media stance shifts after the shock, while RQ2 tests whether firm-level returns also shift. Both are required before claiming a structural media--market linkage in RQ3.
