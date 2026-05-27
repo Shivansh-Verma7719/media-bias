@@ -45,3 +45,12 @@ relevance_classifier_v2/model_*/
 
 # Process IDs
 *.pid
+
+# latex auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+.fdb_latexmk
