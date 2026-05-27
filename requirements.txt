@@ -56,3 +56,4 @@ python-dotenv
 matplotlib
 statsmodels
 ruptures
+yfinance

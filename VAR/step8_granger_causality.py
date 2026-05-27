@@ -145,14 +145,14 @@ def main():
             })
             
     res_df = pd.DataFrame(results)
-    res_df.to_csv(OUTPUT_DIR / "granger_results.csv", index=False)
-    print(f"\n  → Saved test results to: {OUTPUT_DIR / 'granger_results.csv'}")
+    res_df.to_csv(OUTPUT_DIR / "step8_firmlevel_granger.csv", index=False)
+    print(f"\n  → Saved test results to: {OUTPUT_DIR / 'step8_firmlevel_granger.csv'}")
     
     # ---------------------------------------------------------------------------
     # Write Step 8 Summary
     # ---------------------------------------------------------------------------
     summary_lines = [
-        "# Step 8: Granger Causality Summary",
+        "# Step 8: Granger Causality Summary (Firm-level)",
         "",
         "## Methodology",
         "Granger Causality was tested using a direct OLS framework with **HAC-robust standard errors** (Newey-West kernel, `maxlags = p`). This controls for heteroskedasticity and autocorrelation, which are common in financial returns.",
@@ -198,8 +198,8 @@ def main():
         "3. **Structural Shift**: If pre-period results are insignificant but post-period results are significant, this validates the DiD result showing a structural break in the relationship.",
     ]
     
-    (OUTPUT_DIR / "step8_summary.md").write_text("\n".join(summary_lines), encoding="utf-8")
-    print(f"  → Written summary report to: {OUTPUT_DIR / 'step8_summary.md'}")
+    (OUTPUT_DIR / "step8_firmlevel_summary.md").write_text("\n".join(summary_lines), encoding="utf-8")
+    print(f"  → Written summary report to: {OUTPUT_DIR / 'step8_firmlevel_summary.md'}")
     print("\n=== STEP 8 COMPLETE ===")
 
 if __name__ == "__main__":
