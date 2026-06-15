@@ -1,0 +1,1602 @@
+{
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/db.py": {
+    "mtime": 1779891958.5595584,
+    "ast_hash": "3ef75355fd3521e12ebd3a6a98c9cadf",
+    "semantic_hash": "3ef75355fd3521e12ebd3a6a98c9cadf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step1_data_inventory.py": {
+    "mtime": 1779891958.76679,
+    "ast_hash": "9099a667efd04faf9cc2795e1c212131",
+    "semantic_hash": "9099a667efd04faf9cc2795e1c212131"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step2_bias_index.py": {
+    "mtime": 1779891958.7669194,
+    "ast_hash": "6727f7b24acb5ab582a49f34af90569d",
+    "semantic_hash": "6727f7b24acb5ab582a49f34af90569d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step3_gap_analysis.py": {
+    "mtime": 1779891958.767086,
+    "ast_hash": "c9bbad34017116eefb63919644787b11",
+    "semantic_hash": "c9bbad34017116eefb63919644787b11"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step4_returns_construction.py": {
+    "mtime": 1779891958.7672033,
+    "ast_hash": "3217aad49c45ca5e8ced9c815ddbad22",
+    "semantic_hash": "3217aad49c45ca5e8ced9c815ddbad22"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step5_stationarity.py": {
+    "mtime": 1779891958.7677104,
+    "ast_hash": "6e8c9146b516b514b347ea1eee5299f8",
+    "semantic_hash": "6e8c9146b516b514b347ea1eee5299f8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step6_structural_breaks.py": {
+    "mtime": 1779891958.7678542,
+    "ast_hash": "0d6b2baf4673b399d7133a47d591325c",
+    "semantic_hash": "0d6b2baf4673b399d7133a47d591325c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step7_var_specification.py": {
+    "mtime": 1779891958.767996,
+    "ast_hash": "8f74528a9f5a4eaece998abd66dea4c0",
+    "semantic_hash": "8f74528a9f5a4eaece998abd66dea4c0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step8_granger_causality.py": {
+    "mtime": 1779891958.7681315,
+    "ast_hash": "d33e325906d72da910f552400ae30c92",
+    "semantic_hash": "d33e325906d72da910f552400ae30c92"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/step8_panel_granger_causality.py": {
+    "mtime": 1779891958.7682443,
+    "ast_hash": "a4ed4d3fc9477f299b7f34b7281cadb1",
+    "semantic_hash": "a4ed4d3fc9477f299b7f34b7281cadb1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/stocks.sql": {
+    "mtime": 1779891958.768329,
+    "ast_hash": "0b6809f308675b2d6a8b88bc8d8d7e9e",
+    "semantic_hash": "0b6809f308675b2d6a8b88bc8d8d7e9e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/table-schema.sql": {
+    "mtime": 1779891958.7684157,
+    "ast_hash": "80eb542b4b68c6d7e8477ed14f6b90b6",
+    "semantic_hash": "80eb542b4b68c6d7e8477ed14f6b90b6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/top_companies.sql": {
+    "mtime": 1779891958.768494,
+    "ast_hash": "a4455a077274dc819a2dc31342b37c3b",
+    "semantic_hash": "a4455a077274dc819a2dc31342b37c3b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/augmentation/media_cloud_augmentation_pipeline.py": {
+    "mtime": 1777220981.6001213,
+    "ast_hash": "a1147a6210dcd08d155785ed78db8cf4",
+    "semantic_hash": "a1147a6210dcd08d155785ed78db8cf4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/augmentation/run.sh": {
+    "mtime": 1777220981.600244,
+    "ast_hash": "c04999b1f71bf86530ba3fbeb7d7127a",
+    "semantic_hash": "c04999b1f71bf86530ba3fbeb7d7127a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/augmentation/run_nohup.sh": {
+    "mtime": 1777220981.6003332,
+    "ast_hash": "6f7b98907cafed0fc0c65afbc31d62ff",
+    "semantic_hash": "6f7b98907cafed0fc0c65afbc31d62ff"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/check_state.py": {
+    "mtime": 1777220981.6004295,
+    "ast_hash": "631a66ff6c046c75575c396b18d697c5",
+    "semantic_hash": "631a66ff6c046c75575c396b18d697c5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/finance/vix_pipeline.py": {
+    "mtime": 1777220981.6006477,
+    "ast_hash": "5e62cf3ee106b453a2dc91ac4b766c32",
+    "semantic_hash": "5e62cf3ee106b453a2dc91ac4b766c32"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/gdelt_pipeline.py": {
+    "mtime": 1777220981.6009467,
+    "ast_hash": "cd0aff8276e079c2d5f0007efc7cf4ae",
+    "semantic_hash": "cd0aff8276e079c2d5f0007efc7cf4ae"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/gdelt_pipeline_mid.py": {
+    "mtime": 1777220981.6010745,
+    "ast_hash": "cde60b23a5872384099dcb92816976d0",
+    "semantic_hash": "cde60b23a5872384099dcb92816976d0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/gdelt_pipeline_old.py": {
+    "mtime": 1777220981.601232,
+    "ast_hash": "07c1a875f741787046339c7d4dde2f13",
+    "semantic_hash": "07c1a875f741787046339c7d4dde2f13"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/ism-gdelt-key-old.json": {
+    "mtime": 1777220981.6013288,
+    "ast_hash": "7d1019fed951369d9e85fd42624b5a3e",
+    "semantic_hash": "7d1019fed951369d9e85fd42624b5a3e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/pipeline_checkpoint.json": {
+    "mtime": 1777220981.6014202,
+    "ast_hash": "8de0fd6c45da9378f7e988c7fbc4806c",
+    "semantic_hash": "8de0fd6c45da9378f7e988c7fbc4806c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/scripts/run_gdelt.sh": {
+    "mtime": 1777220981.6015599,
+    "ast_hash": "9ebe83882aa0f9dee83b35ffda513ac5",
+    "semantic_hash": "9ebe83882aa0f9dee83b35ffda513ac5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/scripts/run_gdelt_nohup.sh": {
+    "mtime": 1777220981.601649,
+    "ast_hash": "e532d0472c21a8c0606561d5ae57d7c3",
+    "semantic_hash": "e532d0472c21a8c0606561d5ae57d7c3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/scripts/run_with_quota_watch.sh": {
+    "mtime": 1777220981.6017523,
+    "ast_hash": "54c371513249e148b46cd52ff37d040b",
+    "semantic_hash": "54c371513249e148b46cd52ff37d040b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/seed/push_nifty50.py": {
+    "mtime": 1777220981.6020355,
+    "ast_hash": "47792a611e6ee007db32ff9237087c63",
+    "semantic_hash": "47792a611e6ee007db32ff9237087c63"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/helpers/supabase_helper.py": {
+    "mtime": 1777220981.6022289,
+    "ast_hash": "a4492399c8946da50943be056fb4ffa2",
+    "semantic_hash": "a4492399c8946da50943be056fb4ffa2"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/link_check/main.py": {
+    "mtime": 1777220981.602399,
+    "ast_hash": "91e3933e691b88433915058d915210d9",
+    "semantic_hash": "91e3933e691b88433915058d915210d9"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/mtsc/export_results.py": {
+    "mtime": 1777220981.6025925,
+    "ast_hash": "17574ffe06b3c546bbaedc4657efb9da",
+    "semantic_hash": "17574ffe06b3c546bbaedc4657efb9da"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/mtsc/helpers.py": {
+    "mtime": 1777220981.602669,
+    "ast_hash": "199b0055195a988c34631110d3c30599",
+    "semantic_hash": "199b0055195a988c34631110d3c30599"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/mtsc/mtsc_pipeline.py": {
+    "mtime": 1777220981.6028368,
+    "ast_hash": "eacd7ce4cc4046206ceddc93c5ceceaf",
+    "semantic_hash": "eacd7ce4cc4046206ceddc93c5ceceaf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/mtsc/run_mtsc_nohup.sh": {
+    "mtime": 1777220981.6029134,
+    "ast_hash": "a488f6c0981377e13fee72a40b69294e",
+    "semantic_hash": "a488f6c0981377e13fee72a40b69294e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/populate_exposure_weights.py": {
+    "mtime": 1777225644.4006362,
+    "ast_hash": "efb63a1bbfa2ed28d21c014a281a4dc5",
+    "semantic_hash": "efb63a1bbfa2ed28d21c014a281a4dc5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/00_fetch_and_filter.py": {
+    "mtime": 1777220981.6030684,
+    "ast_hash": "1ee2578b4a80c9c5731624173179e037",
+    "semantic_hash": "1ee2578b4a80c9c5731624173179e037"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/00_fetch_nifty.py": {
+    "mtime": 1777220981.6031485,
+    "ast_hash": "529a44ba8c61db7d9857b7705a4540d7",
+    "semantic_hash": "529a44ba8c61db7d9857b7705a4540d7"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/01_llm_annotation.py": {
+    "mtime": 1777220981.60921,
+    "ast_hash": "6e90645fbb408311e5c33e027c829c38",
+    "semantic_hash": "6e90645fbb408311e5c33e027c829c38"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/01_llm_annotation_fewshot.py": {
+    "mtime": 1777220981.6094105,
+    "ast_hash": "db9fda923ad16288ba7576cebc28dbc3",
+    "semantic_hash": "db9fda923ad16288ba7576cebc28dbc3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/02_train_bert.py": {
+    "mtime": 1777220981.6095586,
+    "ast_hash": "9488bf631bb0d561aded5e51a29d1704",
+    "semantic_hash": "9488bf631bb0d561aded5e51a29d1704"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/03_run_inference.py": {
+    "mtime": 1777220981.6097124,
+    "ast_hash": "a010892a372e46bd6cc993bcdf425041",
+    "semantic_hash": "a010892a372e46bd6cc993bcdf425041"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/04_full_inference.py": {
+    "mtime": 1777220981.6099362,
+    "ast_hash": "a8169b976b1460ca7896cc43ee9734e7",
+    "semantic_hash": "a8169b976b1460ca7896cc43ee9734e7"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/04_full_inference_nifty.py": {
+    "mtime": 1777220981.6100876,
+    "ast_hash": "66b45541370bafc1bf56bc8ea26b22f0",
+    "semantic_hash": "66b45541370bafc1bf56bc8ea26b22f0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/05_evaluate_llm.py": {
+    "mtime": 1777220981.6106994,
+    "ast_hash": "a0fff2a91ef7c9b9996f3280e19f8990",
+    "semantic_hash": "a0fff2a91ef7c9b9996f3280e19f8990"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/build_company_names.py": {
+    "mtime": 1777220981.6115425,
+    "ast_hash": "449204fe1e755ba13efc0f27de365d74",
+    "semantic_hash": "449204fe1e755ba13efc0f27de365d74"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/00_fetch_filtered.py": {
+    "mtime": 1777220981.6117969,
+    "ast_hash": "92c9f4be94d1c9e39c1c6935d69cc810",
+    "semantic_hash": "92c9f4be94d1c9e39c1c6935d69cc810"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/01_annotate.py": {
+    "mtime": 1777220981.6145835,
+    "ast_hash": "662907d1232fd2b491bf37a63a67159b",
+    "semantic_hash": "662907d1232fd2b491bf37a63a67159b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/01_audit_irrelevant.py": {
+    "mtime": 1777220981.6147285,
+    "ast_hash": "b1c90457147c550299fd8ca46fc83c83",
+    "semantic_hash": "b1c90457147c550299fd8ca46fc83c83"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/02_annotate_gold.py": {
+    "mtime": 1777220981.6148489,
+    "ast_hash": "838fcb439ca397424f57a9341af55872",
+    "semantic_hash": "838fcb439ca397424f57a9341af55872"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/02_prepare_training_data.py": {
+    "mtime": 1777220981.6149209,
+    "ast_hash": "f3476dcbde19d850a3d6ff2d2e7e15ed",
+    "semantic_hash": "f3476dcbde19d850a3d6ff2d2e7e15ed"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/03_train_finbert.py": {
+    "mtime": 1777220981.6151123,
+    "ast_hash": "259a6298826ca383dbed6db4fbebbaf6",
+    "semantic_hash": "259a6298826ca383dbed6db4fbebbaf6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/04_build_training_set.py": {
+    "mtime": 1777220981.615237,
+    "ast_hash": "cf04fc386af7eceba77a556ac4439677",
+    "semantic_hash": "cf04fc386af7eceba77a556ac4439677"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/04_evaluate.py": {
+    "mtime": 1777220981.6153738,
+    "ast_hash": "08edf93800c57a8a1121e1d9f6b737bc",
+    "semantic_hash": "08edf93800c57a8a1121e1d9f6b737bc"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/05_full_inference.py": {
+    "mtime": 1777220981.6154776,
+    "ast_hash": "22c87f97f5a36dcdb8005cf2456c3a02",
+    "semantic_hash": "22c87f97f5a36dcdb8005cf2456c3a02"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/05_verify_relevant.py": {
+    "mtime": 1777220981.6156137,
+    "ast_hash": "7192f1a99a005269a2d38e760bc69a0d",
+    "semantic_hash": "7192f1a99a005269a2d38e760bc69a0d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/06_semisup_expand.py": {
+    "mtime": 1777220981.615732,
+    "ast_hash": "c68a11917d8ab4563301d78866415bfa",
+    "semantic_hash": "c68a11917d8ab4563301d78866415bfa"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/07_sample_for_annotation.py": {
+    "mtime": 1777220981.6158195,
+    "ast_hash": "754fbf4d68424bd1d40b4395690c544d",
+    "semantic_hash": "754fbf4d68424bd1d40b4395690c544d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/08_ensemble_eval.py": {
+    "mtime": 1777220981.6159515,
+    "ast_hash": "44542d646e1239d27b90af1c43a14054",
+    "semantic_hash": "44542d646e1239d27b90af1c43a14054"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/09_postprocess_eval.py": {
+    "mtime": 1777220981.6160588,
+    "ast_hash": "d6fa43e47c360241c8ffb9452472a022",
+    "semantic_hash": "d6fa43e47c360241c8ffb9452472a022"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/10_full_inference_ensemble.py": {
+    "mtime": 1777220981.6162057,
+    "ast_hash": "76201c4718e4c6323dc2ef795b471d64",
+    "semantic_hash": "76201c4718e4c6323dc2ef795b471d64"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/extract_borderline.py": {
+    "mtime": 1779891958.7846718,
+    "ast_hash": "0b023dde991bae9c66448c248800748c",
+    "semantic_hash": "0b023dde991bae9c66448c248800748c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/gen_synthetic.py": {
+    "mtime": 1777220981.6177018,
+    "ast_hash": "df4c61acd00feaea348aae670825e11e",
+    "semantic_hash": "df4c61acd00feaea348aae670825e11e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/gen_targeted.py": {
+    "mtime": 1777220981.6178286,
+    "ast_hash": "631408d92a7385746c0f2941e9458503",
+    "semantic_hash": "631408d92a7385746c0f2941e9458503"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/rule_adjuster.py": {
+    "mtime": 1779891958.7855887,
+    "ast_hash": "e74a72c854075ab6fbd9c571e33891b8",
+    "semantic_hash": "e74a72c854075ab6fbd9c571e33891b8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/test_g19.py": {
+    "mtime": 1779891958.7863052,
+    "ast_hash": "97a52de347b91cc0ef3c9c07438f32c8",
+    "semantic_hash": "97a52de347b91cc0ef3c9c07438f32c8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/threshold_sweep.py": {
+    "mtime": 1777220981.6199973,
+    "ast_hash": "5e95d46688afc868ad9a5cdac189f7b5",
+    "semantic_hash": "5e95d46688afc868ad9a5cdac189f7b5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/write_gold.py": {
+    "mtime": 1777220981.6201103,
+    "ast_hash": "186eb09f7e854915eedcdd5dbfb6927e",
+    "semantic_hash": "186eb09f7e854915eedcdd5dbfb6927e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/assumptions/mlr_assumptions.json": {
+    "mtime": 1779891958.7865338,
+    "ast_hash": "df3085e5c05d8cbd771e05cd4c438a8f",
+    "semantic_hash": "df3085e5c05d8cbd771e05cd4c438a8f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/log_volume/rq1_summary_log_volume.json": {
+    "mtime": 1779891958.7867887,
+    "ast_hash": "b3c3a13f2bed232d16b7ee40ec855d46",
+    "semantic_hash": "b3c3a13f2bed232d16b7ee40ec855d46"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/rq1_event_study_monthly.json": {
+    "mtime": 1779891958.7968354,
+    "ast_hash": "7af0149c30458395f62bfbdeb5158501",
+    "semantic_hash": "7af0149c30458395f62bfbdeb5158501"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/rq1_summary.json": {
+    "mtime": 1779891958.7978811,
+    "ast_hash": "94f713282fb4ae7572fdc95e0fc47e9e",
+    "semantic_hash": "94f713282fb4ae7572fdc95e0fc47e9e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq2/rq2_summary.json": {
+    "mtime": 1777220981.7014709,
+    "ast_hash": "8caf66c980197968efd215dbb94aec70",
+    "semantic_hash": "8caf66c980197968efd215dbb94aec70"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq2/two_way_fe/rq2_summary_two_way.json": {
+    "mtime": 1779891958.7982357,
+    "ast_hash": "96a8806b5f410043115d66b345dc396f",
+    "semantic_hash": "96a8806b5f410043115d66b345dc396f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/mlr_assumptions_check.py": {
+    "mtime": 1779891958.7983594,
+    "ast_hash": "7719bdcbc20b317a8d0e29d642eafd20",
+    "semantic_hash": "7719bdcbc20b317a8d0e29d642eafd20"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/rq-1-pipeline.py": {
+    "mtime": 1779891958.8032258,
+    "ast_hash": "4cff663efadb03605edfe65b92349d67",
+    "semantic_hash": "4cff663efadb03605edfe65b92349d67"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/rq-1_revised.py": {
+    "mtime": 1777234915.062863,
+    "ast_hash": "193f08e4d666bb8119ce52272d28d047",
+    "semantic_hash": "193f08e4d666bb8119ce52272d28d047"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/rq-2-pipeline.py": {
+    "mtime": 1777220981.7032657,
+    "ast_hash": "753515ed6cf561d02757eed1057c91b0",
+    "semantic_hash": "753515ed6cf561d02757eed1057c91b0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/rq-2_revised.py": {
+    "mtime": 1777235145.4389992,
+    "ast_hash": "46f339c376fe9c1dc7ad855583cd35da",
+    "semantic_hash": "46f339c376fe9c1dc7ad855583cd35da"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/cdf/main.py": {
+    "mtime": 1777220981.705722,
+    "ast_hash": "b849e2dce30ede8a1c43f35dbdd0dbdc",
+    "semantic_hash": "b849e2dce30ede8a1c43f35dbdd0dbdc"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/create_stratified.py": {
+    "mtime": 1777220981.7058334,
+    "ast_hash": "224194421777c33539ffb9a61dd978f6",
+    "semantic_hash": "224194421777c33539ffb9a61dd978f6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/diagnosis/main.py": {
+    "mtime": 1777220981.705976,
+    "ast_hash": "d66fe8839d3ccac44656839792847b88",
+    "semantic_hash": "d66fe8839d3ccac44656839792847b88"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/load_filtered_articles_to_new_table.py": {
+    "mtime": 1777220981.7061045,
+    "ast_hash": "623b33430ef576958f5d9ce9b1be397b",
+    "semantic_hash": "623b33430ef576958f5d9ce9b1be397b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/main.py": {
+    "mtime": 1777220981.706197,
+    "ast_hash": "7da27ed6744f197656433745109b407a",
+    "semantic_hash": "7da27ed6744f197656433745109b407a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/matrix/create_stratified_sample_matrix_indian_cos.py": {
+    "mtime": 1777220981.706441,
+    "ast_hash": "6797a9fb740136971f8d1d04c59949c6",
+    "semantic_hash": "6797a9fb740136971f8d1d04c59949c6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/matrix/create_stratified_sample_matrix_public.py": {
+    "mtime": 1777220981.7065766,
+    "ast_hash": "a9a8c6a7dd90d9e02922852eaca0869a",
+    "semantic_hash": "a9a8c6a7dd90d9e02922852eaca0869a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/pipelines/sampling_pipeline.py": {
+    "mtime": 1777220981.7111363,
+    "ast_hash": "6e9aa2e9800b8601bfcc8ac032c7818d",
+    "semantic_hash": "6e9aa2e9800b8601bfcc8ac032c7818d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/scripts/run_rq_todos.py": {
+    "mtime": 1779891958.8033829,
+    "ast_hash": "49fcd7fa7864b72536a7515c2532ec48",
+    "semantic_hash": "49fcd7fa7864b72536a7515c2532ec48"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/feature_engineering.py": {
+    "mtime": 1777220981.712359,
+    "ast_hash": "80c481ed7db38dcffc7c4e718b61fe3f",
+    "semantic_hash": "80c481ed7db38dcffc7c4e718b61fe3f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/helper.py": {
+    "mtime": 1777220981.7127132,
+    "ast_hash": "bcf67a0507f13fc3136532723c4d1357",
+    "semantic_hash": "bcf67a0507f13fc3136532723c4d1357"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/helper2.py": {
+    "mtime": 1777220981.7128198,
+    "ast_hash": "589c92c855e94918ba70709bbcbb3896",
+    "semantic_hash": "589c92c855e94918ba70709bbcbb3896"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/indicators/impulsemacd.py": {
+    "mtime": 1777220981.7130332,
+    "ast_hash": "21d58e9917a60e7664af8741bb1204c2",
+    "semantic_hash": "21d58e9917a60e7664af8741bb1204c2"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/indicators/obv.py": {
+    "mtime": 1777220981.7131033,
+    "ast_hash": "ecb08181fbff2015bff8780ce4619292",
+    "semantic_hash": "ecb08181fbff2015bff8780ce4619292"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/indicators/squeeze.py": {
+    "mtime": 1777220981.7131736,
+    "ast_hash": "63624ccf626bb02bed6f45a04462bef8",
+    "semantic_hash": "63624ccf626bb02bed6f45a04462bef8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/indicators/supertrend.py": {
+    "mtime": 1777220981.713287,
+    "ast_hash": "5a3833d811f9cacd65fe4b572922173f",
+    "semantic_hash": "5a3833d811f9cacd65fe4b572922173f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/indicators/velocity_indicator.py": {
+    "mtime": 1777220981.7133522,
+    "ast_hash": "b6c1f258910f5682a90545aa08fd78eb",
+    "semantic_hash": "b6c1f258910f5682a90545aa08fd78eb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/inference.py": {
+    "mtime": 1777220981.7134702,
+    "ast_hash": "9bbb18396e90e5d4d282359a1dda0f6a",
+    "semantic_hash": "9bbb18396e90e5d4d282359a1dda0f6a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/main.py": {
+    "mtime": 1777220981.7135897,
+    "ast_hash": "94c95ddc5631aca8109c41b385e7d602",
+    "semantic_hash": "94c95ddc5631aca8109c41b385e7d602"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/media_follow.py": {
+    "mtime": 1777220981.7137167,
+    "ast_hash": "e70491835fc90326cfcfbec4f036f968",
+    "semantic_hash": "e70491835fc90326cfcfbec4f036f968"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/statistical.py": {
+    "mtime": 1777220981.7140534,
+    "ast_hash": "31b5b9935eb5a5e2bbc962c5d9ad4b5a",
+    "semantic_hash": "31b5b9935eb5a5e2bbc962c5d9ad4b5a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/study.py": {
+    "mtime": 1777220981.714219,
+    "ast_hash": "8a62d5d7b7f983156c48d95bc828c208",
+    "semantic_hash": "8a62d5d7b7f983156c48d95bc828c208"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/app.py": {
+    "mtime": 1777220981.7144542,
+    "ast_hash": "971aceec6d5918c3e79a3b2ca79ff089",
+    "semantic_hash": "971aceec6d5918c3e79a3b2ca79ff089"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/cdk.json": {
+    "mtime": 1777220981.7145693,
+    "ast_hash": "5ba1992ce7e6df37cf4c2eea27e1ac0e",
+    "semantic_hash": "5ba1992ce7e6df37cf4c2eea27e1ac0e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/cdk/__init__.py": {
+    "mtime": 1777220981.7146413,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/cdk/cdk_stack.py": {
+    "mtime": 1777220981.7147324,
+    "ast_hash": "25d6a1a5de38637e4a7ad87ff5e1b9bf",
+    "semantic_hash": "25d6a1a5de38637e4a7ad87ff5e1b9bf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/tests/__init__.py": {
+    "mtime": 1777220981.7150097,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/tests/unit/__init__.py": {
+    "mtime": 1777220981.715109,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/tests/unit/test_cdk_stack.py": {
+    "mtime": 1777220981.715208,
+    "ast_hash": "982b7a32f7bebbfd29a849008b99c2b4",
+    "semantic_hash": "982b7a32f7bebbfd29a849008b99c2b4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/add_bias_index.sql": {
+    "mtime": 1777220981.7153316,
+    "ast_hash": "d27170329e2b3ff0ca806d0268b6c91e",
+    "semantic_hash": "d27170329e2b3ff0ca806d0268b6c91e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/add_norm_bias_score.sql": {
+    "mtime": 1777220981.7153997,
+    "ast_hash": "89b1ff6e1c6b352867b306681ad486a4",
+    "semantic_hash": "89b1ff6e1c6b352867b306681ad486a4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/add_sentiment_columns.sql": {
+    "mtime": 1777220981.715469,
+    "ast_hash": "36e5de205036f780bd09fbe2c8f17dda",
+    "semantic_hash": "36e5de205036f780bd09fbe2c8f17dda"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/add_stock_prices.sql": {
+    "mtime": 1777220981.715581,
+    "ast_hash": "f3e9847673551b819c5ae8ab14cae96d",
+    "semantic_hash": "f3e9847673551b819c5ae8ab14cae96d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/migrate_companies_state.sql": {
+    "mtime": 1777220981.7156875,
+    "ast_hash": "144ac3691b97c78c497a5d761f7108c8",
+    "semantic_hash": "144ac3691b97c78c497a5d761f7108c8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/db/schema.sql": {
+    "mtime": 1777220981.7158368,
+    "ast_hash": "ef7cd4df131063ece0ce6103a0d80cf8",
+    "semantic_hash": "ef7cd4df131063ece0ce6103a0d80cf8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/main.py": {
+    "mtime": 1777220981.7159216,
+    "ast_hash": "2e164b9f7ffcafcd70c5eacf07092b44",
+    "semantic_hash": "2e164b9f7ffcafcd70c5eacf07092b44"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/BERT.py": {
+    "mtime": 1777220981.716106,
+    "ast_hash": "751ad97fc381db127e53ce57be733364",
+    "semantic_hash": "751ad97fc381db127e53ce57be733364"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/bias_calculator.py": {
+    "mtime": 1777220981.7163732,
+    "ast_hash": "7bb959febee19a6835816978b4260567",
+    "semantic_hash": "7bb959febee19a6835816978b4260567"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/fin/fetch_fin.py": {
+    "mtime": 1777220981.7165196,
+    "ast_hash": "a37c7250b52c13eb5fdd3585e950a033",
+    "semantic_hash": "a37c7250b52c13eb5fdd3585e950a033"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/fin/fetch_fin_full.py": {
+    "mtime": 1777220981.7166553,
+    "ast_hash": "5ded03f50d92da9eef418c99a9238ec6",
+    "semantic_hash": "5ded03f50d92da9eef418c99a9238ec6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/helpers/__init__.py": {
+    "mtime": 1777220981.7167695,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/helpers/db_helper.py": {
+    "mtime": 1777220981.716917,
+    "ast_hash": "0c424213774a7d83454eb34fbfc6a522",
+    "semantic_hash": "0c424213774a7d83454eb34fbfc6a522"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/impact_analysis.py": {
+    "mtime": 1777220981.7172034,
+    "ast_hash": "41e9e5d4dfda3343972ff9adbd759cc3",
+    "semantic_hash": "41e9e5d4dfda3343972ff9adbd759cc3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/normalize_bias_scores.py": {
+    "mtime": 1777220981.7173228,
+    "ast_hash": "6f5dd70812afcce59d63fa73f4d7bd38",
+    "semantic_hash": "6f5dd70812afcce59d63fa73f4d7bd38"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/reddit_scraper.py": {
+    "mtime": 1777220981.7174542,
+    "ast_hash": "cfc1f4a596d7049520e69db8e741bf28",
+    "semantic_hash": "cfc1f4a596d7049520e69db8e741bf28"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/scraper/scraper_pipeline.py": {
+    "mtime": 1777220981.7176468,
+    "ast_hash": "34155f68b7086af1402078ca8dd2c9c1",
+    "semantic_hash": "34155f68b7086af1402078ca8dd2c9c1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/pipelines/sp500_media_pipeline.py": {
+    "mtime": 1777220981.7181513,
+    "ast_hash": "bbbc8acfba7bd7d1823987bffa6dc3cf",
+    "semantic_hash": "bbbc8acfba7bd7d1823987bffa6dc3cf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/check_duplicates.py": {
+    "mtime": 1777220981.718344,
+    "ast_hash": "7031d8c48c5f84b5be3f975981e26468",
+    "semantic_hash": "7031d8c48c5f84b5be3f975981e26468"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/copy_stock_to_bias.py": {
+    "mtime": 1777220981.7184253,
+    "ast_hash": "3d3e202b4db5e885e97c4f7f0a654068",
+    "semantic_hash": "3d3e202b4db5e885e97c4f7f0a654068"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/init_db.sh": {
+    "mtime": 1777220981.7185042,
+    "ast_hash": "979b1a5d2485d906aa5972d72a41aef3",
+    "semantic_hash": "979b1a5d2485d906aa5972d72a41aef3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/run_bias_pipeline.sh": {
+    "mtime": 1777220981.7185817,
+    "ast_hash": "86d69a282c435bc6e4991f71e906758c",
+    "semantic_hash": "86d69a282c435bc6e4991f71e906758c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/seed_sp500.py": {
+    "mtime": 1777220981.718661,
+    "ast_hash": "811b90dc3e4408f4914de313ada5f968",
+    "semantic_hash": "811b90dc3e4408f4914de313ada5f968"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/scripts/visualize_bias_index.py": {
+    "mtime": 1777220981.7187924,
+    "ast_hash": "48f38005350371d0182e833680ec3266",
+    "semantic_hash": "48f38005350371d0182e833680ec3266"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/PIPELINE_DOCUMENTATION.md": {
+    "mtime": 1779891958.559106,
+    "ast_hash": "aea51ba05d592b2b8facf67d21147bb8",
+    "semantic_hash": "aea51ba05d592b2b8facf67d21147bb8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/README.md": {
+    "mtime": 1777220981.5999048,
+    "ast_hash": "77c3991e332c18688de59b41ea75153c",
+    "semantic_hash": "77c3991e332c18688de59b41ea75153c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/VAR_Diagnostic_Checklist.md": {
+    "mtime": 1779891958.5594492,
+    "ast_hash": "b86d7d0cf35558c54edd8f80066e501f",
+    "semantic_hash": "b86d7d0cf35558c54edd8f80066e501f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/step1_summary.md": {
+    "mtime": 1779891958.56864,
+    "ast_hash": "6a77dd229d317ca0a076ba1db1ba187f",
+    "semantic_hash": "6a77dd229d317ca0a076ba1db1ba187f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/step2_summary.md": {
+    "mtime": 1779891958.6102254,
+    "ast_hash": "fb6d228a571bba9bcaed101b000e13d4",
+    "semantic_hash": "fb6d228a571bba9bcaed101b000e13d4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/step3_summary.md": {
+    "mtime": 1779891958.6214406,
+    "ast_hash": "b2dc5116e7bbc96d3fe97cf3ed0111dd",
+    "semantic_hash": "b2dc5116e7bbc96d3fe97cf3ed0111dd"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/step4_summary.md": {
+    "mtime": 1779891958.6653483,
+    "ast_hash": "21d1befb143f945ca82b29e663a6745e",
+    "semantic_hash": "21d1befb143f945ca82b29e663a6745e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/step5_summary.md": {
+    "mtime": 1779891958.7283788,
+    "ast_hash": "2115df57228bcea3406b7365915c225c",
+    "semantic_hash": "2115df57228bcea3406b7365915c225c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/step6_summary.md": {
+    "mtime": 1779891958.7656357,
+    "ast_hash": "55da480ba1f64612080cf0ff3e9b2005",
+    "semantic_hash": "55da480ba1f64612080cf0ff3e9b2005"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step7/step7_summary.md": {
+    "mtime": 1779891958.7658358,
+    "ast_hash": "19b7c1fc16550ed8829cc924ae4c1b7c",
+    "semantic_hash": "19b7c1fc16550ed8829cc924ae4c1b7c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step8/step8_firmlevel_summary.md": {
+    "mtime": 1779891958.7663147,
+    "ast_hash": "f667e6902d4c7c353688e466090fe102",
+    "semantic_hash": "f667e6902d4c7c353688e466090fe102"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step8/step8_panel_summary.md": {
+    "mtime": 1779891958.766461,
+    "ast_hash": "91c1a529bc20183c9966448f184b7674",
+    "semantic_hash": "91c1a529bc20183c9966448f184b7674"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step8/step8_summary.md": {
+    "mtime": 1779891958.7665281,
+    "ast_hash": "33b202a59bc204b484926736280f95c0",
+    "semantic_hash": "33b202a59bc204b484926736280f95c0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/implementation-plan-1.md": {
+    "mtime": 1779891958.7666397,
+    "ast_hash": "560cf4fbaeefbf9f4a67de7428d9f7bb",
+    "semantic_hash": "560cf4fbaeefbf9f4a67de7428d9f7bb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/gdelt/README.md": {
+    "mtime": 1777220981.6007955,
+    "ast_hash": "389426faa917b801360ad8a1a26fd222",
+    "semantic_hash": "389426faa917b801360ad8a1a26fd222"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/paper/master_docs/ISM Master.md": {
+    "mtime": 1779891958.7712762,
+    "ast_hash": "3e3529684be00e315eed5ccb97f03d11",
+    "semantic_hash": "3e3529684be00e315eed5ccb97f03d11"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier/company_names.txt": {
+    "mtime": 1777220981.6116273,
+    "ast_hash": "69666a6603c7bbaee4cd476150132e52",
+    "semantic_hash": "69666a6603c7bbaee4cd476150132e52"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/README.md": {
+    "mtime": 1777220981.61633,
+    "ast_hash": "82cb12ca889b92083a1c5b27ca0f4a92",
+    "semantic_hash": "82cb12ca889b92083a1c5b27ca0f4a92"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/relevance_classifier_v2/STATUS.md": {
+    "mtime": 1777220981.6166735,
+    "ast_hash": "369a90a09d1c39f26e976090838c376d",
+    "semantic_hash": "369a90a09d1c39f26e976090838c376d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/requirements.txt": {
+    "mtime": 1779891958.7864192,
+    "ast_hash": "8f501d6e0a2301ac6c0986f771afd90e",
+    "semantic_hash": "8f501d6e0a2301ac6c0986f771afd90e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/assumptions/mlr_assumptions.md": {
+    "mtime": 1779891958.7866096,
+    "ast_hash": "67c39791be9a280e29431090c988e3eb",
+    "semantic_hash": "67c39791be9a280e29431090c988e3eb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/rq1_event_study_monthly.md": {
+    "mtime": 1779891958.7976348,
+    "ast_hash": "7a18095961e00c5ec2fe08a7d802d960",
+    "semantic_hash": "7a18095961e00c5ec2fe08a7d802d960"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1/rq1_summary.md": {
+    "mtime": 1779891958.7980342,
+    "ast_hash": "4c62517f19f6858d23cd7627bbb5f716",
+    "semantic_hash": "4c62517f19f6858d23cd7627bbb5f716"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq2/rq2_summary.txt": {
+    "mtime": 1777220981.7015517,
+    "ast_hash": "1f2988c44c0c60f183c477af687a5379",
+    "semantic_hash": "1f2988c44c0c60f183c477af687a5379"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sector-wise-exposure.md": {
+    "mtime": 1777224866.1696703,
+    "ast_hash": "5771558968d69b228dbd47817aa4601e",
+    "semantic_hash": "5771558968d69b228dbd47817aa4601e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/README.md": {
+    "mtime": 1777220981.711388,
+    "ast_hash": "9f6c637bab961cd4afb8cff4b401d9a7",
+    "semantic_hash": "9f6c637bab961cd4afb8cff4b401d9a7"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/final_study_output/silent_shocks_report.txt": {
+    "mtime": 1777220981.71264,
+    "ast_hash": "56dcd8d89f4c6736cbfa880eaac6011e",
+    "semantic_hash": "56dcd8d89f4c6736cbfa880eaac6011e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/README.md": {
+    "mtime": 1777220981.7143831,
+    "ast_hash": "8325f2beb83b53f6b02963589849938e",
+    "semantic_hash": "8325f2beb83b53f6b02963589849938e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/requirements-dev.txt": {
+    "mtime": 1777220981.7147992,
+    "ast_hash": "c57fe3a9f77bee9703e89ca99605968e",
+    "semantic_hash": "c57fe3a9f77bee9703e89ca99605968e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/infra/cdk/requirements.txt": {
+    "mtime": 1777220981.7148712,
+    "ast_hash": "de9d203abf63b664b25dcc9527bf4c06",
+    "semantic_hash": "de9d203abf63b664b25dcc9527bf4c06"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/visualizations/impact_analysis/regression_results.txt": {
+    "mtime": 1777220981.7215388,
+    "ast_hash": "15b02eeb8e5484d24af5d5076620a620",
+    "semantic_hash": "15b02eeb8e5484d24af5d5076620a620"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR_Pipeline_Report.pdf": {
+    "mtime": 1781515768.8726432,
+    "ast_hash": "c6204b561027fcbdb4c93b79d2aaee4b",
+    "semantic_hash": "c6204b561027fcbdb4c93b79d2aaee4b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/paper/ism_paper.pdf": {
+    "mtime": 1779891958.7705543,
+    "ast_hash": "1e9a894bb41e6e83b53f9313264b762e",
+    "semantic_hash": "1e9a894bb41e6e83b53f9313264b762e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq1_did_regression_results.pdf": {
+    "mtime": 1777234978.3717449,
+    "ast_hash": "60b777c53ad0fcec5f832fa6cf56951d",
+    "semantic_hash": "60b777c53ad0fcec5f832fa6cf56951d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/results/rq2_did_regression_results.pdf": {
+    "mtime": 1777235157.2098792,
+    "ast_hash": "e011ef581fb47af2071b2d0b24289531",
+    "semantic_hash": "e011ef581fb47af2071b2d0b24289531"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/report/methods_master_table.pdf": {
+    "mtime": 1781516024.481418,
+    "ast_hash": "6dbf43dc6db0d801ea5bbf545308f716",
+    "semantic_hash": "6dbf43dc6db0d801ea5bbf545308f716"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/report/regressions_compendium.pdf": {
+    "mtime": 1779891958.8002727,
+    "ast_hash": "169108d3642bb5b979decb754d7b82d5",
+    "semantic_hash": "169108d3642bb5b979decb754d7b82d5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/rq/report/rq_methods_report.pdf": {
+    "mtime": 1779891958.8021994,
+    "ast_hash": "8d12f67cd1767ac88b14a063e1626c3a",
+    "semantic_hash": "8d12f67cd1767ac88b14a063e1626c3a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_AAPL.png": {
+    "mtime": 1779891958.5604415,
+    "ast_hash": "fece60d1aee5d5f79e87c231c9908c6f",
+    "semantic_hash": "fece60d1aee5d5f79e87c231c9908c6f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_ABNB.png": {
+    "mtime": 1779891958.5608017,
+    "ast_hash": "779064ab2c425247ca184e8c24583a87",
+    "semantic_hash": "779064ab2c425247ca184e8c24583a87"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_AMZN.png": {
+    "mtime": 1779891958.561125,
+    "ast_hash": "b56ec3ee20d62d2a8193d4f7e37fb85b",
+    "semantic_hash": "b56ec3ee20d62d2a8193d4f7e37fb85b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_BA.png": {
+    "mtime": 1779891958.5615804,
+    "ast_hash": "4500c08bfb8f8aacd22c60df40a505e0",
+    "semantic_hash": "4500c08bfb8f8aacd22c60df40a505e0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_BAC.png": {
+    "mtime": 1779891958.5619664,
+    "ast_hash": "c4146e24beb9b1cbf898b4fe474bbf07",
+    "semantic_hash": "c4146e24beb9b1cbf898b4fe474bbf07"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_ETN.png": {
+    "mtime": 1779891958.562242,
+    "ast_hash": "7ab708a32eac54388b91fb5cc80d31d5",
+    "semantic_hash": "7ab708a32eac54388b91fb5cc80d31d5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_FDX.png": {
+    "mtime": 1779891958.5625281,
+    "ast_hash": "9c71977b876c3e8688711a7d3728942d",
+    "semantic_hash": "9c71977b876c3e8688711a7d3728942d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_GM.png": {
+    "mtime": 1779891958.5631042,
+    "ast_hash": "e4dd61dcbd3390e2adc0b2b9f9f68ce7",
+    "semantic_hash": "e4dd61dcbd3390e2adc0b2b9f9f68ce7"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_GS.png": {
+    "mtime": 1779891958.5634038,
+    "ast_hash": "499d70383de61cd0444f64a10cf4f283",
+    "semantic_hash": "499d70383de61cd0444f64a10cf4f283"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_INTC.png": {
+    "mtime": 1779891958.5638633,
+    "ast_hash": "a1a210a5a9168e41defbf786ef3305fc",
+    "semantic_hash": "a1a210a5a9168e41defbf786ef3305fc"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_MCD.png": {
+    "mtime": 1779891958.5641236,
+    "ast_hash": "76853a01ce96459294ccb78bc7144d11",
+    "semantic_hash": "76853a01ce96459294ccb78bc7144d11"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_MMM.png": {
+    "mtime": 1779891958.56439,
+    "ast_hash": "4014ce30f24e8eaee0d40cd68b4c4400",
+    "semantic_hash": "4014ce30f24e8eaee0d40cd68b4c4400"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_MS.png": {
+    "mtime": 1779891958.5646527,
+    "ast_hash": "7058c121fd0db3801ed2be7de625c0a8",
+    "semantic_hash": "7058c121fd0db3801ed2be7de625c0a8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_MSFT.png": {
+    "mtime": 1779891958.564916,
+    "ast_hash": "c8650331fd793d2e87fb88075021b403",
+    "semantic_hash": "c8650331fd793d2e87fb88075021b403"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_NDAQ.png": {
+    "mtime": 1779891958.5651777,
+    "ast_hash": "c135baa06acbdd1e9d2ad33fbf2803eb",
+    "semantic_hash": "c135baa06acbdd1e9d2ad33fbf2803eb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_NFLX.png": {
+    "mtime": 1779891958.5654528,
+    "ast_hash": "c08a50f298b90b13fb67fd47a95608c9",
+    "semantic_hash": "c08a50f298b90b13fb67fd47a95608c9"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_NKE.png": {
+    "mtime": 1779891958.5657115,
+    "ast_hash": "8e2685a7c98c9363589d57f8f6560a41",
+    "semantic_hash": "8e2685a7c98c9363589d57f8f6560a41"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_ORCL.png": {
+    "mtime": 1779891958.5659757,
+    "ast_hash": "cb7499ce03ae25fbf94cd6f01ba9c0cf",
+    "semantic_hash": "cb7499ce03ae25fbf94cd6f01ba9c0cf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_PGR.png": {
+    "mtime": 1779891958.5662456,
+    "ast_hash": "ea3279db436297aa29a6def1017b0179",
+    "semantic_hash": "ea3279db436297aa29a6def1017b0179"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_SBUX.png": {
+    "mtime": 1779891958.5665107,
+    "ast_hash": "27f674e335003479adb0c3636d827381",
+    "semantic_hash": "27f674e335003479adb0c3636d827381"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_T.png": {
+    "mtime": 1779891958.5667748,
+    "ast_hash": "7b1e6c3aef1aee51a4dac0a23c4723a6",
+    "semantic_hash": "7b1e6c3aef1aee51a4dac0a23c4723a6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_TSLA.png": {
+    "mtime": 1779891958.5670598,
+    "ast_hash": "d5fa8bdc50413c3d028fec1d37a3cd1b",
+    "semantic_hash": "d5fa8bdc50413c3d028fec1d37a3cd1b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_UBER.png": {
+    "mtime": 1779891958.5675151,
+    "ast_hash": "d762e723b826a6974f3cc58823d0d1b5",
+    "semantic_hash": "d762e723b826a6974f3cc58823d0d1b5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_V.png": {
+    "mtime": 1779891958.5679066,
+    "ast_hash": "526350964dd79cc6a492509538d69094",
+    "semantic_hash": "526350964dd79cc6a492509538d69094"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_WFC.png": {
+    "mtime": 1779891958.56818,
+    "ast_hash": "40f30928988c419c4a4dc5270277614a",
+    "semantic_hash": "40f30928988c419c4a4dc5270277614a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step1/plots/freq_hist_WMT.png": {
+    "mtime": 1779891958.5684698,
+    "ast_hash": "56cbed52048042ad5de280120b0f8eca",
+    "semantic_hash": "56cbed52048042ad5de280120b0f8eca"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_ABNB.png": {
+    "mtime": 1779891958.590141,
+    "ast_hash": "785ffccfa40b82ec4a6cfe7d1af47722",
+    "semantic_hash": "785ffccfa40b82ec4a6cfe7d1af47722"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_AMZN.png": {
+    "mtime": 1779891958.5903058,
+    "ast_hash": "a4da162fc82f8d6e187f16237fd833a1",
+    "semantic_hash": "a4da162fc82f8d6e187f16237fd833a1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_BA.png": {
+    "mtime": 1779891958.59046,
+    "ast_hash": "2e920524b0af80704959aa5e8388b294",
+    "semantic_hash": "2e920524b0af80704959aa5e8388b294"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_BAC.png": {
+    "mtime": 1779891958.590658,
+    "ast_hash": "77908606948b01928e6930e19e196a06",
+    "semantic_hash": "77908606948b01928e6930e19e196a06"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_GM.png": {
+    "mtime": 1779891958.5908113,
+    "ast_hash": "aac0087db9d5a202e7dbc80bfe8a1653",
+    "semantic_hash": "aac0087db9d5a202e7dbc80bfe8a1653"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_GS.png": {
+    "mtime": 1779891958.5910025,
+    "ast_hash": "67dab2305d3b9b79ca4a4eb1d81f0d33",
+    "semantic_hash": "67dab2305d3b9b79ca4a4eb1d81f0d33"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_INTC.png": {
+    "mtime": 1779891958.591153,
+    "ast_hash": "f436d7ef2bef8f4795ad4bf361e120a1",
+    "semantic_hash": "f436d7ef2bef8f4795ad4bf361e120a1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_MCD.png": {
+    "mtime": 1779891958.5913432,
+    "ast_hash": "f4d40fa40436a42ecbffea5516075f23",
+    "semantic_hash": "f4d40fa40436a42ecbffea5516075f23"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_MS.png": {
+    "mtime": 1779891958.5914953,
+    "ast_hash": "b6cbbc92be2c03b17852609b51c02e6d",
+    "semantic_hash": "b6cbbc92be2c03b17852609b51c02e6d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_MSFT.png": {
+    "mtime": 1779891958.5916462,
+    "ast_hash": "88c4a730dd312611e40d37750bbfafac",
+    "semantic_hash": "88c4a730dd312611e40d37750bbfafac"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_NFLX.png": {
+    "mtime": 1779891958.591834,
+    "ast_hash": "9e92840b69eb577be0133797089f9798",
+    "semantic_hash": "9e92840b69eb577be0133797089f9798"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_SBUX.png": {
+    "mtime": 1779891958.591984,
+    "ast_hash": "972f395e1a31bd582c28f6fbf225460d",
+    "semantic_hash": "972f395e1a31bd582c28f6fbf225460d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_T.png": {
+    "mtime": 1779891958.5921416,
+    "ast_hash": "aab4e2c49135fdca1e675dfe9eca7bfd",
+    "semantic_hash": "aab4e2c49135fdca1e675dfe9eca7bfd"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_UBER.png": {
+    "mtime": 1779891958.5923443,
+    "ast_hash": "b76abd84e5525fc57ad897da41551928",
+    "semantic_hash": "b76abd84e5525fc57ad897da41551928"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_V.png": {
+    "mtime": 1779891958.5924964,
+    "ast_hash": "d6533791812544fabbe47b3ca0c31922",
+    "semantic_hash": "d6533791812544fabbe47b3ca0c31922"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_WFC.png": {
+    "mtime": 1779891958.5926855,
+    "ast_hash": "84b29ad65c326f5852d309ccfabf0e38",
+    "semantic_hash": "84b29ad65c326f5852d309ccfabf0e38"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_WMT.png": {
+    "mtime": 1779891958.592882,
+    "ast_hash": "0f58ab7255a71ea7c64d0e9ce6433d26",
+    "semantic_hash": "0f58ab7255a71ea7c64d0e9ce6433d26"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/stance_hist_all.png": {
+    "mtime": 1779891958.5936239,
+    "ast_hash": "db44d94e4e68732e3754bc89fa65c4ca",
+    "semantic_hash": "db44d94e4e68732e3754bc89fa65c4ca"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_ABNB.png": {
+    "mtime": 1779891958.5951726,
+    "ast_hash": "df82d23278e46e3500c2938a70ce2b3b",
+    "semantic_hash": "df82d23278e46e3500c2938a70ce2b3b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_AMZN.png": {
+    "mtime": 1779891958.5964096,
+    "ast_hash": "fccbc1e2864a370424e44caa48604f9d",
+    "semantic_hash": "fccbc1e2864a370424e44caa48604f9d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_BA.png": {
+    "mtime": 1779891958.5973969,
+    "ast_hash": "b049f08d757ef340dc78c74775ab4791",
+    "semantic_hash": "b049f08d757ef340dc78c74775ab4791"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_BAC.png": {
+    "mtime": 1779891958.598894,
+    "ast_hash": "3add87bda4809c06906b6818bf233090",
+    "semantic_hash": "3add87bda4809c06906b6818bf233090"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_GM.png": {
+    "mtime": 1779891958.5997727,
+    "ast_hash": "d59a167b43627425c6635e888887e73c",
+    "semantic_hash": "d59a167b43627425c6635e888887e73c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_GS.png": {
+    "mtime": 1779891958.6008797,
+    "ast_hash": "0d0edb4a621427b49fb646f7d81ef941",
+    "semantic_hash": "0d0edb4a621427b49fb646f7d81ef941"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_INTC.png": {
+    "mtime": 1779891958.601809,
+    "ast_hash": "1f10cb641d8c0ccf8646e17250044117",
+    "semantic_hash": "1f10cb641d8c0ccf8646e17250044117"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_MCD.png": {
+    "mtime": 1779891958.6028514,
+    "ast_hash": "ba418c35aba43de8aa591bae822d39c3",
+    "semantic_hash": "ba418c35aba43de8aa591bae822d39c3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_MS.png": {
+    "mtime": 1779891958.6037037,
+    "ast_hash": "543bcdd1eed01f057ef4aeb59c3b4b74",
+    "semantic_hash": "543bcdd1eed01f057ef4aeb59c3b4b74"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_MSFT.png": {
+    "mtime": 1779891958.6045117,
+    "ast_hash": "1b608117f920837936c10e6613a4d0b0",
+    "semantic_hash": "1b608117f920837936c10e6613a4d0b0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_NFLX.png": {
+    "mtime": 1779891958.6049156,
+    "ast_hash": "072012e305965ae93a0769b7920f5f6e",
+    "semantic_hash": "072012e305965ae93a0769b7920f5f6e"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_SBUX.png": {
+    "mtime": 1779891958.6059039,
+    "ast_hash": "c18f26415fc8acc587ef5510affe3046",
+    "semantic_hash": "c18f26415fc8acc587ef5510affe3046"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_T.png": {
+    "mtime": 1779891958.6065552,
+    "ast_hash": "3bd895af973447ca05c798bb65797bdc",
+    "semantic_hash": "3bd895af973447ca05c798bb65797bdc"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_UBER.png": {
+    "mtime": 1779891958.607424,
+    "ast_hash": "1210f0c4087740635dae8fceb7b97585",
+    "semantic_hash": "1210f0c4087740635dae8fceb7b97585"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_V.png": {
+    "mtime": 1779891958.6081262,
+    "ast_hash": "b53b6ecf92949c09c826445ad7feefd1",
+    "semantic_hash": "b53b6ecf92949c09c826445ad7feefd1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_WFC.png": {
+    "mtime": 1779891958.6090705,
+    "ast_hash": "c88ff79b88d0c84a1284b04ef6addded",
+    "semantic_hash": "c88ff79b88d0c84a1284b04ef6addded"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step2/plots/weekly_ts_WMT.png": {
+    "mtime": 1779891958.610047,
+    "ast_hash": "b39a0d6d60e2b5512620ecccdf93e0aa",
+    "semantic_hash": "b39a0d6d60e2b5512620ecccdf93e0aa"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_ABNB.png": {
+    "mtime": 1779891958.6172028,
+    "ast_hash": "3c249db7327eb97474cf1abb8f8a9ed8",
+    "semantic_hash": "3c249db7327eb97474cf1abb8f8a9ed8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_AMZN.png": {
+    "mtime": 1779891958.6173327,
+    "ast_hash": "edfa77e8e499e1bdc3a88fa8e3c584d0",
+    "semantic_hash": "edfa77e8e499e1bdc3a88fa8e3c584d0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_BA.png": {
+    "mtime": 1779891958.6181076,
+    "ast_hash": "11294ab43f569c624947c93c37c4931f",
+    "semantic_hash": "11294ab43f569c624947c93c37c4931f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_BAC.png": {
+    "mtime": 1779891958.6184387,
+    "ast_hash": "83e46e3f0c7338f694f8012ab650000f",
+    "semantic_hash": "83e46e3f0c7338f694f8012ab650000f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_GM.png": {
+    "mtime": 1779891958.6185827,
+    "ast_hash": "979b9d75ec3c6046afeef0d2667c645d",
+    "semantic_hash": "979b9d75ec3c6046afeef0d2667c645d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_GS.png": {
+    "mtime": 1779891958.6190844,
+    "ast_hash": "6a59b9d3ac63081b25e687fb60690799",
+    "semantic_hash": "6a59b9d3ac63081b25e687fb60690799"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_INTC.png": {
+    "mtime": 1779891958.6194165,
+    "ast_hash": "203d915fd02055da61a8832cca670428",
+    "semantic_hash": "203d915fd02055da61a8832cca670428"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_MCD.png": {
+    "mtime": 1779891958.6195507,
+    "ast_hash": "3ef8266729958d0aa1aec59772935e52",
+    "semantic_hash": "3ef8266729958d0aa1aec59772935e52"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_MS.png": {
+    "mtime": 1779891958.6198256,
+    "ast_hash": "b75f4626598d35835cfda6453302dab1",
+    "semantic_hash": "b75f4626598d35835cfda6453302dab1"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_MSFT.png": {
+    "mtime": 1779891958.6201003,
+    "ast_hash": "0ea716c13827595dc597456ec3c5e567",
+    "semantic_hash": "0ea716c13827595dc597456ec3c5e567"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_SBUX.png": {
+    "mtime": 1779891958.6203098,
+    "ast_hash": "eb960b52d1c93b21049573964452f3d3",
+    "semantic_hash": "eb960b52d1c93b21049573964452f3d3"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_T.png": {
+    "mtime": 1779891958.62044,
+    "ast_hash": "4421a0c89fa3c5f366cff428f89e24b9",
+    "semantic_hash": "4421a0c89fa3c5f366cff428f89e24b9"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_UBER.png": {
+    "mtime": 1779891958.6207106,
+    "ast_hash": "bed717d5114b4044891b11b029075cc0",
+    "semantic_hash": "bed717d5114b4044891b11b029075cc0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_V.png": {
+    "mtime": 1779891958.6208508,
+    "ast_hash": "c23bc9ea415af4259808a88a767e16d9",
+    "semantic_hash": "c23bc9ea415af4259808a88a767e16d9"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_WFC.png": {
+    "mtime": 1779891958.6211274,
+    "ast_hash": "721f5abe0e5c633a1cc174ebb2e93c6f",
+    "semantic_hash": "721f5abe0e5c633a1cc174ebb2e93c6f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step3/plots/gap_map_WMT.png": {
+    "mtime": 1779891958.6213646,
+    "ast_hash": "335268f8e0b4516072ae2da2a7becb2f",
+    "semantic_hash": "335268f8e0b4516072ae2da2a7becb2f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_ABNB.png": {
+    "mtime": 1779891958.651982,
+    "ast_hash": "21c087e7d671106363aa7b2fd3e72dbb",
+    "semantic_hash": "21c087e7d671106363aa7b2fd3e72dbb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_AMZN.png": {
+    "mtime": 1779891958.6525004,
+    "ast_hash": "7de5812f0d4cff159b7ddac78976d85d",
+    "semantic_hash": "7de5812f0d4cff159b7ddac78976d85d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_BA.png": {
+    "mtime": 1779891958.6526794,
+    "ast_hash": "4aa7feff371f0958fd91a09628014a95",
+    "semantic_hash": "4aa7feff371f0958fd91a09628014a95"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_BAC.png": {
+    "mtime": 1779891958.6528594,
+    "ast_hash": "e5cf9c504b68049fc3c2fc7c0fec869b",
+    "semantic_hash": "e5cf9c504b68049fc3c2fc7c0fec869b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_GM.png": {
+    "mtime": 1779891958.6530378,
+    "ast_hash": "97cf4b2b9bec6e6f13929fb55ec78e91",
+    "semantic_hash": "97cf4b2b9bec6e6f13929fb55ec78e91"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_GS.png": {
+    "mtime": 1779891958.6532207,
+    "ast_hash": "c3baa217beb2be5048c763868f97a993",
+    "semantic_hash": "c3baa217beb2be5048c763868f97a993"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_INTC.png": {
+    "mtime": 1779891958.6533997,
+    "ast_hash": "56ca0375873a2e56801ea14dae72ca22",
+    "semantic_hash": "56ca0375873a2e56801ea14dae72ca22"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_MCD.png": {
+    "mtime": 1779891958.6535876,
+    "ast_hash": "81e13072bb64250fe20d45065383cffd",
+    "semantic_hash": "81e13072bb64250fe20d45065383cffd"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_MS.png": {
+    "mtime": 1779891958.6537623,
+    "ast_hash": "230969e0701538f25569196cd0cd788b",
+    "semantic_hash": "230969e0701538f25569196cd0cd788b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_MSFT.png": {
+    "mtime": 1779891958.6539059,
+    "ast_hash": "239f509fff7bbfdb391b64bbdd2c5ed8",
+    "semantic_hash": "239f509fff7bbfdb391b64bbdd2c5ed8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_SBUX.png": {
+    "mtime": 1779891958.6542277,
+    "ast_hash": "8683324d454724937ff90d4c7020b9cd",
+    "semantic_hash": "8683324d454724937ff90d4c7020b9cd"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_T.png": {
+    "mtime": 1779891958.6543849,
+    "ast_hash": "e984dbad3bc407b9e58355c3f110e523",
+    "semantic_hash": "e984dbad3bc407b9e58355c3f110e523"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_UBER.png": {
+    "mtime": 1779891958.6545465,
+    "ast_hash": "c25443d555587d8259b51ab34f353caf",
+    "semantic_hash": "c25443d555587d8259b51ab34f353caf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_V.png": {
+    "mtime": 1779891958.6546998,
+    "ast_hash": "ef8190de42d45e42a350e50a96412bbf",
+    "semantic_hash": "ef8190de42d45e42a350e50a96412bbf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_WFC.png": {
+    "mtime": 1779891958.654895,
+    "ast_hash": "f141056915445b15fa7350d8b4f56c00",
+    "semantic_hash": "f141056915445b15fa7350d8b4f56c00"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_hist_WMT.png": {
+    "mtime": 1779891958.655057,
+    "ast_hash": "9a31f9069d7622019b18f1b86b6bbb18",
+    "semantic_hash": "9a31f9069d7622019b18f1b86b6bbb18"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_ABNB.png": {
+    "mtime": 1779891958.6556993,
+    "ast_hash": "c96cd7195dbc424fad55d2df3b931bae",
+    "semantic_hash": "c96cd7195dbc424fad55d2df3b931bae"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_AMZN.png": {
+    "mtime": 1779891958.6563952,
+    "ast_hash": "f729298a5a7506574766027037e89b2c",
+    "semantic_hash": "f729298a5a7506574766027037e89b2c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_BA.png": {
+    "mtime": 1779891958.6569552,
+    "ast_hash": "98f633e806bd08fe592ac3d706262f99",
+    "semantic_hash": "98f633e806bd08fe592ac3d706262f99"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_BAC.png": {
+    "mtime": 1779891958.6577034,
+    "ast_hash": "d5592f29e7f014b79b90689b2b3ce0e8",
+    "semantic_hash": "d5592f29e7f014b79b90689b2b3ce0e8"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_GM.png": {
+    "mtime": 1779891958.6581817,
+    "ast_hash": "26eae7f0863a3081ecc7a22e246d1d52",
+    "semantic_hash": "26eae7f0863a3081ecc7a22e246d1d52"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_GS.png": {
+    "mtime": 1779891958.6590455,
+    "ast_hash": "b6a717f6dbc95ad83e3b4284ce9e49ca",
+    "semantic_hash": "b6a717f6dbc95ad83e3b4284ce9e49ca"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_INTC.png": {
+    "mtime": 1779891958.6597269,
+    "ast_hash": "2d7710e43ecfadb5e1bf0e439fe289ce",
+    "semantic_hash": "2d7710e43ecfadb5e1bf0e439fe289ce"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_MCD.png": {
+    "mtime": 1779891958.660319,
+    "ast_hash": "11006ac45cf3f4a415a0416f3c4cfbf4",
+    "semantic_hash": "11006ac45cf3f4a415a0416f3c4cfbf4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_MS.png": {
+    "mtime": 1779891958.6609716,
+    "ast_hash": "4c4b4481e8a783cb55fc2c4ca8a393b6",
+    "semantic_hash": "4c4b4481e8a783cb55fc2c4ca8a393b6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_MSFT.png": {
+    "mtime": 1779891958.661662,
+    "ast_hash": "945cc47e7724c71c5a23d70588208c2d",
+    "semantic_hash": "945cc47e7724c71c5a23d70588208c2d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_SBUX.png": {
+    "mtime": 1779891958.662406,
+    "ast_hash": "704dbc553f5dd8efe7d4d1fc000386eb",
+    "semantic_hash": "704dbc553f5dd8efe7d4d1fc000386eb"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_T.png": {
+    "mtime": 1779891958.6629374,
+    "ast_hash": "d3142e5cf4d5d0b14d3bb9d7261929ef",
+    "semantic_hash": "d3142e5cf4d5d0b14d3bb9d7261929ef"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_UBER.png": {
+    "mtime": 1779891958.6634784,
+    "ast_hash": "3c9d56d90f9442fcfb98c6bfd44e7e49",
+    "semantic_hash": "3c9d56d90f9442fcfb98c6bfd44e7e49"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_V.png": {
+    "mtime": 1779891958.6641364,
+    "ast_hash": "ddadb78df90f48ac89b8eeafad3c42e5",
+    "semantic_hash": "ddadb78df90f48ac89b8eeafad3c42e5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_WFC.png": {
+    "mtime": 1779891958.6646726,
+    "ast_hash": "198c2736631c4848dc3f1ab38cc8dd66",
+    "semantic_hash": "198c2736631c4848dc3f1ab38cc8dd66"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step4/plots/returns_ts_WMT.png": {
+    "mtime": 1779891958.6651545,
+    "ast_hash": "f9b8bfab44b8d0f0620df2febe68c0ec",
+    "semantic_hash": "f9b8bfab44b8d0f0620df2febe68c0ec"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_ABNB.png": {
+    "mtime": 1779891958.6739101,
+    "ast_hash": "98796ee08b43f3344a244958825d16f5",
+    "semantic_hash": "98796ee08b43f3344a244958825d16f5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_AMZN.png": {
+    "mtime": 1779891958.6781454,
+    "ast_hash": "5e5dafd4ba2d5b29086d191299172f4a",
+    "semantic_hash": "5e5dafd4ba2d5b29086d191299172f4a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_BA.png": {
+    "mtime": 1779891958.6805418,
+    "ast_hash": "15f3fd3e79b3b252ed87996cb91b9efe",
+    "semantic_hash": "15f3fd3e79b3b252ed87996cb91b9efe"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_BAC.png": {
+    "mtime": 1779891958.682163,
+    "ast_hash": "aa79ccc16f57287ec0151b4bbf9e0364",
+    "semantic_hash": "aa79ccc16f57287ec0151b4bbf9e0364"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_GM.png": {
+    "mtime": 1779891958.684075,
+    "ast_hash": "f4f1ef434588b9b85365263dc490c9bf",
+    "semantic_hash": "f4f1ef434588b9b85365263dc490c9bf"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_GS.png": {
+    "mtime": 1779891958.686421,
+    "ast_hash": "d3a44fee4a32db197554bc241841448a",
+    "semantic_hash": "d3a44fee4a32db197554bc241841448a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_INTC.png": {
+    "mtime": 1779891958.6896725,
+    "ast_hash": "9f42a6fd08796b63c479d469c5c8f8f6",
+    "semantic_hash": "9f42a6fd08796b63c479d469c5c8f8f6"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_MCD.png": {
+    "mtime": 1779891958.6921792,
+    "ast_hash": "f93fd5ef85787cb4416b436c59c9c334",
+    "semantic_hash": "f93fd5ef85787cb4416b436c59c9c334"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_MS.png": {
+    "mtime": 1779891958.6945422,
+    "ast_hash": "f0ea24c3a3a7d23a3153e900b2dedc3f",
+    "semantic_hash": "f0ea24c3a3a7d23a3153e900b2dedc3f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_MSFT.png": {
+    "mtime": 1779891958.6975095,
+    "ast_hash": "4316492aba237ce6f62bdf0359ed5bc0",
+    "semantic_hash": "4316492aba237ce6f62bdf0359ed5bc0"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_SBUX.png": {
+    "mtime": 1779891958.7004402,
+    "ast_hash": "4ec1a93750cb055ff3ec5a00d0ff4595",
+    "semantic_hash": "4ec1a93750cb055ff3ec5a00d0ff4595"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_T.png": {
+    "mtime": 1779891958.703597,
+    "ast_hash": "50a2dcb94fa89d51eb829fcbc2eb054d",
+    "semantic_hash": "50a2dcb94fa89d51eb829fcbc2eb054d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_UBER.png": {
+    "mtime": 1779891958.7064638,
+    "ast_hash": "0ad02521ee83b0609445f78b82f026ed",
+    "semantic_hash": "0ad02521ee83b0609445f78b82f026ed"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_V.png": {
+    "mtime": 1779891958.711832,
+    "ast_hash": "929f13d5ae564db161bc30e2e487a2ac",
+    "semantic_hash": "929f13d5ae564db161bc30e2e487a2ac"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_WFC.png": {
+    "mtime": 1779891958.7151148,
+    "ast_hash": "ddc096b06780be773498a399e47b220c",
+    "semantic_hash": "ddc096b06780be773498a399e47b220c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step5/plots/stationarity_WMT.png": {
+    "mtime": 1779891958.7194357,
+    "ast_hash": "2702cc23de97f69acb2aec6e5f01b1ac",
+    "semantic_hash": "2702cc23de97f69acb2aec6e5f01b1ac"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_ABNB.png": {
+    "mtime": 1779891958.742721,
+    "ast_hash": "23ccc019c8c41c949917c9b6126a905a",
+    "semantic_hash": "23ccc019c8c41c949917c9b6126a905a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_AMZN.png": {
+    "mtime": 1779891958.7459092,
+    "ast_hash": "318a759cb60a33d495c93f941d8c44d4",
+    "semantic_hash": "318a759cb60a33d495c93f941d8c44d4"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_BA.png": {
+    "mtime": 1779891958.748049,
+    "ast_hash": "d0ac3206f1470e1ee1b1d55e699eb1cc",
+    "semantic_hash": "d0ac3206f1470e1ee1b1d55e699eb1cc"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_BAC.png": {
+    "mtime": 1779891958.7510543,
+    "ast_hash": "17383216c7dc3761042eb4e9a681927d",
+    "semantic_hash": "17383216c7dc3761042eb4e9a681927d"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_GM.png": {
+    "mtime": 1779891958.753393,
+    "ast_hash": "a02b1b65c2ac0fa4ea881a83145b122a",
+    "semantic_hash": "a02b1b65c2ac0fa4ea881a83145b122a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_GS.png": {
+    "mtime": 1779891958.7556689,
+    "ast_hash": "b0a947ebb0ea9787ea54b1aab04477e7",
+    "semantic_hash": "b0a947ebb0ea9787ea54b1aab04477e7"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_INTC.png": {
+    "mtime": 1779891958.756847,
+    "ast_hash": "43b8c190a871550e832f32fa03ebfdc5",
+    "semantic_hash": "43b8c190a871550e832f32fa03ebfdc5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_MCD.png": {
+    "mtime": 1779891958.7577653,
+    "ast_hash": "59163a992df26d607a5a28421cccc70f",
+    "semantic_hash": "59163a992df26d607a5a28421cccc70f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_MS.png": {
+    "mtime": 1779891958.7586746,
+    "ast_hash": "54da6470e596abafd06a72c795c8ac3a",
+    "semantic_hash": "54da6470e596abafd06a72c795c8ac3a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_MSFT.png": {
+    "mtime": 1779891958.759661,
+    "ast_hash": "1e5a271695c5f202243566dc20bacfc5",
+    "semantic_hash": "1e5a271695c5f202243566dc20bacfc5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_SBUX.png": {
+    "mtime": 1779891958.760692,
+    "ast_hash": "a41fb525b377106653a77fb916ad3e2b",
+    "semantic_hash": "a41fb525b377106653a77fb916ad3e2b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_T.png": {
+    "mtime": 1779891958.7616298,
+    "ast_hash": "66ca50c8ffccab9171a2fbed8804792b",
+    "semantic_hash": "66ca50c8ffccab9171a2fbed8804792b"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_UBER.png": {
+    "mtime": 1779891958.7625325,
+    "ast_hash": "3d26e3730f800b5d3ecde56d4e4d2b0a",
+    "semantic_hash": "3d26e3730f800b5d3ecde56d4e4d2b0a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_V.png": {
+    "mtime": 1779891958.763514,
+    "ast_hash": "b53c7050440abc0d2491d1f0314733ec",
+    "semantic_hash": "b53c7050440abc0d2491d1f0314733ec"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_WFC.png": {
+    "mtime": 1779891958.7645373,
+    "ast_hash": "b540be59bc268670a911274dc12a6372",
+    "semantic_hash": "b540be59bc268670a911274dc12a6372"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/VAR/diagnostics/step6/plots/breaks_WMT.png": {
+    "mtime": 1779891958.7655292,
+    "ast_hash": "306c0729366a9c584ff3da23968f627c",
+    "semantic_hash": "306c0729366a9c584ff3da23968f627c"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/cdf/cdf_articles_by_company.png": {
+    "mtime": 1777220981.7052178,
+    "ast_hash": "503d75fb62b9eae056e631866209a2ee",
+    "semantic_hash": "503d75fb62b9eae056e631866209a2ee"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/pipelines/results/post_stratification_cdf.png": {
+    "mtime": 1777220981.7089715,
+    "ast_hash": "277856199df6ec94247ac98083a80700",
+    "semantic_hash": "277856199df6ec94247ac98083a80700"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/sampling/pipelines/results/pre_stratification_cdf.png": {
+    "mtime": 1777220981.7107131,
+    "ast_hash": "d3a84687a4e156fd4a20c415707aca7a",
+    "semantic_hash": "d3a84687a4e156fd4a20c415707aca7a"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/event_study/event_study_result.png": {
+    "mtime": 1777220981.711847,
+    "ast_hash": "bbaf00d1ee0dde2277d3b1d213652861",
+    "semantic_hash": "bbaf00d1ee0dde2277d3b1d213652861"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/event_study/event_study_stats_table.png": {
+    "mtime": 1777220981.7122297,
+    "ast_hash": "c48dc406eeaa65606735bdd19d5e30f5",
+    "semantic_hash": "c48dc406eeaa65606735bdd19d5e30f5"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/final_study_output/plot_4_silent_shocks_time_series.png": {
+    "mtime": 1777220981.7125297,
+    "ast_hash": "5e9c664c78afbf89439777237d33e1ad",
+    "semantic_hash": "5e9c664c78afbf89439777237d33e1ad"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/anomaly_det/narrative_test/plot_2_media_behavior_all.png": {
+    "mtime": 1777220981.7138925,
+    "ast_hash": "b4b82e2c8c4e75c67961dea39b0a9b25",
+    "semantic_hash": "b4b82e2c8c4e75c67961dea39b0a9b25"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/visualizations/article_count_distribution.png": {
+    "mtime": 1777220981.7191944,
+    "ast_hash": "5471754ca63d01435e4a66603ad11787",
+    "semantic_hash": "5471754ca63d01435e4a66603ad11787"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/visualizations/impact_analysis/impact_beta_plot.png": {
+    "mtime": 1777220981.7201195,
+    "ast_hash": "37eeaf2a2e87d9f3b702f427131bb599",
+    "semantic_hash": "37eeaf2a2e87d9f3b702f427131bb599"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/visualizations/impact_analysis/impact_correlation_matrix.png": {
+    "mtime": 1777220981.7214122,
+    "ast_hash": "a6bd8dd6943bad0cb018da0d0916808f",
+    "semantic_hash": "a6bd8dd6943bad0cb018da0d0916808f"
+  },
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/stma/visualizations/top_20_articles.png": {
+    "mtime": 1777220981.721953,
+    "ast_hash": "f045877bc42a15dcb57562008fbad5d1",
+    "semantic_hash": "f045877bc42a15dcb57562008fbad5d1"
+  }
+}

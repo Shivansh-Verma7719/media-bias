@@ -176,72 +176,72 @@ Pre-trend flat. $\beta_0$ (Jan 2020) $={-}0.00145$, $p{=}0.044$; post bins mostl
 \midrule
 % ============ RQ3 ============
 \addlinespace[2pt]
-\multicolumn{7}{l}{\textbf{RQ3: Did the bias$\to$return link \emph{strengthen} post-2020?} \quad Interpretation of the pre/post Granger split (no new estimation; draws on RQ4).}\\
-\multicolumn{7}{l}{\footnotesize\itshape Split: firm-specific Bai--Perron single break in the bias series (see RQ3.C1), \emph{not} a common Jan 2020 date.}\\
-\addlinespace[2pt]
-\midrule
-
-RQ3.C1 & \chk\ Structural breaks (Bai--Perron) &
-Single largest mean shift per firm in the bias series &
-16 firms &
-Breaks span \emph{2018--2024} (only V $\approx$ Sep 2020). ``Pre-break'' $\ne$ ``pre-COVID'' $\Rightarrow$ calendar reading needs a fixed-date robustness check. &
-\na & \na \\
-
-RQ3.1 & Pre vs.\ post-break Granger shift (from RQ4) &
-Compare Bias$\to$Returns Granger $p$ across the firm-specific break &
-panel $+$ firm; both corpora &
-\allart\ panel pre $p{=}0.245\to$ post $0.617$ (no change); firm WFC pre $0.345\to$ post $0.013^{**}$. \newline\rel\ panel pre $0.009^{***}\to$ post $0.672$; firms MS/SBUX significant \emph{pre}-break, none post. Effect is \textbf{pre}-break, not strengthening after 2020. &
-\na & \marg \\
-
-\midrule
-% ============ RQ4 (was RQ5) ============
-\addlinespace[2pt]
-\multicolumn{7}{l}{\textbf{RQ4: Does media bias \emph{predict} returns at all?} \quad Weekly VAR$(p{=}3)$ $+$ Granger causality (HAC SE), 15 firms. Both corpora reported.}\\
+\multicolumn{7}{l}{\textbf{RQ3: Does media bias \emph{predict} returns at all?} \quad Weekly VAR$(p{=}3)$ $+$ Granger causality (HAC SE), 15 firms. Both corpora reported.}\\
 \multicolumn{7}{l}{\footnotesize\itshape Construction: ensemble relevance filter (both corpora); weekly ISO aggregation $+$ gap imputation; $\Delta$bias (bias I(1)$\to$differenced); weekly log returns winsorized $\pm5$SD/firm (excl.\ AT\&T); Helmert FE removal.}\\
 \addlinespace[2pt]
 \midrule
 
-RQ4.C1 & \chk\ Stationarity (ADF $+$ KPSS) &
+RQ3.C1 & \chk\ Stationarity (ADF $+$ KPSS) &
 ADF $H_0$: unit root; KPSS $H_0$: stationary &
 16 firms, weekly &
 Returns I(0) all 16. Bias levels I(1)/``conflicting'' 14/16 $\Rightarrow$ VAR uses $\Delta$bias. &
 \na & \na \\
 
-RQ4.C2 & \chk\ VAR lag selection \& residual diagnostics &
+RQ3.C2 & \chk\ VAR lag selection \& residual diagnostics &
 BIC lag order; stability roots; Portmanteau; Jarque--Bera; ARCH &
 15 firms &
 Modal BIC lag $p{=}3$; all stable. Portmanteau fails 11/15; JB fails all; ARCH 10/15 $\Rightarrow$ HAC/Newey--West SE throughout. &
 \na & \na \\
 
-RQ4.1 & Panel VAR Granger: \,Bias $\to$ Returns &
+RQ3.1 & Panel VAR Granger: \,Bias $\to$ Returns &
 Pooled VAR on $[\Delta\text{bias}_{it},\text{return}_{it}]$; Helmert FE; $+$VIX $+$S\&P ret $+$ article count &
 pooled firm-weeks; 15 firms &
 \allart\ $p{=}0.976$ / $0.245$ / $0.617$ (full/pre/post); $N{=}7{,}493$. \newline\rel\ $p{=}0.114$ / $\mathbf{0.009^{***}}$ / $0.672$; $N{=}6{,}976$. Significant pre-break only under filtering. &
 n/a ($F$-test) & \sig \\
 
-RQ4.2 & Panel VAR Granger: \,Returns $\to$ Bias &
-(reverse direction of RQ4.1) &
+RQ3.2 & Panel VAR Granger: \,Returns $\to$ Bias &
+(reverse direction of RQ3.1) &
 15 firms &
 \allart\ $p{=}0.200$ / $0.801$ / $0.187$. \newline\rel\ $p{=}0.706$ / $0.359$ / $0.131$. Reverse channel null in both corpora. &
 n/a ($F$-test) & \ns \\
 
-RQ4.3 & Firm Granger: \,Bias $\to$ Returns (sig.\ firms) &
+RQ3.3 & Firm Granger: \,Bias $\to$ Returns (sig.\ firms) &
 Per-firm bivariate VAR, HAC SE; full / pre / post-break &
 $\ge100$ wks/firm &
-\allart\ WFC full $0.023^{**}$, post $0.013^{**}$; MS full $0.058^{*}$. \newline\rel\ SBUX full $0.024^{**}$, pre $0.014^{**}$; MS pre $\mathbf{0.001^{***}}$; no firm sig.\ post-break. &
+\allart\ WFC full $0.023^{**}$, post $0.013^{**}$; MS full $0.058^{*}$; MCD post $0.077^{*}$. \newline\rel\ SBUX full $0.024^{**}$, pre $0.014^{**}$; MS pre $\mathbf{0.001^{***}}$; no firm sig.\ post-break. &
 n/a ($F$-test) & \sig \\
 
-RQ4.4 & Firm Granger: \,Returns $\to$ Bias (sig.\ firms) &
+RQ3.4 & Firm Granger: \,Returns $\to$ Bias (sig.\ firms) &
 Per-firm bivariate VAR, HAC SE &
 $\ge100$ wks/firm &
-\allart\ GS full $0.012^{**}$ / post $0.007^{***}$; MS post $0.016^{**}$; BA post $0.014^{**}$. \newline\rel\ GS full $0.032^{**}$ / pre $0.010^{***}$; GM full $0.079^{*}$. Price$\to$coverage for financials. &
+\allart\ GS full $0.012^{**}$ / post $0.007^{***}$; MS post $0.016^{**}$; BA post $0.014^{**}$; MCD pre $0.027^{**}$. \newline\rel\ GS full $0.032^{**}$ / pre $0.010^{***}$; GM full $0.079^{*}$. Price$\to$coverage for financials. &
 n/a ($F$-test) & \sig \\
 
-RQ4.5 & Firm Granger: \,remaining firms &
+RQ3.5 & Firm Granger: \,remaining firms &
 Per-firm bivariate VAR, HAC SE &
 both corpora &
-ABNB, AMZN, T, BAC, INTC, MCD, MSFT, UBER, V: no significant Granger in either direction (either corpus). WFC dropped (coverage); WMT excluded (VAR spec). &
+ABNB, AMZN, BAC, INTC, MSFT, T, UBER, V: no significant Granger in either direction. NFLX dropped (coverage); WMT excluded (data bug). &
 n/a ($F$-test) & \ns \\
+
+\midrule
+% ============ RQ4 ============
+\addlinespace[2pt]
+\multicolumn{7}{l}{\textbf{RQ4: Did the bias$\to$return link \emph{strengthen} post-2020?} \quad Interpretation of the pre/post Granger split (no new estimation; draws on RQ3).}\\
+\multicolumn{7}{l}{\footnotesize\itshape Split: firm-specific Bai--Perron single break in the bias series (see RQ4.C1), \emph{not} a common Jan 2020 date.}\\
+\addlinespace[2pt]
+\midrule
+
+RQ4.C1 & \chk\ Structural breaks (Bai--Perron) &
+Single largest mean shift per firm in the bias series &
+16 firms &
+Breaks span \emph{2018--2024} (only V $\approx$ Sep 2020). ``Pre-break'' $\ne$ ``pre-COVID'' $\Rightarrow$ calendar reading needs a fixed-date robustness check. &
+\na & \na \\
+
+RQ4.1 & Pre vs.\ post-break Granger shift (from RQ3) &
+Compare Bias$\to$Returns Granger $p$ across the firm-specific break &
+panel $+$ firm; both corpora &
+\allart\ panel pre $p{=}0.245\to$ post $0.617$ (no change); firm WFC pre $0.345\to$ post $0.013^{**}$. \newline\rel\ panel pre $0.009^{***}\to$ post $0.672$; firms MS/SBUX significant \emph{pre}-break, none post. Effect is \textbf{pre}-break, not strengthening after 2020. &
+\na & \marg \\
 
 \end{longtable}
 \footnotetext{RQ2.2 within-$R^2\approx0$ because month fixed effects absorb the S\&P~500 return (the dominant regressor); the model's explanatory power is loaded onto the FE, not the within variation.}
@@ -255,12 +255,12 @@ Static pre/post dummies are significant on the one-way firm-FE design (RQ1.L) bu
 once daily common shocks are absorbed (RQ1.1, RQ2.2); a single Post dummy averages five
 heterogeneous post-shock years into one coefficient. The monthly event study (RQ1.4) shows the
 stance shift is gradual, rising to $\beta_{+12}{=}{+}0.064$ by year~1, while returns show a
-one-month hit at the event date. The weekly VAR (RQ4) is run on two corpora. On all scored
+one-month hit at the event date. The weekly VAR (RQ3) is run on two corpora. On all scored
 articles, media bias does not predict returns at the panel level ($p{=}0.976$). On
 relevance-filtered articles the effect is significant in the pre-break period only (panel
 $p{=}0.009$; firms MS, SBUX) and null post-break ($p{=}0.672$), which is the reverse of a post-2020
-strengthening (RQ3). Because the structural breaks are firm-specific and span 2018 to 2024
-(RQ3.C1), ``pre-break'' is not the same as ``pre-COVID,'' so the calendar reading needs a
+strengthening (RQ4). Because the structural breaks are firm-specific and span 2018 to 2024
+(RQ4.C1), ``pre-break'' is not the same as ``pre-COVID,'' so the calendar reading needs a
 fixed-date robustness check. Reverse causality (returns$\to$bias) is significant only for
 financials (GS, MS), consistent with price moves preceding coverage.
 
