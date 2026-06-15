@@ -81,19 +81,35 @@ The study is grounded in three observations from the project work so far. First,
 
 We therefore build a two-stage pipeline: (i) relevance classification that filters articles to those that actually report on the target firm, and (ii) NewsMTSC stance scoring with confidence thresholds. With this signal we pose three research questions on structural shifts in stance and returns and the post-shock stance-return linkage. Our empirical strategy combines pre/post regressions, interrupted time series, difference-in-differences, VAR and Granger causality, and event studies to triangulate the stance-return channel.
 
-The remainder of the paper proceeds as follows. Section II defines research questions and hypotheses. Section III provides the data story and pipeline. Section IV lays out the methodology and identification strategy. Section V discusses validity threats and robustness. Section VI concludes with planned deliverables.
+The remainder of the paper proceeds as follows. Section II states the research questions and formal hypotheses. Section III describes the data pipeline. Section IV develops the methodology and estimating equations. Section V presents results for each RQ. Section VI addresses robustness, and Section VII concludes.
 
 \section{Research Questions and Hypotheses}
-We formalize three research questions (RQs) that map directly to the project pipeline.
 
-\textbf{RQ1: Structural shift in media stance.} How did media reporting (stance) toward large-cap firms change pre versus post the 2020 recession? \\
-\textbf{H1:} The 2020 shock induced a systematic shift in average daily stance scores after January 2020, conditional on firm fixed effects and controls.
+Three hypotheses organize the empirical work. In each case the null corresponds to no effect; rejection constitutes a positive finding.
 
-\textbf{RQ2: Structural shift in returns.} Did the same shock change stock return behavior at the firm level? \\
-\textbf{H2:} Mean firm-day returns shifted after 2020, even after controlling for market returns and volatility.
+\textbf{RQ1: Stance shift.}
+Did the tone of firm-specific media coverage shift systematically after January 2020?
+\begin{align*}
+H_0^{(1)}&: \beta = 0 \\
+H_1^{(1)}&: \beta \neq 0
+\end{align*}
+where $\beta$ is the coefficient on $\text{Post}_t$ in the two-way fixed-effects stance regression (Section~\ref{sec:method}).
 
-\textbf{RQ3: Post-shock sensitivity.} Did the stance-to-return relationship strengthen after 2020? \\
-\textbf{H3:} The stance-to-return elasticity increased in the post-2020 period for S\&P 500 firms.
+\textbf{RQ2: Returns shift.}
+Did firm-idiosyncratic daily returns shift after January 2020 beyond market co-movement?
+\begin{align*}
+H_0^{(2)}&: \beta = 0 \\
+H_1^{(2)}&: \beta \neq 0
+\end{align*}
+where $\beta$ is the coefficient on $\text{Post}_t$ in the two-way fixed-effects returns regression.
+
+\textbf{RQ3: Stance-return predictability.}
+Does past media stance Granger-cause future returns, and did that relationship change post-2020?
+\begin{align*}
+H_0^{(3)}&: a^{(2,1)}_1 = \cdots = a^{(2,1)}_p = 0 \\
+H_1^{(3)}&: \exists\,\ell\text{ s.t. }a^{(2,1)}_\ell \neq 0
+\end{align*}
+where $a^{(2,1)}_\ell$ are the lagged-stance coefficients in the return equation of the VAR.
 
 \section{Data and Signal Construction}
 \subsection{Corpus and Coverage}
@@ -104,9 +120,14 @@ To avoid severe imbalance across firms and time, we use a stratified design: for
 \subsection{Sampling and Stratification (Facts and Figures)}
 The starting panel contains 4,706,589 firm-article links across the top firms and years 2015--2025 (Table~\ref{tab:yearly_matrix}). This raw panel is highly skewed: some firms dominate the coverage while others have sparse years.
 
-We therefore impose two sampling constraints. First, we filter to articles whose titles explicitly contain the company name or ticker and de-duplicate by normalized title per company (title-level deduplication). Second, we select firms that meet a minimum annual coverage threshold: a company is kept if it has at most three years with \(\leq 3000\) articles; companies failing this criterion are dropped (Table~\ref{tab:company_filter}). This yields a retained set of 22 companies and a stratified, filtered corpus of 483,514 firm-article links (Table~\ref{tab:filtered_matrix}).
+We therefore impose two sampling constraints. First, we filter to articles whose
+titles explicitly contain the company name and de-duplicate by normalized title
+per company. Second, we apply a minimum annual coverage threshold: a company is
+retained if it has at most three years with $\leq 3{,}000$ articles; companies
+failing this are dropped. Table~\ref{tab:pipeline} shows the full construction
+funnel from raw panel to analysis sample.
 
-\begin{table*}[htbp]
+\begin{table*}[!t]
 \caption{Yearly article totals in the starting panel (2015--2025)}
 \label{tab:yearly_matrix}
 \centering
@@ -119,30 +140,19 @@ Total articles & 570,999 & 625,582 & 652,741 & 525,259 & 559,027 & 363,962 & 291
 \end{tabular}
 \end{table*}
 
-\begin{table}[htbp]
-\caption{Coverage filter for firm selection}
-\label{tab:company_filter}
+\begin{table}[!t]
+\caption{Sample construction funnel}
+\label{tab:pipeline}
 \centering
+\small
 \begin{tabular}{lrr}
 \toprule
-Group & Firms & Rule \\
+Stage & Firms & Firm-article links \\
 \midrule
-Kept & 22 & At most three years with \(\leq 3000\) articles \\
-Dropped & 8 & More than three years with \(\leq 3000\) articles \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-\caption{Sample size after filtering and stratification}
-\label{tab:filtered_matrix}
-\centering
-\begin{tabular}{lr}
-\toprule
-Stage & Total firm-article links \\
-\midrule
-Starting panel & 4,706,589 \\
-Final stratified panel & 483,514 \\
+Raw panel (2015--2025)              & 30 & 4,706,589 \\
+\quad Title deduplication           & 30 & --- \\
+\quad Coverage filter ($\leq$3 sparse years) & 22 & --- \\
+Final stratified panel              & 22 & 483,514 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -177,311 +187,148 @@ where $A_{i,t}$ is the set of high-confidence articles for firm $i$ on day $t$ a
 The stance series is aligned to firm-day market outcomes: daily returns, S\&P 500 index returns, and VIX. We also log-normalize article volume in regressions. This alignment yields the panel used across the RQ1--RQ3 specifications.
 
 \section{Methodology}
-This section groups the empirical strategy into three layers: (i) structural shifts around the 2020 shock, (ii) stance-return linkage, and (iii) time-series dynamics and event studies.
+\label{sec:method}
 
-\subsection{RQ1: Stance Shift Around the 2020 Shock}
-We test for a structural shift in stance using a pre/post specification with firm fixed effects:
+\subsection{Identification and Panel Design}
+Both RQ1 and RQ2 use a pre/post design on a firm--day panel. The treatment indicator
 \begin{equation}
-\text{stance}_{i,t} = \alpha_i + \beta \cdot Post_t + \gamma' X_{i,t} + \varepsilon_{i,t}
+\text{Post}_t = \mathbf{1}[\,t \ge \text{2020-01-01}\,]
 \end{equation}
-where $Post_t$ equals 1 after January 2020 (post period: 2020--2025; pre: 2015--2019) and $X_{i,t}$ includes article volume and VIX. If pre-period means are not comparable, we implement Synthetic Control DiD (SCDiD) or use an interrupted time-series specification with level and trend shifts.
-
-\subsection{RQ2: Returns Shift Around the 2020 Shock}
-The returns analogue mirrors the stance regression, with returns as the outcome and market controls added:
+partitions the sample into a pre-period (2015--2019) and post-period (2020--2025).
+Firm fixed effects $\alpha_i$ absorb permanent cross-firm heterogeneity; time fixed
+effects $\delta_t$ absorb common shocks at the day or month level depending on the
+outcome. The stance outcome is the signed daily mean,
 \begin{equation}
-\text{return}_{i,t} = \alpha_i + \beta\,\text{Post}_t + \gamma' X_{i,t} + \varepsilon_{i,t}
+\text{bias}_{it} = \frac{1}{|\mathcal{A}_{it}|}\sum_{a \in \mathcal{A}_{it}}(p_a^{+}-p_a^{-}),
 \end{equation}
-where $X_{i,t}$ includes index returns and VIX to absorb market-wide shocks.
+and the returns outcome is the log return $\text{return}_{it} = \ln P_{it} - \ln P_{i,t-1}$.
+Both equations are estimated by within-transformation OLS with HC1-robust standard
+errors; day-clustered standard errors are additionally reported for RQ1.
 
-\subsection{RQ3: Stance-Return Linkage}
-We test the direct stance-return relationship using next-day returns:
+\subsection{RQ1: Stance Regression}
 \begin{equation}
-\text{return}_{i,t+1} = \alpha_i + \beta\,\text{stance}_{i,t} + \gamma' X_{i,t} + \varepsilon_{i,t}
+\text{bias}_{it} = \alpha_i + \delta_t^{\text{day}} + \beta\,\text{Post}_t + \gamma\,\text{vol}_{it} + \varepsilon_{it}
+\label{eq:rq1}
 \end{equation}
-To test whether the stance-to-return sensitivity changes post-2020, we use a triple interaction:
+Firm effects $\alpha_i$ absorb each firm's structural coverage level; daily time
+effects $\delta_t^{\text{day}}$ absorb market-wide sentiment common to all firms on
+a given day. The volume control $\text{vol}_{it} = |\mathcal{A}_{it}|$ is required
+because the mean of a noisy signal mechanically concentrates as more articles are
+averaged, so volume must be held fixed to isolate a genuine tone shift from a
+coverage shift. Under $H_0^{(1)}$, $\beta = 0$.
+
+\subsection{RQ2: Returns Regression}
 \begin{equation}
-\begin{aligned}
-\text{return}_{i,t} &= \alpha_i + \beta\,\text{Post}_t + \gamma\,\text{stance}_{i,t} \\
-&\quad + \delta(\text{Post}_t \times \text{stance}_{i,t}) + \theta X_{i,t} + \varepsilon_{i,t}
-\end{aligned}
+\text{return}_{it} = \alpha_i + \delta_t^{\text{month}} + \beta\,\text{Post}_t + \gamma_1\,\text{sp500\_ret}_t + \gamma_2\,\text{vix}_t + \varepsilon_{it}
+\label{eq:rq2}
 \end{equation}
-where the interaction $\text{Post}_t \times \text{stance}_{i,t}$ captures post-shock amplification of the stance-return channel.
+Monthly time effects $\delta_t^{\text{month}}$ absorb common market-level shocks at
+the monthly frequency, which is the resolution at which macro regime changes operate.
+The S\&P~500 return and VIX are included as daily controls within each month. Under
+$H_0^{(2)}$, $\beta = 0$.
 
-\subsection{Time-Series Dynamics and Event Studies}
-We estimate VARs on (stance, returns) to capture bidirectional dynamics and compute impulse response functions. Granger causality tests evaluate whether past stance improves return forecasts beyond past returns, and whether the reverse also holds. We also test for autocorrelation in stance using ARIMA models, which motivates lagged stance controls.
-
-As a non-parametric check, we run event studies around large stance jumps (e.g., >2 SD from a rolling mean) and compute abnormal returns in short windows around those events.
-
-\subsection{Robustness and Sensitivity}
-We perform numerous robustness checks: alternative stance aggregation (median, winsorized means), different confidence thresholds, exclusion of low-coverage firm-days, placebo pre/post cutoffs, and treatments that control for article topical composition. We also test sensitivity to training-test splits for the relevance classifier and manual annotation thresholds.
-
-\section{Regression Analysis}
-This section develops the panel regression framework used to test the first two
-research questions: whether firm-level media stance (RQ1) and firm-level stock
-returns (RQ2) exhibit a structural shift around the 2020 recession. Both
-questions share a common pre/post design built on a fixed-effects panel
-estimator, which is the natural workhorse for repeated observations of the same
-firms over time. We describe variable construction, the estimating equations,
-the estimator and its inference, and the diagnostic battery used to certify that
-the estimates satisfy the classical linear model (CLM) assumptions.
-
-\subsection{Variable Construction}
-The unit of analysis is the firm--day pair $(i,t)$. For each scored article $a$
-of firm $i$ published on date $t$, the NewsMTSC model returns a probability
-triple $(p_a^{+}, p_a^{-}, p_a^{0})$ over the positive, negative, and neutral
-stance classes toward the target firm. We collapse this triple into a signed
-article-level stance,
+\subsection{RQ3: VAR and Granger Causality}
+For the dynamic analysis we estimate a reduced-form bivariate VAR of order $p$ on
+the endogenous vector $\mathbf{y}_t = (\Delta\text{bias}_t,\, r_t)^\top$:
 \begin{equation}
-s_a = p_a^{+} - p_a^{-},
+\mathbf{y}_t = \mathbf{c} + \sum_{\ell=1}^{p} \mathbf{A}_\ell\,\mathbf{y}_{t-\ell} + \mathbf{u}_t
+\label{eq:var}
 \end{equation}
-which lies in $[-1,1]$ and is large in magnitude only when the model is
-confident and one-sided. The firm--day media stance, our RQ1 outcome, is the
-simple mean of article stances on that day,
-\begin{equation}
-\text{bias}_{it} = \frac{1}{|\mathcal{A}_{it}|}\sum_{a\in\mathcal{A}_{it}} s_a,
-\end{equation}
-where $\mathcal{A}_{it}$ is the set of qualifying articles for firm $i$ on day
-$t$. Optionally only high-confidence articles
-$\max\{p_a^{+},p_a^{-},p_a^{0}\}\ge\tau$ are retained; the headline RQ1
-specification sets $\tau=0$ to maximize coverage, and lower-coverage thresholds
-($\tau=0.6,0.9$) are used as sensitivity checks.
+where $\Delta\text{bias}_t$ is the first-differenced weekly bias index (required for
+stationarity; see Section~\ref{sec:var}) and $r_t$ is the weekly log return. The
+$H_0^{(3)}$ restriction is $a^{(2,1)}_1 = \cdots = a^{(2,1)}_p = 0$, tested via a
+joint Wald $F$-test with Newey--West HAC standard errors.
 
-The RQ2 outcome is the firm--day simple return computed from adjusted close
-prices,
-\begin{equation}
-\text{return}_{it} = \frac{P_{it}-P_{i,t-1}}{P_{i,t-1}}.
-\end{equation}
-The treatment variable common to both questions is the post-shock indicator
-\begin{equation}
-\text{Post}_t = \mathbf{1}[\,t \ge \text{2020-01-01}\,],
-\end{equation}
-which partitions the panel into a pre-period (2015--2019) and a post-period
-(2020--2025). The remaining regressors are controls chosen to absorb confounders
-that would otherwise contaminate the post coefficient. For RQ1 we include
-firm--day article volume $\text{vol}_{it}=|\mathcal{A}_{it}|$, because the mean
-of a noisy stance signal mechanically tightens as more articles are averaged, so
-volume must be held fixed to separate a genuine tone shift from a coverage
-shift. For RQ2 we include the contemporaneous S\&P 500 index return
-$\text{sp500\_return}_t$, which absorbs the market-wide bull-run and broad index
-drift, and the volatility index $\text{vix}_t$, which absorbs common
-volatility-regime shifts. Without these two controls the post indicator would
-simply re-estimate the average market path before and after 2020 rather than the
-firm-specific component of interest.
+\section{Results}
+\label{sec:results}
 
-\subsection{Estimating Equations}
-RQ1 is estimated with a two-way fixed-effects specification,
-\begin{equation}
-\text{bias}_{it} = \alpha_i + \delta_t + \beta\,\text{Post}_t
-+ \gamma\,\text{vol}_{it} + \varepsilon_{it},
-\label{eq:rq1twfe}
-\end{equation}
-where $\alpha_i$ are firm fixed effects and $\delta_t$ are daily time fixed
-effects. The firm effects absorb every time-invariant firm characteristic (an
-outlet's structural tendency to cover a given firm favorably), while the day
-effects absorb every firm-invariant daily shock (market-wide sentiment swings or
-macro news). With both sets of dummies present, $\beta$ identifies only the
-idiosyncratic within-firm shift in stance after 2020 that is orthogonal to
-common daily movements. Because $\text{Post}_t$ is itself a function of the
-calendar, $\beta$ is identified through the interaction of the step with the
-firm dimension once daily effects are partialled out.
+\subsection{RQ1: No Significant Aggregate Stance Shift}
 
-RQ2 mirrors this design with an entity (firm) fixed-effects specification and
-market controls,
-\begin{equation}
-\text{return}_{it} = \alpha_i + \beta\,\text{Post}_t
-+ \gamma_1\,\text{sp500\_return}_t + \gamma_2\,\text{vix}_t + \varepsilon_{it}.
-\label{eq:rq2fe}
-\end{equation}
-Here the firm effects remove permanent cross-firm differences in mean return,
-and the two market controls strip out the systematic component of returns so
-that $\beta$ measures the firm-idiosyncratic post-2020 mean shift.
+Table~\ref{tab:results}(a) reports estimates from Eq.~\eqref{eq:rq1} on $n=63{,}200$
+firm--day observations (26 firms, 4,018 days). We fail to reject $H_0^{(1)}$:
+the post-shock coefficient is $\hat{\beta}=+0.0141$ with HC1 SE $=0.0136$
+($p=0.30$); day-clustered inference is nearly identical (SE $=0.0134$, $p=0.29$),
+confirming that within-day cross-firm dependence is not driving the result.
+Article volume is strongly negative ($-0.00097^{***}$): heavier-coverage
+firm-days regress toward neutral tone, validating the volume control.
+The within $R^2=0.0017$ reflects the well-known dominance of idiosyncratic
+article noise at the firm-day level.
 
-\subsection{Estimator and Inference}
-Both models are estimated by the within (Mundlak) transformation: each variable
-is demeaned by its firm and, for RQ1, time means, and ordinary least squares is
-applied to the transformed data,
-\begin{equation}
-\hat{\theta} = (\tilde{X}^{\top}\tilde{X})^{-1}\tilde{X}^{\top}\tilde{y},
-\end{equation}
-where tildes denote within-transformed quantities and $\theta=(\beta,\gamma)^\top$.
-This is algebraically identical to dummy-variable OLS but avoids storing
-thousands of fixed-effect columns, which is essential given $26$ firms and over
-$4{,}000$ daily periods. Standard errors use the heteroscedasticity-robust HC1
-estimator,
-\begin{equation}
-\widehat{\Var}(\hat{\theta}) = \frac{n}{n-K}(\tilde{X}^{\top}\tilde{X})^{-1}
-\Bigl(\textstyle\sum_{j=1}^{n}\hat{u}_j^{2}\,\tilde{x}_j\tilde{x}_j^{\top}\Bigr)
-(\tilde{X}^{\top}\tilde{X})^{-1},
-\end{equation}
-and two-sided $p$-values are obtained from the normal approximation
-$p_k = 2\,\Phi(-|t_k|)$ with $t_k=\hat{\theta}_k/\widehat{\mathrm{SE}}(\hat{\theta}_k)$.
-Because the panel is observed daily and firms are exposed to common trading-day
-shocks, we additionally report day-clustered standard errors for RQ1, which are
-robust to arbitrary cross-firm correlation within the same trading day and are
-our preferred uncertainty estimate for the static model.
+% RQ1 and RQ2 tables placed together after both subsections — see tab:results below
 
-\subsection{RQ1 Results}
-Table~\ref{tab:rq1} reports the two-way fixed-effects estimates. The post
-coefficient is positive ($0.0141$) but statistically insignificant
-($p=0.30$), while article volume is strongly negative and highly significant,
-confirming that heavier coverage is associated with more neutral average tone
-within a firm--day. Day-clustered inference (SE $=0.0134$) is almost identical to
-the HC1 result, indicating that within-day cross-firm dependence does not
-materially affect the conclusion.
+The null result is informative. A joint $F$-test of the 4,017 daily effects is
+strongly significant ($F=1.135$, $p=1.1\times10^{-8}$), meaning common daily
+shocks drive most of the time variation in stance. Once those shocks are absorbed
+by $\delta_t^{\text{day}}$, the static Post step carries almost no residual
+identifying variation---the day fixed effects effectively span it. We therefore
+fail to detect a systematic within-firm stance shift beyond what the broader news
+environment already explains.
 
-\begin{table}[!t]
-\caption{RQ1: Two-Way Fixed-Effects Estimates of Media Stance ($\alpha_i+\delta_t$)}
-\label{tab:rq1}
+\subsection{RQ2: No Significant Firm-Idiosyncratic Return Shift}
+
+Table~\ref{tab:results}(b) reports estimates from Eq.~\eqref{eq:rq2} on $n=62{,}667$
+firm--day observations (26 firms; pre-period mean returns tightly clustered,
+range $0.0019$, SD $0.0004$). We fail to reject $H_0^{(2)}$: once monthly
+time effects absorb common market-regime variation, the post-shock coefficient
+is $\hat{\beta}=-0.0018$ (SE $=0.0142$, $p=0.90$). The S\&P~500 return regressor
+is absorbed by the month fixed effects ($\hat{\gamma}_1 \approx 0$, $p=0.90$),
+and VIX is similarly uninformative within month ($p=0.93$). The within
+$R^2\approx0$ follows directly: with the dominant systematic factor (index
+returns) loaded entirely onto the monthly FE, the regressors have negligible
+residual explanatory power.
+
+\begin{table*}[!t]
+\caption{Regression results for RQ1 (stance shift, Eq.~\ref{eq:rq1}) and RQ2 (returns shift, Eq.~\ref{eq:rq2}). Both specifications fail to reject the null at conventional levels once common daily (RQ1) and monthly (RQ2) shocks are absorbed.}
+\label{tab:results}
 \centering
 \small
+\begin{minipage}[t]{0.46\linewidth}
+\centering
+\textbf{(a) RQ1 — Daily Stance}\\[4pt]
+Firm $+$ day FE, HC1 SE\\[6pt]
 \begin{tabular}{lrrr}
 \toprule
-Variable & Coef. & SE (HC1) & $p$-value \\
+Variable & Coef. & SE & $p$ \\
 \midrule
-Post            & $0.014130$  & $0.013623$ & $0.2996$ \\
-Article Volume  & $-0.000970$ & $0.000076$ & $<0.0001$ \\
+Post ($\hat{\beta}$) & $+0.01413$ & $0.01362$ & $0.300$ \\
+Article volume       & $-0.00097$ & $0.00008$ & $<0.001$ \\
 \midrule
-\multicolumn{4}{l}{Firm--day obs. $n=63{,}200$; Firms $=26$; Days $=4{,}018$} \\
-\multicolumn{4}{l}{Raw articles after filters $=690{,}586$; Within $R^2=0.0017$} \\
+\multicolumn{4}{l}{$n=63{,}200$;\; 26 firms;\; 4,018 days} \\
+\multicolumn{4}{l}{Within $R^2=0.0017$} \\
 \bottomrule
 \end{tabular}
-\end{table}
-
-The weakness of the static post coefficient is itself informative rather than a
-failure of the design. An $F$-test of the $4{,}017$ daily fixed effects against a
-firm-only model is jointly significant ($F=1.135$ versus a $5\%$ critical value
-of $1.038$, $p=1.1\times10^{-8}$), so daily shocks clearly drive much of the
-temporal variation in stance. Because those daily dummies absorb most of the
-common-time movement, the coarse stepwise $\text{Post}_t$ indicator is left with
-little residual variation to explain, which both attenuates $\beta$ and keeps the
-within $R^2$ small; the within $R^2$ measures only the share of demeaned variance
-explained, and firm--day stance is dominated by idiosyncratic article noise.
-
-To recover the timing that the single step compresses, we estimate a monthly
-event study with firm effects, article volume, and month-relative dummies around
-January 2020 (reference month $m=-1$, December 2019). Table~\ref{tab:rq1es}
-reports the informative horizons. Pre-shock coefficients are small and
-insignificant, consistent with the parallel-trends premise, whereas the
-post-shock coefficients build gradually and become significant from roughly three
-months onward, peaking at $m=+12$ ($0.064$, $p<0.001$) and remaining elevated at
-$m=+24$. The 2020 effect is therefore a slow, persistent uplift rather than a
-single discrete jump, which explains why the static post term is muted once daily
-effects are absorbed.
-
-\begin{table}[!t]
-\caption{RQ1: Selected Monthly Event-Study Coefficients (Firm FE)}
-\label{tab:rq1es}
+\end{minipage}
+\hfill
+\vrule
+\hfill
+\begin{minipage}[t]{0.46\linewidth}
 \centering
-\small
-\begin{tabular}{lrrrl}
-\toprule
-Month & Coef. & SE (HC1) & $p$-value & Phase \\
-\midrule
-$m=-12$ & $0.021692$ & $0.018045$ & $0.2293$ & pre-trend \\
-$m=-6$  & $0.031757$ & $0.017201$ & $0.0649$ & pre-trend \\
-$m=0$   & $0.031032$ & $0.018354$ & $0.0909$ & event \\
-$m=+3$  & $0.042152$ & $0.019168$ & $0.0279$ & early post \\
-$m=+6$  & $0.032197$ & $0.018248$ & $0.0777$ & mid post \\
-$m=+12$ & $0.064054$ & $0.018797$ & $0.0007$ & persistent \\
-$m=+24$ & $0.050394$ & $0.018705$ & $0.0071$ & long-run \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{RQ1 Diagnostics (BLUE/CLM Checks)}
-Table~\ref{tab:rq1mlr} summarizes the diagnostic battery used to certify the
-estimator. The residual mean is numerically zero ($-9.0\times10^{-19}$),
-confirming orthogonality, and the design is numerically well conditioned
-(condition number $157.5$). Multicollinearity is negligible: both variance
-inflation factors are $\approx 1.0$ and the maximum pairwise correlation is
-$0.019$. Two assumptions are violated in the expected ways for financial panel
-data: the Breusch--Pagan test rejects homoscedasticity (LM $=190.3$) and the
-Jarque--Bera test rejects normality (JB $=4541$, kurtosis $4.25$, indicating fat
-tails). Neither threatens the estimates: HC1 and day-clustered standard errors
-already correct for heteroscedasticity, and with $n=63{,}200$ the central limit
-theorem justifies the normal-approximation inference despite non-normal
-residuals. The Durbin--Watson statistic ($1.67$) indicates mild serial
-correlation that is partly absorbed by the time effects. The estimator is
-therefore best linear unbiased under the Gauss--Markov conditions, with robust
-inference applied where the ideal conditions fail.
-
-\begin{table}[!t]
-\caption{RQ1: Summary Diagnostics}
-\label{tab:rq1mlr}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lrl}
-\toprule
-Test & Statistic & Implication \\
-\midrule
-Residual mean        & $-9.0\times10^{-19}$ & Orthogonality OK \\
-Condition number     & $157.46$ & Stable \\
-Breusch--Pagan (LM)  & $190.25$ & Heteroscedastic (HC1 used) \\
-Jarque--Bera         & $4541.18$ & Fat tails ($n$ large) \\
-VIF (both regressors)& $\approx 1.00$ & No collinearity \\
-Durbin--Watson       & $1.673$ & Mild autocorrelation \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{RQ2 Results}
-The returns panel contains $62{,}667$ firm--day observations across $26$ firms
-(2015-12-01 to 2025-11-24), with tightly clustered pre-period means (range
-$0.0019$, SD $0.0004$). Table~\ref{tab:rq2} reports the entity fixed-effects
-estimates. Conditional on the index return and VIX, the post-period shift in
-daily firm returns is negative and marginally significant
-($-0.000344$, $p=0.045$), corresponding to about $-0.034\%$ per day. The market
-return loads strongly and significantly (a coefficient near unity, as expected
-for large-cap constituents), confirming that the control is doing its job, while
-VIX is insignificant once the index return is included. The contrast between
-RQ1 and RQ2 is the substantive payoff: media stance shows a slow post-2020
-uplift while raw returns show only a faint downward mean shift, motivating the
-dynamic analysis in the next section, where the question becomes not whether
-each series shifts in level but whether the lead--lag relationship between them
-changes.
-
-\begin{table}[!t]
-\caption{RQ2: Entity Fixed-Effects Estimates of Daily Returns (HC1 Robust SE)}
-\label{tab:rq2}
-\centering
-\small
+\textbf{(b) RQ2 — Daily Returns}\\[4pt]
+Firm $+$ month FE, HC1 SE\\[6pt]
 \begin{tabular}{lrrr}
 \toprule
-Variable & Coef. & SE (HC1) & $p$-value \\
+Variable & Coef. & SE & $p$ \\
 \midrule
-Post           & $-0.000344$ & $0.000172$ & $0.0451$ \\
-S\&P 500 Return& $1.127576$  & $0.010982$ & $<0.0001$ \\
-VIX            & $-0.000001$ & $0.000020$ & $0.9654$ \\
+Post ($\hat{\beta}$) & $-0.00184$ & $0.01424$ & $0.897$ \\
+S\&P 500 return      & $\approx 0$ & ---      & $0.902$ \\
+VIX                  & $+0.00061$ & $0.00654$ & $0.925$ \\
+\midrule
+\multicolumn{4}{l}{$n=62{,}667$;\; 26 firms} \\
+\multicolumn{4}{l}{Within $R^2\approx 0$} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{minipage}
+\end{table*}
 
-\subsection{Why This Design Fits the Study, and Its Limits}
-The two-way fixed-effects panel is the appropriate estimator here because the
-data are repeated firm--day observations in which the principal confounders are
-either firm-permanent (outlet--firm coverage tendencies) or day-common
-(market-wide news), exactly the two margins that firm and time dummies absorb by
-construction. The pre/post step matches the research design, which targets a
-single documented macro break (the 2020 recession), and the event-study
-extension guards against the well-known limitation of a static
-difference-in-means by exposing the timing and testing for pre-trends. Robust and
-clustered standard errors keep inference valid under the heteroscedasticity and
-within-day dependence that the diagnostics confirm.
-
-Three limitations should temper the interpretation. First, identification rests
-on a conditional within-firm parallel-trends assumption; the flat pre-shock
-event-study coefficients are supportive but not a proof, and any firm-specific
-trend coinciding with 2020 would bias $\beta$. Second, the stance signal inherits
-the measurement error of the upstream NewsMTSC and relevance-classifier stages,
-which adds classical noise that depresses the within $R^2$ and can attenuate
-coefficients toward zero. Third, a binary post indicator cannot distinguish the
-2020 shock from other contemporaneous regime changes, and the low explanatory
-power of the static model means it is better read as evidence about the
-\emph{shape} of the adjustment than as a precise effect size. These limitations
-directly motivate the time-series approach that follows.
+Together, RQ1 and RQ2 establish a clean null baseline: after properly absorbing
+common daily and monthly shocks, neither media stance nor firm-level returns
+show a detectable aggregate level shift around January 2020. This motivates
+the dynamic question in Section~\ref{sec:var}---whether the \emph{lead--lag
+relationship} between stance and returns changed post-shock, even if the
+marginal distributions did not.
 
 \section{Vector Autoregression and Granger Causality Analysis}
+\label{sec:var}
 The regressions in the previous section ask whether the level of each series
 shifts after 2020. They are silent on the dynamic relationship between media
 stance and returns: whether past stance helps predict future returns, whether
@@ -501,7 +348,6 @@ $r_t$ is the weekly log return, a reduced-form VAR of order $p$ is
 \begin{equation}
 \mathbf{y}_t = \mathbf{c} + \sum_{\ell=1}^{p}\mathbf{A}_\ell\,\mathbf{y}_{t-\ell}
 + \mathbf{u}_t,
-\label{eq:var}
 \end{equation}
 with coefficient matrices $\mathbf{A}_\ell\in\R^{2\times2}$ and innovations
 $\mathbf{u}_t$ having covariance $\Sigma$. The off-diagonal entries of the
