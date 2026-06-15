@@ -69,7 +69,20 @@ sashwat.dhanuka\_ug2023@ashoka.edu.in
 \thispagestyle{empty}
 
 \begin{abstract}
-This paper studies how media reporting about large-cap firms changed around the 2020 recession and whether shifts in news stance predict firm-level stock outcomes. Using a large-scale NewsMTSC pipeline to compute daily stance scores from full-text news articles (2015--2025) for S\&P 500 firms, we combine NLP-derived stance with firm-day controls and market variables to test structural shifts, causal responses, and predictive linkages. Our identification strategy centers on a pre/post shock design around January 2020, complemented by difference-in-differences, interrupted time series, and time-series VAR exercises. We document the data pipeline, relevance filtering, stance aggregation, and robustness checks used throughout the analysis.
+This paper studies how media reporting about large-cap firms changed around the
+2020 recession and whether shifts in news stance predict firm-level stock
+outcomes. Using a NewsMTSC pipeline to compute daily target-dependent stance from
+$690{,}586$ relevance-filtered full-text articles (2015--2025) across 26 S\&P~500
+firms, we align stance with firm-day returns and market controls and test three
+questions: whether media stance shifted after January 2020 (RQ1), whether
+firm-idiosyncratic returns shifted (RQ2), and whether stance predicts returns in
+a dynamic sense (RQ3). RQ1 and RQ2 use two-way fixed-effects pre/post panel
+regressions; RQ3 uses a weekly vector autoregression with Granger-causality
+tests. We find no significant aggregate level shift in either stance or returns
+once common daily and monthly shocks are absorbed, and a dynamic stance--return
+link that is firm-specific rather than a market-wide regularity. We document the
+data pipeline, relevance filtering, stance aggregation, and the robustness checks
+used throughout.
 \end{abstract}
 
 \section{Introduction}
@@ -77,11 +90,11 @@ The 2020 recession is a natural breakpoint for studying the interaction between 
 
 We approach the problem with a target-dependent stance framework rather than generic sentiment. NewsMTSC allows us to score whether an article is positive or negative toward a specific firm even when multiple firms are mentioned in the same text. That distinction is central to firm-level testing: a general sentiment score cannot distinguish positive coverage of one firm from negative coverage of another in the same article. Target-dependent stance makes it feasible to construct a daily, firm-level media stance signal and evaluate how it behaves across time and shocks.
 
-The study is grounded in three observations from the project work so far. First, the 2020 shock is widely documented as a period in which media coverage and market behavior changed in a persistent way. Second, the data pipeline needs to be precise: naive keyword search introduces many false positives and inflates noise in the stance signal. Third, if stance is to be linked to returns in a credible way, the design must rule out coverage volume effects, pre-trend differences, and spurious correlations driven by macro shocks.
+The study is grounded in three observations. First, the 2020 shock is widely documented as a period in which media coverage and market behavior changed in a persistent way. Second, the data pipeline needs to be precise: naive keyword search introduces many false positives and inflates noise in the stance signal. Third, if stance is to be linked to returns in a credible way, the design must rule out coverage volume effects, pre-trend differences, and spurious correlations driven by macro shocks.
 
-We therefore build a two-stage pipeline: (i) relevance classification that filters articles to those that actually report on the target firm, and (ii) NewsMTSC stance scoring with confidence thresholds. With this signal we pose three research questions on structural shifts in stance and returns and the post-shock stance-return linkage. Our empirical strategy combines pre/post regressions, interrupted time series, difference-in-differences, VAR and Granger causality, and event studies to triangulate the stance-return channel.
+We therefore build a two-stage pipeline: (i) relevance classification that filters articles to those that actually report on the target firm, and (ii) NewsMTSC stance scoring with confidence thresholds. With this signal we pose three research questions on structural shifts in stance and returns and the post-shock stance-return linkage. Our empirical strategy combines two-way fixed-effects pre/post panel regressions (RQ1, RQ2) with a weekly vector autoregression and Granger-causality tests (RQ3) to characterize both the level shifts and the dynamic stance-return channel.
 
-The remainder of the paper proceeds as follows. Section II states the research questions and formal hypotheses. Section III describes the data pipeline. Section IV develops the methodology and estimating equations. Section V presents results for each RQ. Section VI addresses robustness, and Section VII concludes.
+The remainder of the paper proceeds as follows. Section II states the research questions and formal hypotheses. Section III describes the data pipeline. Section IV develops the methodology and estimating equations. Section V presents the regression results for RQ1 and RQ2. Section VI presents the VAR and Granger-causality analysis for RQ3. Section VII addresses identification and robustness, and Section VIII concludes.
 
 \section{Research Questions and Hypotheses}
 
@@ -113,22 +126,26 @@ where $a^{(2,1)}_\ell$ are the lagged-stance coefficients in the return equation
 
 \section{Data and Signal Construction}
 \subsection{Corpus and Coverage}
-We begin with a large corpus of scraped full-text news articles (2015--2025). The core sample focuses on large-cap firms that are consistently observable across time, namely the S\&P 500. Articles are stored with publication, timestamp, URL, title, first paragraph, and full body text. We de-duplicate on titles and keep a separate record of filtered-out content to preserve traceability.
+We begin with a large corpus of scraped full-text news articles (2015--2025)
+covering large-cap firms that are consistently observable across the window,
+drawn from the S\&P~500. Each record stores the publication, timestamp, URL,
+title, first paragraph, and full body text. The raw corpus contains $4{,}706{,}589$
+firm-article links (Table~\ref{tab:yearly_matrix}); coverage is highly skewed,
+with a handful of firms dominating and others sparsely covered.
 
-To avoid severe imbalance across firms and time, we use a stratified design: for each year we compute article counts per firm, take the minimum feasible count across firms, and sample to match that count. This preserves coverage across firms while avoiding a signal driven by a handful of highly covered companies.
-
-\subsection{Sampling and Stratification (Facts and Figures)}
-The starting panel contains 4,706,589 firm-article links across the top firms and years 2015--2025 (Table~\ref{tab:yearly_matrix}). This raw panel is highly skewed: some firms dominate the coverage while others have sparse years.
-
-We therefore impose two sampling constraints. First, we filter to articles whose
-titles explicitly contain the company name and de-duplicate by normalized title
-per company. Second, we apply a minimum annual coverage threshold: a company is
-retained if it has at most three years with $\leq 3{,}000$ articles; companies
-failing this are dropped. Table~\ref{tab:pipeline} shows the full construction
-funnel from raw panel to analysis sample.
+\subsection{From Corpus to Analysis Sample}
+The raw corpus is reduced to the analysis sample in three steps:
+title-level de-duplication, relevance filtering (Section~\ref{sec:rel}), and
+target-dependent stance scoring (Section~\ref{sec:stance}). All downstream
+analysis runs on the resulting scored table, which contains $690{,}586$
+high-confidence firm-article stance observations across $26$ firms.
+Collapsing to the firm--day level yields the $63{,}200$-observation stance panel
+used for RQ1; aligning stance to firm-day market data yields the
+$62{,}667$-observation return panel used for RQ2. Table~\ref{tab:pipeline}
+summarizes the funnel.
 
 \begin{table*}[!t]
-\caption{Yearly article totals in the starting panel (2015--2025)}
+\caption{Yearly article totals in the raw corpus (2015--2025); these sum to the $4{,}706{,}589$ starting links.}
 \label{tab:yearly_matrix}
 \centering
 \begin{tabular}{lrrrrrrrrrrr}
@@ -141,50 +158,63 @@ Total articles & 570,999 & 625,582 & 652,741 & 525,259 & 559,027 & 363,962 & 291
 \end{table*}
 
 \begin{table}[!t]
-\caption{Sample construction funnel}
+\caption{Sample construction funnel from raw corpus to estimation panels}
 \label{tab:pipeline}
 \centering
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{lr}
 \toprule
-Stage & Firms & Firm-article links \\
+Stage & Count \\
 \midrule
-Raw panel (2015--2025)              & 30 & 4,706,589 \\
-\quad Title deduplication           & 30 & --- \\
-\quad Coverage filter ($\leq$3 sparse years) & 22 & --- \\
-Final stratified panel              & 22 & 483,514 \\
+Raw corpus (firm-article links, 2015--2025) & 4,706,589 \\
+Scored firm-articles (relevance-filtered, NewsMTSC) & 690,586 \\
+Firms with scored coverage & 26 \\
+RQ1 stance panel (firm--days) & 63,200 \\
+RQ2 return panel (firm--days) & 62,667 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:article_count_distribution} shows the long-tail distribution of article counts per company, motivating stratification. Figure~\ref{fig:top20_articles} summarizes the top-coverage firms in the retained panel.
+Figure~\ref{fig:article_counts} shows article coverage per firm in the scored
+analysis sample. The distribution spans more than four orders of magnitude---from
+AT\&T ($139{,}701$ scored articles) down to Eaton ($5$)---confirming that
+coverage is concentrated in a subset of heavily reported firms, which the
+firm fixed effects in Section~\ref{sec:method} absorb.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=\linewidth]{article_count_distribution.png}}
-\caption{Distribution of article counts per company. The long tail motivates stratified sampling to avoid coverage-driven bias.}
-\label{fig:article_count_distribution}
-\end{figure}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=\linewidth]{top_20_articles.png}}
-\caption{Top 20 firms by article count in the retained sample.}
-\label{fig:top20_articles}
+\centerline{\includegraphics[width=\linewidth]{fig_article_counts.png}}
+\caption{Scored firm-articles per firm in the analysis sample (26 firms,
+$690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
+2015--2025; log scale).}
+\label{fig:article_counts}
 \end{figure}
 
 \subsection{Relevance Filtering and Annotation}
+\label{sec:rel}
 Keyword matching is not enough for firm targeting (e.g., ``Apple'' is not always the company). We therefore apply a two-stage relevance pipeline: (i) title-based pre-filtering that retains only articles with the company name in the title (company names, not tickers), and (ii) a supervised relevance classifier trained on manual annotations. The held-out test set for manual annotation is kept completely separate from training.
 
 Our base classifier is DeBERTa-v3 fine-tuned for binary classification using article titles. The first model, trained on 750 labeled articles, achieved high recall but insufficient precision. We then expanded the training data via semi-supervised mining: running the model on a large unlabeled pool and adding only high-confidence predictions ($p_{rel} \ge 0.92$ for relevant, $p_{rel} \le 0.05$ for irrelevant). This expanded set increases precision and reduces false positives. An ensemble of model variants further improves precision, and the operating threshold is selected via a sweep to meet a target of precision $\ge 0.90$.
 
 \subsection{Stance Scoring}
-Stance is computed using the NewsMTSC model for target-dependent stance. For each qualifying article we obtain probabilities for positive, negative, and neutral stance. The baseline specification retains only high-confidence outputs (prob >= 0.9), and we report sensitivity to lower thresholds (0.6 and 0.0). Daily firm-level stance is the average across articles on that day:
+\label{sec:stance}
+Stance is computed with the NewsMTSC model for target-dependent stance. For each
+qualifying article it returns probabilities over positive, negative, and neutral
+stance toward the firm. The baseline specification keeps all scored articles
+(confidence threshold $\tau=0$) to maximize coverage; we report sensitivity to
+higher-confidence subsets ($\tau=0.6,0.9$). Daily firm-level stance is the
+article mean,
 \begin{equation}
-\text{stance}_{i,t} = \frac{1}{N_{i,t}} \sum_{a \in A_{i,t}} (p^{+}_{a} - p^{-}_{a})
+\text{stance}_{i,t} = \frac{1}{N_{i,t}} \sum_{a \in A_{i,t}} (p^{+}_{a} - p^{-}_{a}),
 \end{equation}
-where $A_{i,t}$ is the set of high-confidence articles for firm $i$ on day $t$ and $N_{i,t}$ is the count. We also construct article volume and coverage mix covariates to separate tone shifts from coverage shifts.
+where $A_{i,t}$ is the set of scored articles for firm $i$ on day $t$ and
+$N_{i,t}$ is the count. We also retain article volume as a covariate to separate
+tone shifts from coverage shifts.
 
 \subsection{Market Alignment and Controls}
-The stance series is aligned to firm-day market outcomes: daily returns, S\&P 500 index returns, and VIX. We also log-normalize article volume in regressions. This alignment yields the panel used across the RQ1--RQ3 specifications.
+The stance series is aligned to firm-day market outcomes: daily returns, the
+S\&P~500 index return, and VIX, drawn from \texttt{stock\_prices} and the VIX
+daily series. This alignment yields the panels used in the RQ1--RQ3
+specifications.
 
 \section{Methodology}
 \label{sec:method}
@@ -571,12 +601,40 @@ mechanically moves prices, and the firm-specific nature of the surviving signals
 counsels caution against a universal causal claim.
 
 \section{Identification, Validity, and Robustness}
-We address three main threats. First, macro shocks may move both coverage and prices; we control with index returns and VIX. Second, article volume differs widely across firms; we include volume covariates and run trimmed samples. Third, parallel trends may not hold; we use pre-trend checks, placebo cutoffs, and SCDiD when needed.
+Three threats bear on the level-shift findings. First, macro shocks move both
+coverage and prices; the day and month fixed effects absorb common shocks, and
+the S\&P~500 return and VIX controls strip the systematic component out of
+returns. Second, article volume differs widely across firms
+(Fig.~\ref{fig:article_counts}); we hold it fixed with the volume covariate, and
+substituting $\ln(1+\text{vol})$ for raw volume leaves the RQ1 estimates
+essentially unchanged. Third, the pre/post design assumes within-firm parallel
+trends; the flat pre-shock coefficients in the RQ1 monthly event study and the
+tightly clustered pre-period return means (range $0.0019$) are consistent with
+this premise, though they do not prove it. We further confirm the RQ1 conclusion
+is robust to the stance confidence threshold ($\tau=0,0.6,0.9$) and certify the
+estimator with the standard battery (Breusch--Pagan, Jarque--Bera, VIF,
+Durbin--Watson), which motivates the HC1 and day-clustered inference reported
+throughout. Two limitations remain: the stance signal inherits measurement noise
+from the upstream NewsMTSC and relevance stages, which attenuates coefficients
+toward zero, and a binary post indicator cannot separate the 2020 shock from
+other contemporaneous regime changes.
 
-Robustness checks include alternate stance thresholds (0.9, 0.6, 0.0), alternative aggregation (mean vs median), lagged stance controls, sector controls, and quantile regressions to test for tail effects in returns.
-
-\section{Conclusion and Next Steps}
-This draft provides a full narrative of the project to date: why the 2020 shock matters, how we build a target-dependent stance signal, and how we test for structural changes and market effects. Next steps include finalizing the firm panel, completing the relevance classifier evaluation, computing the daily stance series, and running the full RQ1--RQ3 specifications with robustness tables and figures.
+\section{Conclusion}
+We assembled a target-dependent media-stance signal for 26 S\&P~500 firms from
+$690{,}586$ relevance-filtered articles and tested whether the 2020 shock moved
+stance, returns, and the link between them. The level-shift results are null:
+once common daily and monthly shocks are absorbed by two-way fixed effects,
+neither media stance (RQ1, $\beta=+0.014$, $p=0.30$) nor firm-idiosyncratic
+returns (RQ2, $\beta=-0.002$, $p=0.90$) show a significant aggregate shift around
+January 2020. The dynamic analysis (RQ3) reinforces this reading: a weekly panel
+VAR finds no market-wide Granger link between stance and returns in any subsample
+once volatility, the index return, and coverage volume are controlled, with the
+surviving predictability confined to a few firms (notably Wells Fargo and Morgan
+Stanley) rather than the panel as a whole. Taken together, the evidence points to
+a media--market relationship that is firm-specific and heterogeneous rather than
+a uniform post-2020 regularity---a conclusion that the controlled panel design
+supports precisely because it declines to manufacture a spurious aggregate
+effect.
 
 \bibliographystyle{IEEEtran}
 \begin{thebibliography}{99}

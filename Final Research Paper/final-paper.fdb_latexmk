@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1781535189.80401 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/final-paper.tex" "final-paper.pdf" "final-paper" 1781535191.15506 0
-  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/final-paper.tex" 1781535189.23413 33803 c74c576fb7fb6e5388afa2e4a071fd4c ""
+["pdflatex"] 1781536197.63851 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/final-paper.tex" "final-paper.pdf" "final-paper" 1781536198.691 0
+  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/final-paper.tex" 1781536174.60963 35414 b35b7339a9e2a8cd59ffe2695afcb324 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -102,14 +102,13 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1760512895 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1760512815 3345733 331d7ef9d415455749c8e9cff59fa0a0 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "article_count_distribution.png" 1781533022.51967 105178 5471754ca63d01435e4a66603ad11787 ""
+  "fig_article_counts.png" 1781535954.35413 137815 1700dd0a9e0e40a0b925e166b405d3f1 ""
   "fig_breaks_V.png" 1781533022.52034 235540 b53c7050440abc0d2491d1f0314733ec ""
   "fig_breaks_WFC.png" 1781533022.52093 248094 b540be59bc268670a911274dc12a6372 ""
   "fig_gap_WFC.png" 1781533022.52106 14687 721f5abe0e5c633a1cc174ebb2e93c6f ""
   "fig_stationarity_GM.png" 1781533022.52247 431697 f4f1ef434588b9b85365263dc490c9bf ""
-  "final-paper.aux" 1781535191.10818 7019 2f367464bd520a343c2ab6f90a990ca7 "pdflatex"
-  "final-paper.tex" 1781535189.23413 33803 c74c576fb7fb6e5388afa2e4a071fd4c ""
-  "top_20_articles.png" 1781533022.5268 147013 f045877bc42a15dcb57562008fbad5d1 ""
+  "final-paper.aux" 1781536198.64198 7019 77f4c4ca27fba928469f03afb6bd9612 "pdflatex"
+  "final-paper.tex" 1781536174.60963 35414 b35b7339a9e2a8cd59ffe2695afcb324 ""
   (generated)
   "final-paper.aux"
   "final-paper.log"
