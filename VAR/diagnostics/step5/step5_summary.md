@@ -33,27 +33,28 @@ We class each series based on Augmented Dickey-Fuller (ADF) and KPSS tests:
 
 | Ticker | Bias Level Conclusion | Return Level Conclusion | Bias Diff Conclusion | Return Diff Conclusion | Integration (Bias, Return) |
 |---|---|---|---|---|---|
-| ABNB | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
+| ABNB | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
 | AMZN | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Conflicting (Structural Break Likely) | (I(1), I(0)) |
-| T | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| BA | Stationary (I(0)) | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(1)) |
+| T | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
+| BA | Conflicting (Structural Break Likely) | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(1)) |
 | BAC | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
 | GM | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
 | GS | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| INTC | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| MCD | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
+| INTC | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
+| MCD | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
 | MSFT | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| MS | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
+| MS | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
 | SBUX | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
 | UBER | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| V | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
-| WMT | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(0)) |
+| V | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
+| WMT | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | Stationary (I(0)) | (I(0), I(0)) |
 | WFC | Conflicting (Structural Break Likely) | Conflicting (Structural Break Likely) | Stationary (I(0)) | Stationary (I(0)) | (I(1), I(1)) |
 
 ## Cointegration Summary
 | Ticker | Trace Stat (r=0) | CV (95%) | Cointegrated (95%)? | Recommendation |
 |---|---:|---:|---|---|
-| WFC | 340.20 | 15.49 | ✅ YES | VECM |
+| BA | 367.23 | 15.49 | ✅ YES | VECM |
+| WFC | 317.53 | 15.49 | ✅ YES | VECM |
 
 ## Key Decisions / Modelling Takeaways
 1. **Returns Stationarity**: As expected for financial returns, weekly log returns are stationary ($I(0)$) across all companies, both raw and winsorized.
