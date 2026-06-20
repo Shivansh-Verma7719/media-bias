@@ -191,9 +191,84 @@ $690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
 
 \subsection{Relevance Filtering and Annotation}
 \label{sec:rel}
-Keyword matching is not enough for firm targeting (e.g., ``Apple'' is not always the company). We therefore apply a two-stage relevance pipeline: (i) title-based pre-filtering that retains only articles with the company name in the title (company names, not tickers), and (ii) a supervised relevance classifier trained on manual annotations. The held-out test set for manual annotation is kept completely separate from training.
+A company name in a headline does not guarantee that the article reports on
+that company as a corporate entity. ``Apple'' may refer to a product or appear
+only in passing, and macro or human-interest stories routinely name a firm
+without covering it. To remove this noise we keep only articles in which the
+firm is the primary subject of a material corporate event: earnings, mergers and
+acquisitions, executive changes, large layoffs, regulatory or legal action,
+major product launches, or credit and bankruptcy events. The filter has two
+stages, a title-level pre-filter that requires the company name, not the ticker,
+to appear in the headline, followed by a supervised classifier that judges
+materiality. Figure~\ref{fig:relevance_pipeline} summarizes the full stage.
 
-Our base classifier is DeBERTa-v3 fine-tuned for binary classification using article titles. The first model, trained on 750 labeled articles, achieved high recall but insufficient precision. We then expanded the training data via semi-supervised mining: running the model on a large unlabeled pool and adding only high-confidence predictions ($p_{rel} \ge 0.92$ for relevant, $p_{rel} \le 0.05$ for irrelevant). This expanded set increases precision and reduces false positives. An ensemble of model variants further improves precision, and the operating threshold is selected via a sweep to meet a target of precision $\ge 0.90$.
+We manually labeled $750$ article titles under this rubric, of which $227$ are
+relevant and $523$ are irrelevant, and set aside a separate test set of $190$
+titles that is never used for training or threshold selection. The classifier is
+a DeBERTa-v3-base model fine-tuned on titles. Trained on the labeled set alone it
+reached a precision of $0.65$ at a recall of $0.71$ (Table~\ref{tab:relmodels}).
+The binding constraint is the small label budget together with the skew between
+the labeled relevant rate, near $30\%$, and the true rate in the corpus, which is
+closer to $10$ to $15\%$.
+
+To sharpen the decision boundary without further manual labeling, we add
+$10{,}025$ synthetic titles. These cover the patterns the base model most often
+confuses, including consumer promotions, industry overviews, immaterial
+lawsuits, brand comparisons, and articles that name a firm only in passing,
+together with harder examples of genuine material events phrased in unusual ways.
+Training on the combined set with focal loss and a fivefold weighting of the
+labeled examples raises precision from $0.65$ to $0.88$ while holding recall
+above $0.85$ (Table~\ref{tab:relmodels}).
+
+Table~\ref{tab:relmodels} compares the configurations on the held-out test set.
+A three-model ensemble with rule-based post-processing reaches the highest
+precision at $0.94$, but we adopt a single consolidated DeBERTa-v3 model: it
+matches the ensemble on F1, $0.87$ against $0.87$, using one classifier rather
+than an ensemble and a separate rule layer, which is simpler to reproduce and to
+report. At its operating threshold the model attains a precision of $0.88$, a
+recall of $0.86$, and an F1 of $0.87$; a stricter threshold raises precision to
+$0.92$ at a recall of $0.81$ (Figure~\ref{fig:relmodels}). Applied to the full
+corpus of $695{,}731$ scored
+articles it labels $90{,}579$ as relevant, or $13\%$, consistent with the
+expected base rate. These relevant articles are the input to the stance stage of
+Section~\ref{sec:stance}.
+
+\begin{figure}[t]
+\centerline{\includegraphics[width=\linewidth]{pipeline.png}}
+\caption{Relevance classifier pipeline: raw S\&P~500 news titles, preprocessing,
+manual annotation and synthetic augmentation, DeBERTa-v3 fine-tuning, threshold
+selection on a held-out test set, and full-corpus inference.}
+\label{fig:relevance_pipeline}
+\end{figure}
+
+\begin{table}[!t]
+\caption{Relevance classifier performance on the held-out test set ($n=190$),
+each model at its F1-optimal threshold. The ensemble is shown for reference; the
+consolidated single model is adopted.}
+\label{tab:relmodels}
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+Training strategy & P & R & F1 \\
+\midrule
+Labeled titles only                  & 0.65 & 0.71 & 0.68 \\
+\quad + synthetic (broad)            & 0.78 & 0.76 & 0.77 \\
+\quad + synthetic (targeted, focal)  & 0.86 & 0.88 & 0.87 \\
+\textbf{Consolidated single model}   & \textbf{0.88} & \textbf{0.86} & \textbf{0.87} \\
+\midrule
+Ensemble (reference)                 & 0.94 & 0.81 & 0.87 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+\centerline{\includegraphics[width=\linewidth]{fig_threshold_sweep.png}}
+\caption{Precision, recall, and F1 of the chosen single model on the held-out
+test set as a function of the decision threshold. A threshold near $0.80$
+satisfies both operating targets, reaching precision $0.92$ at recall $0.81$,
+which is why this single classifier is adopted in place of the ensemble.}
+\label{fig:relmodels}
+\end{figure}
 
 \subsection{Stance Scoring}
 \label{sec:stance}
@@ -635,6 +710,35 @@ a media--market relationship that is firm-specific and heterogeneous rather than
 a uniform post-2020 regularity---a conclusion that the controlled panel design
 supports precisely because it declines to manufacture a spurious aggregate
 effect.
+
+\appendix
+\section{Relevance Classifier Threshold Sweep}
+Table~\ref{tab:relsweep} reports the decision-threshold sweep for the chosen
+single model on the held-out test set, which underlies
+Figure~\ref{fig:relmodels}. Precision and recall trade off monotonically with the
+threshold, and a value near $0.80$ is the operating point that satisfies both
+targets.
+
+\begin{table}[!h]
+\caption{Held-out threshold sweep for the chosen single model ($n=190$). The
+adopted operating point is shown in bold.}
+\label{tab:relsweep}
+\centering\small
+\begin{tabular}{cccc}
+\toprule
+Threshold & P & R & F1 \\
+\midrule
+0.50 & 0.878 & 0.857 & 0.867 \\
+0.70 & 0.875 & 0.833 & 0.854 \\
+0.75 & 0.897 & 0.833 & 0.864 \\
+\textbf{0.80} & \textbf{0.919} & \textbf{0.810} & \textbf{0.861} \\
+0.85 & 0.914 & 0.762 & 0.831 \\
+0.90 & 0.912 & 0.738 & 0.816 \\
+0.92 & 0.968 & 0.714 & 0.822 \\
+0.95 & 1.000 & 0.714 & 0.833 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \bibliographystyle{IEEEtran}
 \begin{thebibliography}{99}

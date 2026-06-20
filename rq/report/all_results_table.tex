@@ -1,0 +1,48 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{pdflscape}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ragged2e}
+\usepackage{csvsimple}
+\setlength{\extrarowheight}{2pt}
+
+\begin{document}
+\section*{Comprehensive Results Table}
+\footnotesize
+\sloppy
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+
+\begin{landscape}
+\begin{longtable}{L{0.08\linewidth} L{0.32\linewidth} L{0.06\linewidth} L{0.08\linewidth} L{0.08\linewidth} L{0.08\linewidth} L{0.08\linewidth} L{0.08\linewidth} L{0.06\linewidth} L{0.06\linewidth}}
+\caption*{Comprehensive Results (imported from \texttt{all\_results\_long.csv})}\\
+	oprule
+ID & Specification / Equation & $n$ & Variable & Coef & SE\_HC1 & $p$\_HC1 & SE\_cluster & $p$\_cluster & Notes \\
+\midrule
+\endfirsthead
+\multicolumn{10}{c}{\textit{Continued from previous page}} \\
+	oprule
+ID & Specification / Equation & $n$ & Variable & Coef & SE\_HC1 & $p$\_HC1 & SE\_cluster & $p$\_cluster & Notes \\
+\midrule
+\endhead
+\bottomrule
+\multicolumn{10}{r}{\textit{Continued on next page}} \\
+\endfoot
+\endlastfoot
+
+% CSV-driven rows
+\csvreader[separator=comma, head to column names]{all_results_long.csv}{spec_id=\ID,spec_desc=\Spec,n_obs=\N,variable=\Var,coef=\Coef,se_hc1=\SEHC1,p_hc1=\PHC1,se_cluster=\SECL,p_cluster=\PCL,notes=\Notes}% map CSV headers to safe macros
+{\ID & \Spec & \N & \Var & \Coef & \SEHC1 & \PHC1 & \SECL & \PCL & \Notes \\
+}
+
+\end{longtable}
+\end{landscape}
+
+\vspace{1em}
+\noindent \textbf{Notes:} This table imports a machine-readable CSV (`all_results_long.csv`) containing one row per coefficient/spec. Use the CSV for spreadsheets and programmatic consumption. The PDF is a printable summary; see the CSV for full precision and additional columns. 
+
+\end{document}
