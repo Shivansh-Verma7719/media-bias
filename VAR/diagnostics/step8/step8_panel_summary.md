@@ -14,9 +14,9 @@ Significance: `***` $p<0.01$, `**` $p<0.05$, `*` $p<0.10$.
 
 | Sample | N Obs | Bias → Returns ($p$-value) | Returns → Bias ($p$-value) |
 |---|---:|---|---|
-| Full | 7493 | 0.976 | 0.200 |
-| Pre-break | 4168 | 0.245 | 0.801 |
-| Post-break | 3265 | 0.617 | 0.187 |
+| Full | 7493 | 0.565 | 0.899 |
+| Pre-break | 4415 | 0.301 | 0.861 |
+| Post-break | 3018 | 0.905 | 0.937 |
 
 ## Key Takeaways
 1. **Full Panel Analysis**: By pooling the cross-section, the test gains substantial statistical power.
