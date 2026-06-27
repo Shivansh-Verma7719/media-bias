@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1782554987.80892 "final-paper.tex" "final-paper.pdf" "final-paper" 1782554991.99315 0
+["pdflatex"] 1782560868.30085 "final-paper.tex" "final-paper.pdf" "final-paper" 1782560870.86638 0
   "C:/Users/sashw/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1780321442.83244 82686 2381c3433487640bf26aa76a10db7eb2 ""
   "C:/Users/sashw/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1761115533.44618 24225047 d197e02f9fde42afb12a58865dab0f1d ""
   "C:/Users/sashw/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 1194fb36dfcb11d9ae9802f2b00b60a3 ""
@@ -105,8 +105,8 @@
   "fig_gap_WFC.png" 1781521611.48869 14687 721f5abe0e5c633a1cc174ebb2e93c6f ""
   "fig_stationarity_GM.png" 1781521611.4967 431697 f4f1ef434588b9b85365263dc490c9bf ""
   "fig_threshold_sweep.png" 1781941148.77415 78707 beff698e64e6c8aa34ce1542e1f41d99 ""
-  "final-paper.aux" 1782554991.20106 10247 65c6ef7f3731f88c60b991a977567c56 "pdflatex"
-  "final-paper.tex" 1782554325.40831 53277 80e3cf7a1b01e291affaf838c02a4ad0 ""
+  "final-paper.aux" 1782560870.39918 9936 bb6f14a260bb2d4614acb45a9647ef6b "pdflatex"
+  "final-paper.tex" 1782560798.8705 55080 6f6247f01a08e1ad906925274ad93ab6 ""
   "pipeline.png" 1781940517.28041 834318 abfbebb2c0f3ea4e5bbfd6bc2ac5461d ""
   (generated)
   "final-paper.aux"

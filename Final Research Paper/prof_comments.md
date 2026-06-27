@@ -1,5 +1,18 @@
 # Professor's Review Comments — Worklist (Anirban Sen, 26–27 June)
 
+## STATUS (edit pass 1): A, B, C, E, F, G — DONE ✓ · D, H — left for teammates
+- ☑ **A** cross-cutting applied within B/C/E/F/G (titles not articles, active voice, jargon removed, full sentences, forward-refs dropped). Note: A1/A2/A5 still need a pass over D and H (teammates' sections).
+- ☑ **B** abstract reframed bidirectional, "dynamic sense" gone.
+- ☑ **C** intro: motivation added, 2022+ cites (costola2023, news2024), "three observations" removed, pipeline detail condensed.
+- ☑ **E** corpus = MediaCloud collection; preprocessing in full sentences; funnel/panels clarified; figure caption fixed. *Partial:* E3 kept as clear prose (not subsections); E7 figure text fixed but figure not physically relocated after the relevance section.
+- ☑ **F** examples added, annotation + quality described, model I/O + hyperparameters (128 tokens, 768-dim, AdamW, lr 2e-5, batch 16, weight decay, early stopping), synthetic generation method, comparison table removed, ensemble gone. *Honest gap:* no inter-annotator κ claimed (we don't have one) — add if you do.
+- ☑ **G** stance: active voice, target clarified, $p$ defined before the equation, terms defined as bullets.
+- ⚠ **NUMBERS RECONCILED & FLAGGED:** 690,586 (title-filtered + scored, feeds main panels) vs 90,579 (material-event classifier subset, robustness). The paper now treats the **main RQ1/RQ2 as running on 690,586, not the relevance classifier's 90,579.** The team must confirm this is the intended design (does the main analysis use the relevance classifier or not?).
+- ☐ **D** (delete RQ section) and **H** (regression methodology) — not touched, teammates' sections.
+
+---
+
+
 > Line numbers are from the **Overleaf** version he reviewed. Sync local `final-paper.tex`
 > to the Overleaf source before editing. Each item is anchored to quoted text as well.
 > Status: ☐ todo · ◐ in progress · ☑ done

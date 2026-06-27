@@ -70,25 +70,29 @@ sashwat.dhanuka\_ug2023@ashoka.edu.in
 
 \begin{abstract}
 This paper studies how media reporting about large-cap firms changed around the
-2020 recession and whether shifts in stance of news outlets towards these firms predict firm-level stock outcomes. Using a NewsMTSC pipeline to compute daily target-dependent stance from
-$690{,}586$ relevance-filtered full-text article headlines (2015--2025) across 26 S\&P~500
-firms, we align stance with firm-day returns and market controls and address three research questions: whether media stance towards firms significantly shifted after January 2020 (RQ1), whether
-firm-idiosyncratic returns shifted (RQ2), and whether stance predicts returns in
-a dynamic sense (RQ3). RQ1 and RQ2 use two-way fixed-effects pre/post panel
-regressions; RQ3 uses a weekly vector autoregression with Granger-causality
-tests. We find no significant aggregate level shift in either stance or returns
-once common daily and monthly shocks are absorbed, or a dynamic stance--return
-link that is firm-specific rather than a market-wide regularity.
+2020 recession and how firm-level media stance and stock returns relate to one
+another. We do not assume the influence runs in a single direction: we test both
+whether stance moves subsequent returns and whether returns move subsequent
+coverage. We compute daily target-dependent stance with a NewsMTSC pipeline from
+$690{,}586$ scored news headlines (2015--2025) across 26 S\&P~500
+firms, and we align stance with firm-day returns and market controls. We ask
+whether firm-level media stance shifted after January 2020 (RQ1), whether
+firm-idiosyncratic returns shifted (RQ2), and whether past stance and past
+returns help predict each other (RQ3). RQ1 and RQ2 use two-way fixed-effects
+pre/post panel regressions; RQ3 uses a weekly vector autoregression with
+Granger-causality tests. We find no significant aggregate shift in either stance
+or returns once common daily and monthly shocks are absorbed, and we find that
+the stance--return link is firm-specific rather than a market-wide regularity.
 \end{abstract}
 
 \section{Introduction}
-The 2020 recession was a natural breakpoint for studying the interaction between media narratives and financial markets. COVID-era financial news coverage expanded in volume and intensity, and a growing body of evidence documents a structural change in news-market dynamics during and after the shock. This paper addresses the broad research question: \textit{Did the tone of firm-specific media reporting shift after 2020, and if it did, did media tone have a significant impact on the market?}
+The 2020 recession is a natural breakpoint for studying the interaction between media narratives and financial markets. COVID-era financial news coverage expanded sharply in both volume and tone, and a growing body of evidence documents a structural change in news--market dynamics during and after the shock~\cite{costola2023, news2024}. This paper asks a single broad question: did the tone of firm-specific media coverage shift after 2020, and did that tone have a measurable relationship with firm-level stock returns?
 
-We approach the problem with a target-dependent stance framework rather than generic sentiment. NewsMTSC [cite], a library for aspect based sentiment analysis, allows us to score whether an article title is positive, negative, or neutral toward a specific firm even when multiple firms are mentioned in the same text. While a general sentiment score cannot distinguish positive coverage of one firm from negative coverage of another in the same article. Target-dependent stance makes it feasible to construct a daily, firm-level media stance signal and evaluate how it behaves across time and shocks.
+This question matters because news is one of the main channels through which information about a firm reaches investors. If coverage systematically turns more negative or more positive, and if that tone carries information that prices do not already reflect, media tone should help explain firm returns; if prices already incorporate the same information, tone should add nothing once market factors are controlled. Separating these two cases is an empirical question about the strength and the direction of the media--market link, and we study it at the level of individual large-cap firms.
 
-The study is grounded in three observations. The 2020 shock is widely documented as a period in which media coverage and market behavior changed in a persistent way [cite]. This study attempts to discover a correlation, if any, between the two. Second, the data pipeline needs to be precise: naive keyword search introduces many false positives and inflates noise in the stance signal. Third, if stance is to be linked to returns in a credible way, the design must rule out coverage volume effects, pre-trend differences, and spurious correlations driven by macro shocks.
+We measure tone with target-dependent stance rather than generic sentiment. A single news headline often names several firms, and a document-level sentiment score cannot separate positive coverage of one firm from negative coverage of another. Target-dependent stance instead scores the tone expressed toward a specific firm, which lets us build a daily, firm-level stance signal from news headlines and track how it behaves around the 2020 shock. We develop the stance model and the rest of the pipeline in the methodology.
 
-We built a three-stage pipeline for this analysis: (i) relevance classification that filters articles to consider only financial news related articles that actually report on the target firm, (ii) NewsMTSC stance scoring with confidence thresholds to extract the stance of the titles towards the target firm, (iii) two-way fixed-effects pre/post panel regressions (RQ1, RQ2) with a weekly vector autoregression and Granger-causality tests (RQ3) to characterize both the level shifts and the dynamic stance-return channel.
+Our empirical strategy has two parts. We first test whether firm-level stance and returns each shifted around January 2020 using pre/post panel regressions (RQ1 and RQ2), and we then test whether past stance and past returns help predict each other using a weekly vector autoregression with Granger-causality tests (RQ3).
 
 The remainder of the paper proceeds as follows. Section II states the research questions and formal hypotheses. Section III describes the data pipeline. Section IV develops the methodology and estimating equations. Section V presents the regression results for RQ1 and RQ2. Section VI presents the VAR and Granger-causality analysis for RQ3. Section VII addresses identification and robustness, and Section VIII concludes.
 
@@ -121,23 +125,32 @@ where $a^{(2,1)}_\ell$ are the lagged-stance coefficients in the return equation
 
 \section{Data Construction}
 \subsection{Corpus and Coverage}
-We begin with a large corpus of scraped full-text news articles (2015--2025)
-covering large-cap firms that are consistently observable across the window,
-drawn from the S\&P~500. Each record stores the publication, timestamp, URL,
-title, first paragraph, and full body text. The raw corpus contains $4{,}706{,}589$
-firm-article links (Table~\ref{tab:yearly_matrix}); coverage is highly skewed,
-with a handful of firms dominating and others sparsely covered.
+We construct a corpus of S\&P~500 news coverage spanning 2015 to 2025. The
+records are collected through the MediaCloud news aggregation service: for each
+firm we query MediaCloud by company name, and the service returns the matching
+news items together with their publication, timestamp, headline, and article URL.
+The URLs let us recover additional page context where needed, but all downstream
+classification and scoring operate on the headline alone. The corpus contains
+$4{,}706{,}589$ firm-headline records (Table~\ref{tab:yearly_matrix}), and
+coverage is highly skewed across firms: a small number of heavily reported firms
+dominate the corpus, while many firms are covered only sparsely.
 
 \subsection{Data Preprocessing}
-The raw data obtained through the scraping pipeline is further preprocessed in three steps:
-title-level de-duplication, relevance filtering (Section~\ref{sec:rel}), and
-target-dependent stance scoring (Section~\ref{sec:stance}). All downstream
-analyses were run on the resulting scored table, which contains $690{,}586$
-high-confidence firm-article stance observations across $26$ firms.
-Collapsing to the firm--day level yields the $63{,}200$-observation stance panel
-used for RQ1; aligning stance to firm-day market data yields the
-$62{,}667$-observation return panel used for RQ2. Table~\ref{tab:pipeline}
-summarizes the funnel.
+We reduce the raw corpus in three steps. First, we discard headlines that do not
+name the firm, because matching a keyword against body text alone returns many
+articles that mention the firm only in passing; requiring the company name in the
+headline removes most of this contamination. Second, we remove duplicate
+headlines, because the same wire story is republished across many outlets. Third,
+we score the tone of each remaining headline toward the firm with a
+target-dependent stance model. These steps leave $690{,}586$ scored firm-headline
+observations across $26$ firms. We aggregate them to the firm--day level by
+averaging stance for each firm on each day, which gives a daily stance panel of
+$63{,}200$ firm-day observations for RQ1, and merging this panel with each firm's
+daily stock return and market controls gives the $62{,}667$ firm-day observations
+for RQ2. Table~\ref{tab:pipeline} reports the count at each step. A stricter
+supervised relevance classifier, developed in the methodology, further identifies
+the $90{,}579$ headlines that report a material corporate event; we use this
+filtered subset in the robustness analysis.
 
 \begin{table*}[!t]
 \caption{Yearly count of articles in the raw corpus (2015--2025); these sum to the $4{,}706{,}589$ starting links.}
@@ -153,7 +166,7 @@ Total articles & 570,999 & 625,582 & 652,741 & 525,259 & 559,027 & 363,962 & 291
 \end{table*}
 
 \begin{table}[!t]
-\caption{Sample construction funnel from raw corpus to estimation panels}
+\caption{Sample construction, from the raw corpus to the firm-day estimation panels.}
 \label{tab:pipeline}
 \centering
 \small
@@ -161,20 +174,22 @@ Total articles & 570,999 & 625,582 & 652,741 & 525,259 & 559,027 & 363,962 & 291
 \toprule
 Stage & Count \\
 \midrule
-Raw corpus (firm-article links, 2015--2025) & 4,706,589 \\
-Scored firm-articles (relevance-filtered, NewsMTSC) & 690,586 \\
-Firms with scored coverage & 26 \\
-RQ1 stance panel (firm--days) & 63,200 \\
-RQ2 return panel (firm--days) & 62,667 \\
+Raw firm-headline records (2015--2025) & 4,706,589 \\
+After title filter, de-duplication, and stance scoring & 690,586 \\
+Distinct firms & 26 \\
+RQ1 stance panel (firm-day stance observations) & 63,200 \\
+RQ2 returns panel (firm-day stance and returns) & 62,667 \\
+\midrule
+Material-event subset (robustness) & 90,579 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:article_counts} shows article coverage per firm in the scored
-analysis sample. The distribution spans more than four orders of magnitude---from
-AT\&T ($139{,}701$ scored articles) down to Eaton ($5$)---confirming that
-coverage is concentrated in a subset of heavily reported firms, which the
-firm fixed effects in Section~\ref{sec:method} absorb.
+Figure~\ref{fig:article_counts} shows the number of scored headlines per firm in
+the analysis sample. Coverage spans more than four orders of magnitude, from
+AT\&T with $139{,}701$ scored headlines down to Eaton with $5$, so a small subset
+of firms dominates the sample. The firm fixed effects in the panel regressions
+absorb these permanent differences in coverage volume.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{fig_article_counts.png}}
@@ -187,38 +202,59 @@ $690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
 \section{Methodology}
 \subsection{Relevance Filtering and Annotation}
 \label{sec:rel}
-A company name in a headline does not guarantee that the article reports on that company as a corporate entity. ``Apple'' may refer to a product or appear
-only in passing, and generic personal stories and experiences around a product routinely name a firm without covering financial details about it. To remove such noise, we keep only those articles in which the firm is the primary subject of corporate/financial events: earnings, mergers and acquisitions, executive changes, large layoffs, regulatory or legal action, major product launches, or credit and bankruptcy events. This required us to  develop a relevance filter that selects only financial articles around firms for further analysis. 
+A company name in a headline does not guarantee that the headline reports on that
+firm as a company. ``Apple'' can refer to a product, and many lifestyle or
+human-interest headlines name a firm without describing any corporate
+development. We therefore keep only headlines in which the firm is the primary
+subject of a material corporate event, such as earnings, mergers and
+acquisitions, executive changes, large layoffs, regulatory or legal action, major
+product launches, or credit and bankruptcy events. For example, ``Goldman Sachs
+beats profit estimates on a trading surge'' is relevant, whereas ``Ten apple
+recipes to try this autumn'' is not, even though both contain a firm name.
 
-The filter has two stages, a title-level pre-filter that requires the company name to appear in the headline, followed by a supervised classifier that judges materiality. Figure~\ref{fig:relevance_pipeline} summarizes the full stage.
+The filter has two stages: a title-level pre-filter that requires the spelled-out
+company name to appear in the headline, followed by a supervised classifier that
+judges materiality (Figure~\ref{fig:relevance_pipeline}). To train the classifier
+we hand-labeled $750$ headlines under this rubric, of which $227$ are relevant and
+$523$ are irrelevant. To keep the judgments consistent we labeled against the
+written rubric above, resolved borderline headlines by review, and locked a
+separate set of $190$ labeled headlines as a test set that is never used for
+training or threshold selection.
 
-We manually labeled $750$ article titles under this rubric, of which $227$ are
-relevant and $523$ are irrelevant, forming the training data for the classifier. A separate held-out test set of $190$ titles is used as the test data. The classifier is a DeBERTa-v3-base model fine-tuned on the training titles. Trained on the labeled set alone it
-reached a precision of $0.65$ at a recall of $0.71$ (Table~\ref{tab:relmodels}).
-The binding constraint is the small label budget together with the skew between
-the labeled relevant rate, near $30\%$, and the true rate in the corpus, which is
-closer to $10$ to $15\%$.
+The classifier is a DeBERTa-v3-base model fine-tuned for binary classification on
+the headline text. Each headline is tokenized to at most $128$ tokens and padded
+to the batch length, and the model produces a $768$-dimensional contextual
+representation that a linear head maps to a relevance probability. We train with
+the AdamW optimizer at a learning rate of $2\times10^{-5}$, a batch size of $16$,
+weight decay of $0.01$, and early stopping on the validation loss. Trained on the
+$750$ labeled headlines alone, the model reaches a precision of $0.65$ at a recall
+of $0.71$. The main difficulty at this stage is the small label budget together
+with the gap between the labeled relevant rate, near $30\%$, and the true rate in
+the corpus, which is closer to $10\%$ to $15\%$, so the model tends to
+over-predict relevance.
 
-To sharpen the decision boundary without further manual labeling, we add
-$10{,}025$ synthetic titles. These cover the patterns the base model most often
-confuses, including consumer promotions, industry overviews, immaterial
-lawsuits, brand comparisons, and articles that name a firm only in passing,
-together with harder examples of genuine material events phrased in unusual ways.
-Training on the combined set with focal loss and a fivefold weighting of the
-labeled examples raises precision from $0.65$ to $0.88$ while holding recall
-above $0.85$.
+Because additional manual labels are costly, we expand the training set with
+$10{,}025$ synthetic headlines generated programmatically rather than by a
+language model. A template generator fills sector-aware slots for each firm, so
+the events, amounts, and counterparties in a generated headline are plausible for
+that firm's industry. The synthetic headlines deliberately target the categories
+the base model confuses most: on the irrelevant side, consumer promotions,
+analyst previews, immaterial lawsuits, brand comparisons, and passing mentions; on
+the relevant side, earnings, layoffs, and deals phrased in unusual ways. We check
+their quality by sampling generated headlines against the rubric and by verifying
+that none duplicate the held-out test set. We then train on the combined set with
+focal loss, which concentrates learning on the hard boundary cases, and we weight
+the manual labels five times the synthetic ones, so that the synthetic data
+extends the decision boundary without overriding the human labels. This raises
+precision from $0.65$ to $0.88$ while holding recall above $0.85$.
 
-Table~\ref{tab:relmodels} compares the configurations on the held-out test set.
-A three-model ensemble with rule-based post-processing reaches the highest
-precision at $0.94$, but we adopt a single consolidated DeBERTa-v3 model: it
-matches the ensemble on F1, $0.87$ against $0.87$, using one classifier rather
-than an ensemble and a separate rule layer, which is simpler to reproduce and to
-report. At its operating threshold the model attains a precision of $0.88$, a
-recall of $0.86$, and an F1 of $0.87$; a stricter threshold raises precision to
-$0.92$ at a recall of $0.81$ (Figure~\ref{fig:relmodels}). Applied to the full
-corpus of $695{,}731$ scored
-articles, it labels $90{,}579$ as relevant, or $13\%$, consistent with the
-expected base rate. These relevant articles are then fed to the stance classification stage as input as described in Section~\ref{sec:stance}.
+We adopt this single fine-tuned model as the final relevance classifier. On the
+held-out test set it attains a precision of $0.88$, a recall of $0.86$, and an F1
+of $0.87$ at its operating threshold, and a stricter threshold reaches a precision
+of $0.92$ at a recall of $0.81$ (Figure~\ref{fig:relmodels}). Applied to the full
+corpus, the classifier labels $90{,}579$ headlines as relevant, about $13\%$,
+which is consistent with the expected rate of material firm news. These relevant
+headlines are the input to the stance model described next.
 
 \begin{figure}[t]
 \centerline{\includegraphics[width=\linewidth]{pipeline.png}}
@@ -228,48 +264,48 @@ selection on a held-out test set, and full-corpus inference.}
 \label{fig:relevance_pipeline}
 \end{figure}
 
-\begin{table}[!t]
-\caption{Relevance classifier performance on the held-out test set ($n=190$),
-each model at its F1-optimal threshold. The ensemble is shown for reference; the
-consolidated single model is adopted.}
-\label{tab:relmodels}
-\centering\small
-\begin{tabular}{lccc}
-\toprule
-Training strategy & P & R & F1 \\
-\midrule
-Labeled titles only                  & 0.65 & 0.71 & 0.68 \\
-\quad + synthetic (broad)            & 0.78 & 0.76 & 0.77 \\
-\quad + synthetic (targeted, focal)  & 0.86 & 0.88 & 0.87 \\
-\textbf{Consolidated single model}   & \textbf{0.88} & \textbf{0.86} & \textbf{0.87} \\
-\midrule
-Ensemble (reference)                 & 0.94 & 0.81 & 0.87 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \begin{figure}[!t]
 \centerline{\includegraphics[width=\linewidth]{fig_threshold_sweep.png}}
 \caption{Precision, recall, and F1 of the chosen single model on the held-out
 test set as a function of the decision threshold. A threshold near $0.80$
 satisfies both operating targets, reaching precision $0.92$ at recall $0.81$,
-which is why this single classifier is adopted in place of the ensemble.}
+the operating point adopted for full-corpus inference.}
 \label{fig:relmodels}
 \end{figure}
 
 \subsection{Stance Scoring}
 \label{sec:stance}
-Stance is computed with the NewsMTSC model for target-dependent stance. For each
-qualifying article it returns probabilities over positive, negative, and neutral
-stance toward the aspect, which is the name of the firm in this case. The baseline specification keeps all scored articles
-(confidence threshold $\tau=0$) to maximize coverage; we report sensitivity to
-higher-confidence subsets ($\tau=0.6,0.9$). Daily firm-level stance is the article mean,
+We compute the tone of each relevant headline toward its firm with NewsMTSC, a
+target-dependent sentiment model. Given a headline and a target firm, the model
+returns a probability distribution over three classes, positive, negative, and
+neutral, describing the sentiment expressed toward that firm specifically rather
+than toward the headline as a whole. We write these class probabilities as
+$p^{+}_{a}$, $p^{-}_{a}$, and $p^{0}_{a}$ for headline $a$, with
+$p^{+}_{a}+p^{-}_{a}+p^{0}_{a}=1$.
+
+We convert each headline into a single signed stance score, $p^{+}_{a}-p^{-}_{a}$,
+which lies in $[-1,1]$: it is positive for favorable coverage, negative for
+unfavorable coverage, and near zero when the headline is neutral or the model is
+unsure. We keep a headline only when the model is confident, that is when its
+largest class probability is at least $\tau$. The baseline keeps all scored
+headlines ($\tau=0$) to maximize coverage, and we report sensitivity at $\tau=0.6$
+and $\tau=0.9$.
+
+The firm-day stance is the average of the headline scores for that firm on that
+day,
 \begin{equation}
-\text{stance}_{i,t} = \frac{1}{N_{i,t}} \sum_{a \in A_{i,t}} (p^{+}_{a} - p^{-}_{a}),
+\text{stance}_{i,t} = \frac{1}{N_{i,t}} \sum_{a \in A_{i,t}} \left(p^{+}_{a} - p^{-}_{a}\right),
 \end{equation}
-where $A_{i,t}$ is the set of scored articles for firm $i$ on day $t$ and
-$N_{i,t}$ is the count. We also retain article volume as a covariate to separate
-tone shifts from coverage shifts.
+where, for firm $i$ on day $t$:
+\begin{itemize}
+\item $A_{i,t}$ is the set of retained headlines about firm $i$ published on day $t$;
+\item $N_{i,t}=|A_{i,t}|$ is the number of such headlines, that is the daily coverage volume;
+\item $\text{stance}_{i,t}\in[-1,1]$ is the average tone toward the firm on that day.
+\end{itemize}
+We keep the daily volume $N_{i,t}$ as a control in the regressions, because the
+average of a noisy score tightens mechanically as more headlines are averaged, and
+we want to separate a genuine change in tone from a change in the amount of
+coverage.
 
 \subsection{Market Alignment and Controls}
 The stance series is aligned to firm-day market outcomes: daily returns, the
