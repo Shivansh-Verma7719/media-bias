@@ -70,38 +70,33 @@ sashwat.dhanuka\_ug2023@ashoka.edu.in
 
 \begin{abstract}
 This paper studies how media reporting about large-cap firms changed around the
-2020 recession and whether shifts in news stance predict firm-level stock
-outcomes. Using a NewsMTSC pipeline to compute daily target-dependent stance from
-$690{,}586$ relevance-filtered full-text articles (2015--2025) across 26 S\&P~500
-firms, we align stance with firm-day returns and market controls and test three
-questions: whether media stance shifted after January 2020 (RQ1), whether
+2020 recession and whether shifts in stance of news outlets towards these firms predict firm-level stock outcomes. Using a NewsMTSC pipeline to compute daily target-dependent stance from
+$690{,}586$ relevance-filtered full-text article headlines (2015--2025) across 26 S\&P~500
+firms, we align stance with firm-day returns and market controls and address three research questions: whether media stance towards firms significantly shifted after January 2020 (RQ1), whether
 firm-idiosyncratic returns shifted (RQ2), and whether stance predicts returns in
 a dynamic sense (RQ3). RQ1 and RQ2 use two-way fixed-effects pre/post panel
 regressions; RQ3 uses a weekly vector autoregression with Granger-causality
 tests. We find no significant aggregate level shift in either stance or returns
-once common daily and monthly shocks are absorbed, and a dynamic stance--return
-link that is firm-specific rather than a market-wide regularity. We document the
-data pipeline, relevance filtering, stance aggregation, and the robustness checks
-used throughout.
+once common daily and monthly shocks are absorbed, or a dynamic stance--return
+link that is firm-specific rather than a market-wide regularity.
 \end{abstract}
 
 \section{Introduction}
-The 2020 recession is a natural breakpoint for studying the interaction between media narratives and financial markets. COVID-era coverage expanded in volume and intensity, and a growing body of evidence documents a structural change in news-market dynamics during and after the shock. This project asks a simple, high-level question: did the tone of firm-specific media reporting shift after 2020, and if it did, did markets respond differently to that tone?
+The 2020 recession was a natural breakpoint for studying the interaction between media narratives and financial markets. COVID-era financial news coverage expanded in volume and intensity, and a growing body of evidence documents a structural change in news-market dynamics during and after the shock. This paper addresses the broad research question: \textit{Did the tone of firm-specific media reporting shift after 2020, and if it did, did media tone have a significant impact on the market?}
 
-We approach the problem with a target-dependent stance framework rather than generic sentiment. NewsMTSC allows us to score whether an article is positive or negative toward a specific firm even when multiple firms are mentioned in the same text. That distinction is central to firm-level testing: a general sentiment score cannot distinguish positive coverage of one firm from negative coverage of another in the same article. Target-dependent stance makes it feasible to construct a daily, firm-level media stance signal and evaluate how it behaves across time and shocks.
+We approach the problem with a target-dependent stance framework rather than generic sentiment. NewsMTSC [cite], a library for aspect based sentiment analysis, allows us to score whether an article title is positive, negative, or neutral toward a specific firm even when multiple firms are mentioned in the same text. While a general sentiment score cannot distinguish positive coverage of one firm from negative coverage of another in the same article. Target-dependent stance makes it feasible to construct a daily, firm-level media stance signal and evaluate how it behaves across time and shocks.
 
-The study is grounded in three observations. First, the 2020 shock is widely documented as a period in which media coverage and market behavior changed in a persistent way. Second, the data pipeline needs to be precise: naive keyword search introduces many false positives and inflates noise in the stance signal. Third, if stance is to be linked to returns in a credible way, the design must rule out coverage volume effects, pre-trend differences, and spurious correlations driven by macro shocks.
+The study is grounded in three observations. The 2020 shock is widely documented as a period in which media coverage and market behavior changed in a persistent way [cite]. This study attempts to discover a correlation, if any, between the two. Second, the data pipeline needs to be precise: naive keyword search introduces many false positives and inflates noise in the stance signal. Third, if stance is to be linked to returns in a credible way, the design must rule out coverage volume effects, pre-trend differences, and spurious correlations driven by macro shocks.
 
-We therefore build a two-stage pipeline: (i) relevance classification that filters articles to those that actually report on the target firm, and (ii) NewsMTSC stance scoring with confidence thresholds. With this signal we pose three research questions on structural shifts in stance and returns and the post-shock stance-return linkage. Our empirical strategy combines two-way fixed-effects pre/post panel regressions (RQ1, RQ2) with a weekly vector autoregression and Granger-causality tests (RQ3) to characterize both the level shifts and the dynamic stance-return channel.
+We built a three-stage pipeline for this analysis: (i) relevance classification that filters articles to consider only financial news related articles that actually report on the target firm, (ii) NewsMTSC stance scoring with confidence thresholds to extract the stance of the titles towards the target firm, (iii) two-way fixed-effects pre/post panel regressions (RQ1, RQ2) with a weekly vector autoregression and Granger-causality tests (RQ3) to characterize both the level shifts and the dynamic stance-return channel.
 
 The remainder of the paper proceeds as follows. Section II states the research questions and formal hypotheses. Section III describes the data pipeline. Section IV develops the methodology and estimating equations. Section V presents the regression results for RQ1 and RQ2. Section VI presents the VAR and Granger-causality analysis for RQ3. Section VII addresses identification and robustness, and Section VIII concludes.
 
 \section{Research Questions and Hypotheses}
-
-Three hypotheses organize the empirical work. In each case the null corresponds to no effect; rejection constitutes a positive finding.
+The three research questions addressed through this study are as follows:
 
 \textbf{RQ1: Stance shift.}
-Did the tone of firm-specific media coverage shift systematically after January 2020?
+Did the tone of firm-specific media coverage shift significantly after January 2020?
 \begin{align*}
 H_0^{(1)}&: \beta = 0 \\
 H_1^{(1)}&: \beta \neq 0
@@ -124,7 +119,7 @@ H_1^{(3)}&: \exists\,\ell\text{ s.t. }a^{(2,1)}_\ell \neq 0
 \end{align*}
 where $a^{(2,1)}_\ell$ are the lagged-stance coefficients in the return equation of the VAR.
 
-\section{Data and Signal Construction}
+\section{Data Construction}
 \subsection{Corpus and Coverage}
 We begin with a large corpus of scraped full-text news articles (2015--2025)
 covering large-cap firms that are consistently observable across the window,
@@ -133,11 +128,11 @@ title, first paragraph, and full body text. The raw corpus contains $4{,}706{,}5
 firm-article links (Table~\ref{tab:yearly_matrix}); coverage is highly skewed,
 with a handful of firms dominating and others sparsely covered.
 
-\subsection{From Corpus to Analysis Sample}
-The raw corpus is reduced to the analysis sample in three steps:
+\subsection{Data Preprocessing}
+The raw data obtained through the scraping pipeline is further preprocessed in three steps:
 title-level de-duplication, relevance filtering (Section~\ref{sec:rel}), and
 target-dependent stance scoring (Section~\ref{sec:stance}). All downstream
-analysis runs on the resulting scored table, which contains $690{,}586$
+analyses were run on the resulting scored table, which contains $690{,}586$
 high-confidence firm-article stance observations across $26$ firms.
 Collapsing to the firm--day level yields the $63{,}200$-observation stance panel
 used for RQ1; aligning stance to firm-day market data yields the
@@ -145,7 +140,7 @@ $62{,}667$-observation return panel used for RQ2. Table~\ref{tab:pipeline}
 summarizes the funnel.
 
 \begin{table*}[!t]
-\caption{Yearly article totals in the raw corpus (2015--2025); these sum to the $4{,}706{,}589$ starting links.}
+\caption{Yearly count of articles in the raw corpus (2015--2025); these sum to the $4{,}706{,}589$ starting links.}
 \label{tab:yearly_matrix}
 \centering
 \begin{tabular}{lrrrrrrrrrrr}
@@ -189,23 +184,16 @@ $690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
 \label{fig:article_counts}
 \end{figure}
 
+\section{Methodology}
 \subsection{Relevance Filtering and Annotation}
 \label{sec:rel}
-A company name in a headline does not guarantee that the article reports on
-that company as a corporate entity. ``Apple'' may refer to a product or appear
-only in passing, and macro or human-interest stories routinely name a firm
-without covering it. To remove this noise we keep only articles in which the
-firm is the primary subject of a material corporate event: earnings, mergers and
-acquisitions, executive changes, large layoffs, regulatory or legal action,
-major product launches, or credit and bankruptcy events. The filter has two
-stages, a title-level pre-filter that requires the company name, not the ticker,
-to appear in the headline, followed by a supervised classifier that judges
-materiality. Figure~\ref{fig:relevance_pipeline} summarizes the full stage.
+A company name in a headline does not guarantee that the article reports on that company as a corporate entity. ``Apple'' may refer to a product or appear
+only in passing, and generic personal stories and experiences around a product routinely name a firm without covering financial details about it. To remove such noise, we keep only those articles in which the firm is the primary subject of corporate/financial events: earnings, mergers and acquisitions, executive changes, large layoffs, regulatory or legal action, major product launches, or credit and bankruptcy events. This required us to  develop a relevance filter that selects only financial articles around firms for further analysis. 
+
+The filter has two stages, a title-level pre-filter that requires the company name to appear in the headline, followed by a supervised classifier that judges materiality. Figure~\ref{fig:relevance_pipeline} summarizes the full stage.
 
 We manually labeled $750$ article titles under this rubric, of which $227$ are
-relevant and $523$ are irrelevant, and set aside a separate test set of $190$
-titles that is never used for training or threshold selection. The classifier is
-a DeBERTa-v3-base model fine-tuned on titles. Trained on the labeled set alone it
+relevant and $523$ are irrelevant, forming the training data for the classifier. A separate held-out test set of $190$ titles is used as the test data. The classifier is a DeBERTa-v3-base model fine-tuned on the training titles. Trained on the labeled set alone it
 reached a precision of $0.65$ at a recall of $0.71$ (Table~\ref{tab:relmodels}).
 The binding constraint is the small label budget together with the skew between
 the labeled relevant rate, near $30\%$, and the true rate in the corpus, which is
@@ -218,7 +206,7 @@ lawsuits, brand comparisons, and articles that name a firm only in passing,
 together with harder examples of genuine material events phrased in unusual ways.
 Training on the combined set with focal loss and a fivefold weighting of the
 labeled examples raises precision from $0.65$ to $0.88$ while holding recall
-above $0.85$ (Table~\ref{tab:relmodels}).
+above $0.85$.
 
 Table~\ref{tab:relmodels} compares the configurations on the held-out test set.
 A three-model ensemble with rule-based post-processing reaches the highest
@@ -229,9 +217,8 @@ report. At its operating threshold the model attains a precision of $0.88$, a
 recall of $0.86$, and an F1 of $0.87$; a stricter threshold raises precision to
 $0.92$ at a recall of $0.81$ (Figure~\ref{fig:relmodels}). Applied to the full
 corpus of $695{,}731$ scored
-articles it labels $90{,}579$ as relevant, or $13\%$, consistent with the
-expected base rate. These relevant articles are the input to the stance stage of
-Section~\ref{sec:stance}.
+articles, it labels $90{,}579$ as relevant, or $13\%$, consistent with the
+expected base rate. These relevant articles are then fed to the stance classification stage as input as described in Section~\ref{sec:stance}.
 
 \begin{figure}[t]
 \centerline{\includegraphics[width=\linewidth]{pipeline.png}}
@@ -274,10 +261,9 @@ which is why this single classifier is adopted in place of the ensemble.}
 \label{sec:stance}
 Stance is computed with the NewsMTSC model for target-dependent stance. For each
 qualifying article it returns probabilities over positive, negative, and neutral
-stance toward the firm. The baseline specification keeps all scored articles
+stance toward the aspect, which is the name of the firm in this case. The baseline specification keeps all scored articles
 (confidence threshold $\tau=0$) to maximize coverage; we report sensitivity to
-higher-confidence subsets ($\tau=0.6,0.9$). Daily firm-level stance is the
-article mean,
+higher-confidence subsets ($\tau=0.6,0.9$). Daily firm-level stance is the article mean,
 \begin{equation}
 \text{stance}_{i,t} = \frac{1}{N_{i,t}} \sum_{a \in A_{i,t}} (p^{+}_{a} - p^{-}_{a}),
 \end{equation}
@@ -291,7 +277,7 @@ S\&P~500 index return, and VIX, drawn from \texttt{stock\_prices} and the VIX
 daily series. This alignment yields the panels used in the RQ1--RQ3
 specifications.
 
-\section{Methodology}
+
 \label{sec:method}
 
 \subsection{Identification and Panel Design}
