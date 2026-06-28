@@ -185,20 +185,6 @@ Material-event subset (robustness) & 90,579 \\
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:article_counts} shows the number of scored headlines per firm in
-the analysis sample. Coverage spans more than four orders of magnitude, from
-AT\&T with $139{,}701$ scored headlines down to Eaton with $5$, so a small subset
-of firms dominates the sample. The firm fixed effects in the panel regressions
-absorb these permanent differences in coverage volume.
-
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=\linewidth]{fig_article_counts.png}}
-\caption{Scored firm-articles per firm in the analysis sample (26 firms,
-$690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
-2015--2025; log scale).}
-\label{fig:article_counts}
-\end{figure}
-
 \section{Methodology}
 \subsection{Relevance Filtering and Annotation}
 \label{sec:rel}
@@ -273,6 +259,21 @@ the operating point adopted for full-corpus inference.}
 \label{fig:relmodels}
 \end{figure}
 
+Having defined the relevance filter, we can describe the coverage of the resulting
+analysis sample. Figure~\ref{fig:article_counts} shows the number of scored
+headlines per firm. Coverage spans more than four orders of magnitude, from
+AT\&T with $139{,}701$ scored headlines down to Eaton with $5$, so a small subset
+of firms dominates the sample. The firm fixed effects in the panel regressions
+absorb these permanent differences in coverage volume.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{fig_article_counts.png}}
+\caption{Scored firm-articles per firm in the analysis sample (26 firms,
+$690{,}586$ scored firm-articles from \texttt{articles\_no\_title\_deduped},
+2015--2025; log scale).}
+\label{fig:article_counts}
+\end{figure}
+
 \subsection{Stance Scoring}
 \label{sec:stance}
 We compute the tone of each relevant headline toward its firm with NewsMTSC, a
@@ -317,6 +318,22 @@ specifications.
 \label{sec:method}
 
 \subsection{Identification and Panel Design}
+We answer RQ1 and RQ2 with panel regressions rather than simple before-and-after
+averages because both outcomes are confounded by factors a raw comparison cannot
+remove. Firms differ permanently in how heavily they are covered and in their
+average return, and all firms are exposed to common market-wide movements on any
+given day. A regression with firm and time fixed effects nets out both: it compares
+each firm against its own history while holding constant whatever is common across
+firms at each date, so the post-2020 coefficient measures the within-firm change
+net of these confounders. Identification rests on three assumptions. First, in the
+absence of the 2020 shock the treated and untreated periods would have followed a
+common trend, so the fixed effects capture the relevant heterogeneity. Second, the
+timing of the break is exogenous to firm-level coverage and returns, which the
+pandemic onset makes plausible. Third, after the within-transformation the residual
+shocks are uncorrelated with the post indicator; we report HC1-robust and, for RQ1,
+day-clustered standard errors to guard against the remaining heteroskedasticity and
+within-day dependence.
+
 Both RQ1 and RQ2 use a pre/post design on a firm--day panel. The treatment indicator
 \begin{equation}
 \text{Post}_t = \mathbf{1}[\,t \ge \text{2020-01-01}\,]
