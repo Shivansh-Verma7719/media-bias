@@ -1,6 +1,7 @@
 # Professor's Review Comments — Worklist (Anirban Sen, 26–27 June)
 
 ## STATUS (edit pass 1): A, B, C, E, F, G — DONE ✓ · D, H — left for teammates
+
 - ☑ **A** cross-cutting applied within B/C/E/F/G (titles not articles, active voice, jargon removed, full sentences, forward-refs dropped). Note: A1/A2/A5 still need a pass over D and H (teammates' sections).
 - ☑ **B** abstract reframed bidirectional, "dynamic sense" gone.
 - ☑ **C** intro: motivation added, 2022+ cites (costola2023, news2024), "three observations" removed, pipeline detail condensed.
@@ -103,7 +104,9 @@
 ---
 
 ## Suggested order of attack
+
 1. Cross-cutting passes first (A1 titles, A2 passive, A5 jargon) — cheap, paper-wide.
 2. Structural moves (D1 delete RQ section, C5/C6 move intro details, E3/E7 reorder, F6 remove comparison table).
 3. Content additions (E1 MediaCloud, F1 examples + annotation, F3/F4 model + synthetic details, G3/G4 define terms, H1 regression rationale).
 4. Citation pass (C1, A6).
+
