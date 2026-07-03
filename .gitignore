@@ -35,12 +35,9 @@ ism-gdelt-key.json
 results/*.csv
 
 # Large inference outputs (too big for GitHub)
-relevance_classifier/full_predictions_*.csv
 relevance_classifier_v2/full_predictions_*.csv
 
 # Large model directories and checkpoints (PyTorch/Transformers)
-relevance_classifier/best_model/
-relevance_classifier/best_model_*/
 relevance_classifier_v2/model_*/
 
 # Process IDs
