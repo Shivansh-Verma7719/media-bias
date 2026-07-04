@@ -1,0 +1,184 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\thepage}{\Roman{page}} % Capital Roman numerals
+
+\fancyhead[L]{\thepage}                 % Page number on left
+\fancyhead[C]{S. VERMA, S. TULSYAN \& S. DHANUKA, A. SEN}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+
+\title{Quantitative Analysis of Media Bias and Stock Price Dynamics: The 2020 Shock}
+
+\author{\small
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+Anirban Sen \\
+\textit{Dept of CS} \\
+\textit{Ashoka University} \\
+Sonipat, India \\
+anirban.sen@ashoka.edu.in
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+Shivansh Verma \\
+\textit{Dept of CS} \\
+\textit{Ashoka University} \\
+Sonipat, India \\
+shivansh.verma\_ug2023@ashoka.edu.in
+\end{minipage}
+\\[0.6em]
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+Soham Tulsyan \\
+\textit{Dept of CS} \\
+\textit{Ashoka University} \\
+Sonipat, India \\
+soham.tulsyan\_ug2023@ashoka.edu.in
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+Sashwat Dhanuka \\
+\textit{Dept of CS} \\
+\textit{Ashoka University} \\
+Sonipat, India \\
+sashwat.dhanuka\_ug2023@ashoka.edu.in
+\end{minipage}
+}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\begin{abstract}
+% TODO: Abstract.
+\end{abstract}
+
+%=====================================================================
+% INTRODUCTION  (1--1.25 pg)  --  Shivansh Verma, Soham Tulsyan, Sashwat Dhanuka
+%   - Motivation: long para on why this is important / why we are doing this.
+%   - What exactly we are doing: mention the RQs briefly.
+%   - How: brief, high-level methodology; reasons behind VAR + regression.
+%   - Findings: implications; brief basic accuracy metrics / aggregates;
+%     mostly what we feel about the results.
+%=====================================================================
+\section{Introduction}
+
+%=====================================================================
+% RELATED WORK  (0.75--1 pg)  --  Shivansh Verma, Soham Tulsyan, Sashwat Dhanuka
+%   - Cite at least 30 papers, 2022 onwards.
+%   - Divide into 2--3 sections (e.g. by RQ or by theme).
+%   - Frame a story per work: [author (cite) did xyz, found abc; pqr is the
+%     gap; how our study differs; brief on their methodology].
+%   - Answer: why are we doing this work (criticism + motivation).
+%=====================================================================
+\section{Related Work}
+
+%=====================================================================
+% DATA COLLECTION  (0.5--0.75 pg)
+%=====================================================================
+\section{Data Collection}
+
+% Data source and format; scraping process, GDELT, MediaCloud; time span and
+% volume of articles.  --  Shivansh Verma
+\subsection{Corpus and Coverage}
+
+% Preprocessing, cleaning, filtering; relevance classifier as a black box
+% ("we ran an RC to find financial articles of relevance about the companies
+% considered"); rejected companies/articles.  --  Shivansh Verma, Sashwat Dhanuka
+\subsection{Data Preprocessing}
+
+% Table on article volume + temporal variation; final distribution/volume
+% reported POST relevance classification.  --  Sashwat Dhanuka
+
+%=====================================================================
+% METHODOLOGY  (2--3 pg)
+%=====================================================================
+\section{Methodology}
+
+% Only the final relevance classifier (mention failed experiments very briefly,
+% if at all).  Report accuracy, precision, recall, F1.  Optional model-comparison
+% graph/table (can go to appendix).  --  Sashwat Dhanuka
+\subsection{Relevance Classification}
+
+% For each RQ: hypothesis, null hypothesis, estimating equations, and a full,
+% formal description of every variable (VIX, volume, etc.).  Brag about the work:
+% assumption testing, normalization, regularization, etc.
+%   RQ1, RQ2  --  Soham Tulsyan, Shivansh Verma
+%   RQ3       --  Soham Tulsyan
+\subsection{RQ1: }
+
+\subsection{RQ2: }
+
+\subsection{RQ3: }
+
+%=====================================================================
+% RESULTS  (2--3 pg)
+%   Add VAR/regression plots here. Distinguish method plots from finding plots.
+%=====================================================================
+\section{Results}
+
+% Regression table, final finding, hypothesis testing.  --  Shivansh Verma
+\subsection{RQ1: }
+
+% --  Shivansh Verma
+\subsection{RQ2: }
+
+% --  Soham Tulsyan
+\subsection{RQ3: }
+
+%=====================================================================
+% DISCUSSION  (0.75--1.25 pg)  --  Soham Tulsyan, Sashwat Dhanuka
+%   Subsection per RQ, 3 paras each:
+%     Para 1: implication of findings.
+%     Para 2: limitations / what we did not observe or consider.
+%     Para 3: future work / how to extend.
+%=====================================================================
+\section{Discussion}
+
+\subsection{RQ1: }
+
+\subsection{RQ2: }
+
+\subsection{RQ3: }
+
+%=====================================================================
+% CONCLUSION  (0.25 pg)  --  Soham Tulsyan, Shivansh Verma, Sashwat Dhanuka
+%   Summary of what we did, how, and the findings. 1--2 paras max.
+%=====================================================================
+\section{Conclusion}
+
+%=====================================================================
+% APPENDIX (optional)
+%=====================================================================
+% \appendix
+
+%=====================================================================
+% BIBLIOGRAPHY  (@misc entries; target >= 30 papers, 2022 onwards)
+%=====================================================================
+% References: add BibTeX @-entries to references.bib, cite them with \cite{key}
+% in the text (target >= 30, mostly 2022 onwards), then uncomment the two lines
+% below to render the bibliography.
+% \bibliographystyle{IEEEtran}
+% \bibliography{references}
+
+\end{document}

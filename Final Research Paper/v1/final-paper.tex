@@ -14,6 +14,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\graphicspath{{images/}}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
@@ -1107,16 +1108,9 @@ Durbin--Watson        & $1.673$ & mild autocorrelation \\
 \end{tabular}
 \end{table}
 
+% References are managed in references.bib; cite with \cite{key} in the text.
+\nocite{*} % preserve the original 8-entry list (only 2 are \cite'd in the body)
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{99}
-\bibitem{hamborg2021} F. Hamborg and K. Donnay, ``NewsMTSC: Target-dependent stance classification in news articles,'' EACL, 2021.
-\bibitem{haroon2020} O. Haroon and S. A. Rizvi, ``COVID-19: Media coverage and financial markets behavior,'' Finance Research Letters, 2020.
-\bibitem{blajer2024} M. Blajer-Golebiewska, A. Honecker, and K. Nowak, ``Investor sentiment response to COVID-19: A sectoral analysis,'' North American Journal of Economics and Finance, 2024.
-\bibitem{news2024} ``News and markets in the time of COVID-19,'' Journal of Financial and Quantitative Analysis, 2024.
-\bibitem{davis2020} S. Davis, S. Hansen, and C. Seminario, ``Firm-level risk exposures and stock returns in the wake of COVID-19,'' NBER, 2020.
-\bibitem{costola2023} M. Costola, M. Nofer, O. Hinz, and L. Pelizzon, ``Machine learning sentiment analysis, COVID-19 news and stock market reactions,'' Research in International Business and Finance, 2023.
-\bibitem{bai2023} Z. Bai, Q. Han, J. Pan, and R. Zhang, ``Financial market sentiment and returns,'' Finance Research Letters, 2023.
-\bibitem{xu2024} H. Xu, ``News bias in financial journalists' social networks,'' Journal of Accounting Research, 2024.
-\end{thebibliography}
+\bibliography{references}
 
 \end{document}
