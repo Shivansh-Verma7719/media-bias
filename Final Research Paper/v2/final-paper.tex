@@ -93,6 +93,70 @@ anirban.sen@ashoka.edu.in
 %=====================================================================
 \section{Related Work}
 
+\subsection{Media Sentiment and Market Outcomes}
+The question of whether the tone of the news moves prices has drawn a wave of recent
+work, and its trajectory explains where our study sits. Costola et
+al.~\cite{costola2023} ran machine-learning sentiment over COVID-19 news and found
+that a darker news tone accompanied contemporaneous market reactions, while Bai et
+al.~\cite{bai2023} showed that a market-level sentiment index carries predictive
+content for returns at short horizons. Both findings live at the level of the whole
+market, and that is precisely their limit: an aggregate index cannot say whether
+warm coverage of one firm and hostile coverage of another cancel or compound, which
+is the distinction a firm-level question needs. The same limit runs through the
+studies that compare channels and sources. Nyakurukwa and
+Seetharam~\cite{nyakurukwa2024} find that social-media tone has come to dominate
+news tone for United States returns, Xu et al.~\cite{xuhz2025} show that
+official-media sentiment moves the Chinese market, and a broad set of recent papers
+measures the sentiment--return link across horizons, frequencies, and machine-learning
+pipelines~\cite{davidovic2025, cai2024, nguyen2025, krystyniak2025}, across news
+versus social channels~\cite{kimhahm2025, avila2024, smith2025}, and across the
+day--night boundary of the trading calendar~\cite{wang2024}. Each of these works
+reads tone off an aggregate or an outlet; none of them attributes it to the specific
+firm a headline names, which is the measurement our study is built on.
+
+\subsection{Measuring Tone at the Level of a Firm}
+Attributing tone to the right entity is its own research problem. A survey of
+text-based financial sentiment by Todd et al.~\cite{todd2024} closes by naming
+entity- and aspect-level attribution as the open direction of the field, and the
+tooling has been catching up to that call. Huang et al.~\cite{huang2023} show that a
+finance-domain language model extracts information from financial text more
+faithfully than general-purpose models, and Hamborg and Donnay~\cite{hamborg2021}
+supply the piece we lean on directly: a target-dependent stance model that scores
+the sentiment a sentence expresses toward a named entity rather than the sentence's
+overall mood. At the same time, recent work counsels care in how such tools are
+used. Kirtac and Germano show both that language-model sentiment can support
+profitable trading signals~\cite{kirtac2024} and that the measured sentiment shifts
+with the choice of model and prompt~\cite{kirtac2025}, a sensitivity Liu et
+al.~\cite{liu2025} confirm on S\&P~500 headlines; Shah et al.~\cite{shah2024} show
+how weak supervision can stretch scarce labels in finance text, and aspect-level
+sentiment with large language models remains an active
+frontier~\cite{liskowski2026, vanderheever2026}. We take the warning seriously: our
+pipeline fixes a single supervised relevance stage and a transparent signed score,
+so that every downstream number traces to one auditable measurement rather than to
+a moving model choice.
+
+\subsection{Dynamic Links and Structural Change}
+A third strand asks not whether tone and returns are related but in which direction
+the relation runs, and whether it survived 2020 intact. Mamaysky~\cite{mamaysky2023}
+dates a structural break in mid-March 2020 after which news and markets became
+markedly less coupled, which turns the stability of the news--market link from an
+assumption into something a study must test. On direction,
+Mukherjee~\cite{mukherjee2025} examines sentiment and market movements through
+Granger causality and Farrell and O'Connor~\cite{farrell2025} find that the
+predictive power of a widely watched sentiment index over United States returns
+comes and goes rather than holding steady; both, again, work with one aggregate
+series. The COVID-era event studies point the same way from the cross-section: the
+shock's imprint was uneven across firms and sectors~\cite{davis2020, blajer2024,
+yang2024, zhu2023, baiel2024}, coverage tone itself has a structural, non-random
+component~\cite{xu2024}, and the econometric literature shows that inference which
+ignores breaks and regime shifts is distorted by them~\cite{chung2025, segnon2024}.
+What no study in this strand does is test the lead--lag relation between firm-level
+stance and firm-level returns in both directions, on series whose stationarity has
+been verified and whose break dates are estimated rather than imposed. That
+combination, firm-level target-dependent stance at scale, level-shift tests for
+stance and returns under one controlled break, and a break-dated bidirectional
+dynamic analysis, is the gap this paper fills.
+
 %=====================================================================
 % DATA COLLECTION  (0.5--0.75 pg)
 %=====================================================================
@@ -217,6 +281,72 @@ Name or ticker in title, de-duplicated & $695{,}731$ & $26$ \\
 % if at all).  Report accuracy, precision, recall, F1.  Optional model-comparison
 % graph/table (can go to appendix).  --  Sashwat Dhanuka
 \subsection{Relevance Classification}
+\label{sec:rc}
+The scored corpus still carries a problem that no amount of name matching can fix: a
+headline that names a firm is not necessarily about the firm. ``Apple'' headlines a
+recipe as easily as an earnings call, banks lend their names to stadiums and
+sponsorships, and a firm can drift through a story as scenery rather than subject.
+If such headlines flow into a firm's daily tone, the signal we later regress on is
+diluted by coverage that no investor would read as news about the company. What the
+study needs is the subset of headlines in which the firm is the primary subject of a
+material corporate event: earnings, mergers and acquisitions, executive changes,
+large layoffs, regulatory or legal action, major product launches, or credit and
+bankruptcy events. ``Goldman Sachs beats profit estimates on a trading surge''
+belongs in that subset; ``Ten apple recipes to try this autumn'' does not, even
+though both contain a firm name.
+
+Separating the two at the scale of hundreds of thousands of headlines calls for a
+supervised classifier, and a classifier calls for labels. We hand-labelled $750$
+headlines against the written rubric above, resolving borderline cases by review,
+which yielded $227$ relevant and $523$ irrelevant examples; a further $187$ labelled
+headlines ($145$ irrelevant, $42$ relevant) were locked away as a held-out test set,
+touched neither during training nor when choosing the decision threshold. The
+classifier itself is a DeBERTa-v3-base model fine-tuned for binary classification on
+the headline text: each headline is tokenized to at most $128$ tokens, the model
+produces a $768$-dimensional contextual representation, and a linear head maps that
+representation to a relevance probability. Training uses the AdamW optimizer at a
+learning rate of $2\times10^{-5}$, a batch size of $16$, weight decay of $0.01$, and
+early stopping on the validation loss.
+
+Trained on the $750$ labels alone, the model reaches a precision of only $0.65$ at a
+recall of $0.71$, and the reason is instructive: the labelled set is nearly a third
+relevant while the true rate in the corpus is closer to one headline in eight, so
+the model learns to say yes too readily. More manual labels would close that gap
+slowly and expensively. Instead we widen the training set with $10{,}025$
+synthetically generated headlines, built from sector-aware templates so that the
+events, amounts, and counterparties in each generated headline are plausible for the
+firm's industry, and aimed squarely at the categories the base model confuses most:
+consumer promotions, analyst previews, immaterial lawsuits, and passing mentions on
+the irrelevant side; earnings, layoffs, and deals phrased in unusual ways on the
+relevant side. We verify samples of the generated headlines against the rubric and
+confirm that none duplicates the held-out test set. Training on the combined data
+uses focal loss, which concentrates learning on the hard boundary cases, and weights
+each manual label five times a synthetic one, so the synthetic examples stretch the
+decision boundary without ever outvoting a human judgment.
+
+The finished model justifies the effort. On the held-out test set it reaches an
+accuracy of $0.94$ with a precision of $0.88$, a recall of $0.86$, and an F1 of
+$0.87$ at the default threshold, and the trade-off between catching relevant
+headlines and keeping false alarms out can be tuned along the threshold sweep in
+Figure~\ref{fig:relsweep}. For full-corpus inference we adopt a stricter operating
+threshold of $0.80$, where precision rises to $0.92$ at a recall of $0.81$ and
+accuracy holds at $0.94$ ($34$ true positives, $3$ false positives, $142$ true
+negatives, $8$ false negatives): when the classifier labels the whole corpus, we
+would rather lose a genuine story than admit a false one, because every admitted
+headline feeds directly into a firm's measured tone. Applied to the scored corpus,
+the classifier retains $90{,}579$ headlines as materially relevant, about $13\%$ of
+the total, which is consistent with how much of a large firm's news flow reports
+corporate substance rather than mentions it in passing. These retained headlines are
+the raw material for every panel that follows.
+
+\begin{figure}[!t]
+\centerline{\includegraphics[width=\linewidth]{fig_threshold_sweep.png}}
+\caption{Precision, recall, and F1 of the final relevance classifier on the
+held-out test set ($n=187$) as the decision threshold varies. The operating
+threshold of $0.80$ trades recall for precision ($P=0.92$, $R=0.81$), the direction
+the full-corpus inference favors.}
+\label{fig:relsweep}
+\end{figure}
 
 % For each RQ: hypothesis, null hypothesis, estimating equations, and a full,
 % formal description of every variable (VIX, volume, etc.).  Brag about the work:
@@ -437,17 +567,88 @@ VIX                  & $-0.00003$ & $0.00006$ & $0.684$ \\
 %=====================================================================
 \section{Discussion}
 
-\subsection{RQ1: }
+\subsection{RQ1: What a Null Stance Shift Means}
+The absence of a detectable stance shift says something sharper than it first
+appears. Coverage of these firms visibly intensified through the pandemic, yet once
+each firm is compared with its own history and the shocks common to every firm on a
+day are held aside, the average direction of that coverage did not lurch. The strong
+negative volume coefficient completes the picture: what changed in 2020 was how much
+was written, not how favorably. For an investor or a regulator worried that the
+crisis bent the press systematically for or against large firms, the daily
+firm-level evidence here offers no support.
 
-\subsection{RQ2: }
+The measurement, however, bounds the claim. A signed daily mean is a coarse summary
+of tone: it can hide offsetting swings within a day, it inherits noise from both the
+stance model and the relevance filter, and that noise attenuates any true effect
+toward zero. A single calendar break cannot separate the pandemic from anything else
+that changed in early 2020, and headlines, however information-dense, are not the
+articles beneath them.
 
-\subsection{RQ3: }
+The natural extensions follow from those limits. A distributional summary of daily
+tone would preserve what the mean erases; propagating the stance model's uncertainty
+into the regression would let the data speak about attenuation rather than leave it
+as a caveat; and scoring article bodies for the well-covered firms would test how
+much the headline restriction costs.
+
+\subsection{RQ2: What a Null Return Shift Means}
+For returns the null carries a different message: once the market factor and the
+broad regime are absorbed, the 2020 shock left no firm-specific return signature
+aligned to the break for the average firm in the panel. That is what efficient
+pricing of a market-wide shock predicts. The pandemic repriced the market as a
+whole, and it did so through channels the market controls capture, not through a
+persistent firm-level wedge that survives them.
+
+The design is deliberately conservative, and that conservatism is its limitation.
+By stripping out the common component, the specification is silent about the large
+aggregate repricing that plainly occurred; a mean-shift test also cannot see changes
+in volatility or tail behavior, which moved violently in 2020. The panel treats all
+firms symmetrically, though the crisis touched an airline and a grocer very
+differently.
+
+Future work can relax each restriction in turn: modeling conditional volatility
+directly, defining the firm-specific channel against a richer factor benchmark than
+the index and the VIX, and replacing the single calendar break with event windows
+around each firm's own news flow.
+
+\subsection{RQ3: A Link That Is Firm-Specific, Not Market-Wide}
+The dynamic analysis delivers the paper's central interpretive point. Predictability
+between stance and returns exists, but it lives in individual firms and tends to
+switch on only after a firm's own structural break; pooled across the panel, with
+volatility, the market return, and coverage volume controlled, no market-wide lead--lag
+channel survives in either direction. A pooled test is exactly the design most able
+to conjure an aggregate effect, and it declines to; the honest reading is
+heterogeneity, not absence.
+
+The caveats are those of any reduced-form dynamic analysis. Weekly aggregation,
+chosen because daily firm-level stance is sparse, may alias away a faster channel
+through which headlines are priced within days or hours. A single estimated break
+describes firms with several regime changes only partially. And Granger causality is
+predictive, not structural: a significant test says past stance forecasts returns,
+not that stance moves prices.
+
+Extending the analysis to daily or event-time frequency for the densely covered
+firms, allowing multiple breaks or smoothly switching regimes, and pairing the
+reduced-form evidence with an identification strategy that can speak to mechanism
+are the directions we consider most promising.
 
 %=====================================================================
 % CONCLUSION  (0.25 pg)  --  Soham Tulsyan, Shivansh Verma, Sashwat Dhanuka
 %   Summary of what we did, how, and the findings. 1--2 paras max.
 %=====================================================================
 \section{Conclusion}
+We set out to learn whether the 2020 shock changed what the news says about large
+United States firms, what their stocks do, and how the two move together. From
+$6.28$ million headlines we distilled a corpus of $90{,}579$ materially relevant,
+target-scored headlines across $26$ S\&P~500 firms, and put the shock to three
+tests: pre/post panel regressions for the level of stance and of returns, and a
+break-dated weekly dynamic analysis for the link between them. The levels did not
+move: neither media stance nor firm-specific returns shows a significant aggregate
+shift once common shocks are absorbed. The link between stance and returns turns out
+to be real but local, surfacing in individual firms after their own structural
+breaks while no market-wide channel survives the pooled, controlled test. The 2020
+shock, on this evidence, did not rewrite the relationship between the financial
+press and the market; it left a relationship that was firm-specific before the
+crisis just as firm-specific after it.
 
 %=====================================================================
 % APPENDIX (optional)
@@ -460,7 +661,7 @@ VIX                  & $-0.00003$ & $0.00006$ & $0.684$ \\
 % References: add BibTeX @-entries to references.bib, cite them with \cite{key}
 % in the text (target >= 30, mostly 2022 onwards), then uncomment the two lines
 % below to render the bibliography.
-% \bibliographystyle{IEEEtran}
-% \bibliography{references}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
 
 \end{document}
