@@ -1,1 +1,2 @@
 Methodology section B seems unnecessary and not very well written
+Same identification issue as before — RQ1/RQ2 β are the Post-vs-time-FE artifact coefficients. RQ3 is clean (VAR verified end-to-end). The RQ1/RQ2 tables inherit the open problem.

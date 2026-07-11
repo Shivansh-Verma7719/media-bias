@@ -571,45 +571,71 @@ paper's central claim is held to.
 
 % Regression table, final finding, hypothesis testing.  --  Shivansh Verma
 \subsection{RQ1: No Detectable Shift in Media Stance}
-Estimating \eqref{eq:rq1} on the $27{,}627$ firm-day stance observations---$26$ firms
-across $3{,}982$ trading days---returns the coefficients in
+Estimating \eqref{eq:rq1} on the $27{,}627$ firm-day stance observations, drawn from
+$26$ firms across $3{,}982$ trading days, returns the coefficients in
 Table~\ref{tab:results}(a). The post-2020 coefficient is $\hat{\beta} = +0.011$ with
 an HC1 standard error of $0.030$ ($p = 0.71$), and clustering by day barely disturbs
 it ($\text{SE} = 0.030$, $p = 0.72$), so the within-day dependence between firms is
 not hiding a result. We cannot reject $H_0^{(1)}$: once each firm is set against its
 own history and the day's common movement is held fixed, the tone of coverage does not
 step to a new level after the shock. The volume control behaves exactly as its purpose
-demands---its coefficient is $-0.0038$ ($p < 0.001$), so the days on which a firm is
+demands, with a coefficient of $-0.0038$ ($p < 0.001$), so the days on which a firm is
 most heavily covered are the days its average tone is pulled back toward neutral, the
 mechanical averaging effect the control exists to absorb. The within $R^2$ of $0.002$
 is what one expects when a single firm's day-to-day tone is dominated by the noise of
 individual headlines. A null here is not a failure to find something; it says the shock
 left no common, firm-level mark on tone once the news cycle's own daily swings are
-taken out.
+taken out. Figure~\ref{fig:stance_uber} puts the signal on view for one firm across the
+whole window: the tone drifts around a stable, mildly negative mean with no step at the
+turn of 2020, while the panel beneath it tracks the weekly coverage volume, whose wide
+swings are the very variation the volume control absorbs.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{weekly_ts_UBER.png}
+\caption{Stance signal for Uber over 2015--2025. The upper panel plots the
+coverage-weighted mean stance, which drifts around a stable, mildly negative level with
+no visible step at January 2020 (dashed line); the lower panel plots weekly headline
+volume, whose wide swings are the variation the RQ1 volume control is meant to absorb.}
+\label{fig:stance_uber}
+\end{figure}
 
 % --  Shivansh Verma
 \subsection{RQ2: No Detectable Shift in Firm-Level Returns}
 The same estimation on returns, \eqref{eq:rq2} over $20{,}537$ firm-day observations,
 tells the matching story (Table~\ref{tab:results}(b)). The post-2020 coefficient is
 all but zero, $\hat{\beta} = -0.0001$ ($\text{SE} = 0.0013$, $p = 0.92$): returns show
-no level break either. What the regression does register is the market itself. The
-S\&P~500 return enters with a coefficient of $1.10$ ($p < 0.001$)---the familiar market
-beta near one---and together with the monthly effects it accounts for about a third of
+no level break either. The weekly return series makes the pattern plain
+(Figure~\ref{fig:returns_v}): the March 2020 crash is a violent but brief dislocation,
+after which volatility settles back toward its earlier range rather than to a new
+level. What the regression does register is the market itself. The
+S\&P~500 return enters with a coefficient of $1.10$ ($p < 0.001$), the familiar market
+beta near one, and together with the monthly effects it accounts for about a third of
 the within-firm variation in returns ($R^2 = 0.32$). Volatility adds nothing once the
 market return is present ($\text{VIX}$, $p = 0.68$). The reading echoes RQ1: firm
 returns move with the market, as they always have, but the shock itself leaves no
 separate firm-level step behind. Taken together the two nulls are informative rather
-than empty---after common shocks are removed, neither the tone of coverage nor firm
+than empty; after common shocks are removed, neither the tone of coverage nor firm
 returns jumped in 2020. A level test is not the only way the shock could have mattered,
 though: it could have changed how tone and returns move \emph{with one another} over
 time rather than where each of them sits, and a static regression cannot see that.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{fig_returns_V.png}
+\caption{Visa weekly log returns, 2015--2025. The March 2020 crash (dashed line) is a
+large but short-lived dislocation, after which volatility returns to its earlier range,
+consistent with the RQ2 finding of no persistent post-2020 level shift once the market
+factor is absorbed.}
+\label{fig:returns_v}
+\end{figure}
 
 \begin{table}[t]
 \caption{Regression results for RQ1 (stance, Eq.~\ref{eq:rq1}) and RQ2 (returns, Eq.~\ref{eq:rq2}). Both fail to reject the null of no post-2020 level shift once common daily (RQ1) and monthly (RQ2) shocks are absorbed.}
 \label{tab:results}
 \centering
 \small
-\textbf{(a) RQ1 --- Daily Stance} (firm $+$ day FE, HC1 SE)\\[3pt]
+\textbf{(a) RQ1 -- Daily Stance} (firm $+$ day FE, HC1 SE)\\[3pt]
 \begin{tabular}{lrrr}
 \toprule
 Variable & Coef. & SE & $p$ \\
@@ -623,7 +649,7 @@ Article volume       & $-0.00381$ & $0.00049$ & $<0.001$ \\
 \end{tabular}
 
 \vspace{7pt}
-\textbf{(b) RQ2 --- Daily Returns} (firm $+$ month FE, HC1 SE)\\[3pt]
+\textbf{(b) RQ2 -- Daily Returns} (firm $+$ month FE, HC1 SE)\\[3pt]
 \begin{tabular}{lrrr}
 \toprule
 Variable & Coef. & SE & $p$ \\
@@ -638,7 +664,89 @@ VIX                  & $-0.00003$ & $0.00006$ & $0.684$ \\
 \end{table}
 
 % --  Soham Tulsyan
-\subsection{RQ3: }
+\subsection{RQ3: A Link That Lives in Individual Firms}
+Run firm by firm on the full sample, the Granger tests are nearly silent, which is
+what a regime-dependent relationship would lead us to expect. Only two firms show
+stance leading returns, Uber decisively ($p = 0.003$) and Boeing weakly
+($p = 0.10$), and the reverse channel, returns leading stance, reaches significance
+for Goldman Sachs alone ($p = 0.004$); for every other firm neither direction clears
+the five-percent level (Table~\ref{tab:granger}). Taken at face value this reads as a
+relationship that is barely there.
+
+Splitting each firm at its own estimated break tells a sharper story. Several firms
+that are quiet over the full sample come alive after their break: Uber's
+stance-to-returns channel strengthens from $p = 0.48$ before the break to
+$p < 0.001$ after it, and Intel turns marginally predictive ($p = 0.074$ post-break).
+Feedback from returns to coverage surfaces after the break for AT\&T ($p = 0.015$),
+Boeing ($p = 0.010$), and Wells Fargo ($p = 0.030$), while Goldman Sachs and Morgan
+Stanley show it only before. This pre/post asymmetry is the firm-level counterpart of
+the structural shift the level tests looked for and did not find: the media--market
+link is not a fixed feature of the sample but one that switches on after the break for
+a subset of firms. The estimated break dates are themselves the argument for reading
+them off the data rather than fixing them by hand (Figure~\ref{fig:breaks_wfc}): Wells
+Fargo's coverage shifts in early 2019 and its returns only in late 2021, neither near
+the pandemic, so a break imposed at March 2020 would have split the firm at the wrong
+moment.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{fig_breaks_WFC.png}
+\caption{Data-driven structural breaks for Wells Fargo. The Bai--Perron break in the
+coverage-stance series (top, January 2019) and in weekly returns (bottom, September
+2021) both fall well away from the expected March 2020 date (dotted), which is why the
+breaks that split the RQ3 subsamples are estimated from each series rather than imposed
+on the calendar.}
+\label{fig:breaks_wfc}
+\end{figure}
+
+Whether those scattered firm-level signals add up to a market-wide channel is the
+question the panel VAR settles. With the firms pooled through the Helmert transform,
+three lags, and the post-2020 indicator, the VIX, the weekly S\&P~500 return, and
+coverage volume all partialled out, neither Granger direction is significant in any
+subsample: stance-to-returns and returns-to-stance both sit far from conventional
+levels over the full, pre-break, and post-break windows (Table~\ref{tab:panelvar}).
+Pooling buys the statistical power the single-firm tests lack, and still nothing
+aggregate survives once the market-wide controls are in place. The reading is not that
+the link is absent but that it is local: where predictability exists it belongs to
+individual firms and their own break dates rather than to the market as a whole. A
+pooled specification is the design most likely to manufacture a spurious aggregate
+effect, and here it declines to.
+
+\begin{table}[!t]
+\caption{Firm-level Granger causality on the full sample (HAC $p$-values). Only firms
+with a significant direction are shown; the remaining firms clear neither direction at
+the five-percent level.}
+\label{tab:granger}
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Firm & Lag & Stance$\to$Ret & Ret$\to$Stance \\
+\midrule
+Uber          & 6 & $\mathbf{0.003}$ & $0.375$ \\
+Boeing        & 5 & $0.097$          & $0.119$ \\
+Goldman Sachs & 3 & $0.432$          & $\mathbf{0.004}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\caption{Panel VAR Granger causality, Helmert-transformed and HAC-robust, with
+$\text{Post}_t$, the VIX, the S\&P~500 return, and coverage volume partialled out.
+No direction is significant in any subsample.}
+\label{tab:panelvar}
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Sample & $N$ & Stance$\to$Ret & Ret$\to$Stance \\
+\midrule
+Full       & $7{,}493$ & $0.565$ & $0.899$ \\
+Pre-break  & $4{,}415$ & $0.301$ & $0.861$ \\
+Post-break & $3{,}018$ & $0.905$ & $0.937$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 %=====================================================================
 % DISCUSSION  (0.75--1.25 pg)  --  Soham Tulsyan, Sashwat Dhanuka

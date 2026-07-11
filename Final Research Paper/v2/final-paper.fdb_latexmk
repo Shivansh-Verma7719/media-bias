@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex final-paper"] 1783778076.8362 "final-paper.aux" "final-paper.bbl" "final-paper" 1783778077.6539 0
+["bibtex final-paper"] 1783779314.21781 "final-paper.aux" "final-paper.bbl" "final-paper" 1783779315.43142 0
   "./references.bib" 1783776294.09285 10002 71e6959b1597bf6e114871ad797fabc3 ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1440712899 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "final-paper.aux" 1783778077.46439 6639 df0dfa3bd73ff47b1bec79dc151ac9bc "pdflatex"
+  "final-paper.aux" 1783779315.23492 8786 8d64dba591122d99eac6f46861c95cc7 "pdflatex"
   (generated)
   "final-paper.bbl"
   "final-paper.blg"
   (rewritten before read)
-["pdflatex"] 1783778076.92252 "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1783778077.654 0
-  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" 1783778075.66919 43036 656d05ae11f9a994e1751127f73015a9 ""
+["pdflatex"] 1783779314.30113 "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1783779315.43153 0
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" 1783779312.97185 48604 5adbd19e71cfb61f0d449a71b75d47e8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -35,6 +35,7 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm" 1136768653 1332 f817c21a1ba54560425663374f1b651a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx6.tfm" 1136768653 1344 8a0be4fe4d376203000810ad4dc81558 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm" 1136768653 1336 3125ccb448c1a09074e3aa4a9832f130 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx8.tfm" 1136768653 1332 1fde11373e221473104d6cc5993f046e ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx9.tfm" 1136768653 1328 5442e22a7072966dbaf88ca900acf3f0 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1136768653 1512 f21f83efb36853c0b70002322c1ab3ad ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm" 1136768653 1520 eccf95517727cb11801f4f1aee3a21b4 ""
@@ -111,12 +112,15 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1761154854 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1761154847 3345739 d57daa19046d33682a48772a8502eb7c ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "final-paper.aux" 1783778077.46439 6639 df0dfa3bd73ff47b1bec79dc151ac9bc "pdflatex"
-  "final-paper.bbl" 1783778076.92072 7074 92f00d1d1277871c869bd1a7f52d6f4c "bibtex final-paper"
-  "final-paper.tex" 1783778075.66919 43036 656d05ae11f9a994e1751127f73015a9 ""
+  "final-paper.aux" 1783779315.23492 8786 8d64dba591122d99eac6f46861c95cc7 "pdflatex"
+  "final-paper.bbl" 1783779314.29932 7074 92f00d1d1277871c869bd1a7f52d6f4c "bibtex final-paper"
+  "final-paper.tex" 1783779312.97185 48604 5adbd19e71cfb61f0d449a71b75d47e8 ""
+  "images/fig_breaks_WFC.png" 1783779221.44103 248094 b540be59bc268670a911274dc12a6372 ""
   "images/fig_coverage_per_firm.png" 1783776294.09224 87108 1e72766e1d06d988ffa154eca4a6006c ""
+  "images/fig_returns_V.png" 1783779221.43641 83856 ddadb78df90f48ac89b8eeafad3c42e5 ""
   "images/fig_stratification.png" 1783776294.09248 83139 49d592b937fa8679babb226e3fb78520 ""
   "images/fig_threshold_sweep.png" 1783776294.09272 78707 beff698e64e6c8aa34ce1542e1f41d99 ""
+  "images/weekly_ts_UBER.png" 1783779221.43411 121894 1210f0c4087740635dae8fceb7b97585 ""
   (generated)
   "final-paper.aux"
   "final-paper.log"
