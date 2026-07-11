@@ -759,67 +759,74 @@ Post-break & $3{,}018$ & $0.905$ & $0.937$ \\
 
 \subsection{RQ1: What a Null Stance Shift Means}
 The absence of a detectable stance shift says something sharper than it first
-appears. Coverage of these firms visibly intensified through the pandemic, yet once
-each firm is compared with its own history and the shocks common to every firm on a
-day are held aside, the average direction of that coverage did not lurch. The strong
-negative volume coefficient completes the picture: what changed in 2020 was how much
+appears. The pandemic was inescapable in the news, yet once each firm is set against
+its own history and the shocks common to every firm on a day are held aside, the
+average direction of its coverage did not lurch. The strongly negative volume
+coefficient completes the picture: what moved on a firm's heaviest days was how much
 was written, not how favorably. For an investor or a regulator worried that the
 crisis bent the press systematically for or against large firms, the daily
-firm-level evidence here offers no support.
+firm-level evidence offers no support.
 
-The measurement, however, bounds the claim. A signed daily mean is a coarse summary
-of tone: it can hide offsetting swings within a day, it inherits noise from both the
-stance model and the relevance filter, and that noise attenuates any true effect
-toward zero. A single calendar break cannot separate the pandemic from anything else
-that changed in early 2020, and headlines, however information-dense, are not the
-articles beneath them.
+The measurement, however, bounds that claim. A signed daily mean is a coarse summary
+of tone: it can net out opposing headlines within the same day, and it inherits noise
+from both the relevance filter and the stance model, noise that pulls any true effect
+toward zero. A single calendar break cannot separate the pandemic from whatever else
+changed in early 2020. And a headline, however sharply it compresses a story, is not
+the full article beneath it, so a stance that lived mainly in the body would go unseen.
 
 The natural extensions follow from those limits. A distributional summary of daily
-tone would preserve what the mean erases; propagating the stance model's uncertainty
-into the regression would let the data speak about attenuation rather than leave it
-as a caveat; and scoring article bodies for the well-covered firms would test how
-much the headline restriction costs.
+tone would keep what the mean erases; carrying the stance model's uncertainty into the
+regression would let the data quantify the attenuation rather than leave it as a
+caveat; and scoring the full article text for the most heavily covered firms would
+measure what the headline restriction costs.
 
 \subsection{RQ2: What a Null Return Shift Means}
-For returns the null carries a different message: once the market factor and the
-broad regime are absorbed, the 2020 shock left no firm-specific return signature
-aligned to the break for the average firm in the panel. That is what efficient
-pricing of a market-wide shock predicts. The pandemic repriced the market as a
-whole, and it did so through channels the market controls capture, not through a
-persistent firm-level wedge that survives them.
+For returns the null carries a different message. Once the market factor and the broad
+monthly regime are absorbed, the shock left no firm-specific return signature aligned
+to the break for the average firm in the panel, which is what efficient pricing of a
+market-wide event would predict. The pandemic repriced the market as a whole, and it
+did so through the channels the market controls already capture rather than through a
+persistent firm-level wedge that outlives them.
 
-The design is deliberately conservative, and that conservatism is its limitation.
-By stripping out the common component, the specification is silent about the large
-aggregate repricing that plainly occurred; a mean-shift test also cannot see changes
-in volatility or tail behavior, which moved violently in 2020. The panel treats all
-firms symmetrically, though the crisis touched an airline and a grocer very
-differently.
+The design is deliberately conservative, and that conservatism is its limitation. By
+removing the common component it stays silent on the large aggregate repricing that
+plainly happened, and by testing a shift in the mean it cannot see the moves in
+volatility and tail risk that were violent in 2020. Loading the broad market onto
+monthly effects and the index return also risks absorbing part of a genuine
+firm-level response along with the noise. And the panel treats every firm alike,
+though the crisis fell on an airline and a grocer in opposite ways.
 
-Future work can relax each restriction in turn: modeling conditional volatility
-directly, defining the firm-specific channel against a richer factor benchmark than
-the index and the VIX, and replacing the single calendar break with event windows
-around each firm's own news flow.
+Each restriction invites a relaxation: modeling conditional volatility directly rather
+than testing means alone, defining the firm-specific channel against a richer factor
+benchmark than the index and the VIX, and trading the single calendar break for event
+windows drawn around each firm's own news flow.
 
 \subsection{RQ3: A Link That Is Firm-Specific, Not Market-Wide}
 The dynamic analysis delivers the paper's central interpretive point. Predictability
-between stance and returns exists, but it lives in individual firms and tends to
+between stance and returns is real, but it lives in individual firms and tends to
 switch on only after a firm's own structural break; pooled across the panel, with
-volatility, the market return, and coverage volume controlled, no market-wide lead--lag
-channel survives in either direction. A pooled test is exactly the design most able
-to conjure an aggregate effect, and it declines to; the honest reading is
-heterogeneity, not absence.
+volatility, the market return, and coverage volume held aside, no market-wide
+lead--lag channel survives in either direction. A pooled test is the design most able
+to conjure an aggregate effect, and it declines to, so the honest reading is
+heterogeneity rather than absence.
 
-The caveats are those of any reduced-form dynamic analysis. Weekly aggregation,
-chosen because daily firm-level stance is sparse, may alias away a faster channel
-through which headlines are priced within days or hours. A single estimated break
-describes firms with several regime changes only partially. And Granger causality is
-predictive, not structural: a significant test says past stance forecasts returns,
-not that stance moves prices.
+The caveats are those of any reduced-form dynamic analysis. Weekly aggregation, forced
+by how sparse daily firm-level stance is, may alias away a faster channel through which
+headlines are priced within days or hours. The bivariate design carries only stance and
+returns, so drivers that move both, among them earnings surprises, analyst actions, and
+sector shocks, sit outside it, and the panel controls narrow that gap without closing
+it. A single estimated break describes a firm with several regime changes only in part,
+and the subsample split treats a break date that was itself estimated as though it were
+known. Heavy-tailed, volatility-clustered residuals leave the inference resting on the
+HAC correction and large-sample approximation rather than on exact distributions. And
+Granger causality is predictive, not structural: a rejection says past stance forecasts
+returns, not that stance moves prices.
 
-Extending the analysis to daily or event-time frequency for the densely covered
-firms, allowing multiple breaks or smoothly switching regimes, and pairing the
-reduced-form evidence with an identification strategy that can speak to mechanism
-are the directions we consider most promising.
+The most promising directions answer those caveats in turn: pushing to daily or
+event-time frequency for the densely covered firms, allowing several breaks or smoothly
+switching regimes in place of one, folding the omitted drivers into the model as
+exogenous regressors, and pairing the reduced-form evidence with an identification
+strategy that can speak to mechanism rather than to prediction alone.
 
 %=====================================================================
 % CONCLUSION  (0.25 pg)  --  Soham Tulsyan, Shivansh Verma, Sashwat Dhanuka
