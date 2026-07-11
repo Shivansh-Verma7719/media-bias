@@ -353,51 +353,44 @@ the full-corpus inference favors.}
 % assumption testing, normalization, regularization, etc.
 %   RQ1, RQ2  --  Soham Tulsyan, Shivansh Verma
 %   RQ3       --  Soham Tulsyan
-\subsection{A Panel Design for the 2020 Break}
-With a daily, firm-level stance series in hand and a matching series of daily stock
-returns, the first question the 2020 shock raises is the plainest one: did either
-series step to a new level once the shock arrived? The tempting way to answer it is
-to average each series over the years before 2020 and over the years after, and read
-off the difference. That answer would mislead, and seeing why fixes the design for
-both questions that follow.
-
-Two forces move a firm's coverage and its returns that have nothing to do with the
-shock. Firms differ from one another in ways that hold across the whole sample: some
-are simply covered more, and more warmly, than others, and some earn higher average
-returns than others. And on any single day every firm is pushed in the same
-direction by the news cycle and by the market as a whole. A raw before-and-after
-average folds both of these into what it labels the ``2020 effect'': a shift in which
-firms happen to be in the news, or a run of shared bad days, would surface as a break
-that owes nothing to the shock itself.
-
-A panel regression with two sets of fixed effects strips out exactly these two
-confounders. Firm effects pin each firm to its own baseline, so the comparison is
-between a firm and its own past rather than between one firm and another; time
-effects hold constant whatever is common to every firm on a given day, or in a given
-month, so a market-wide swing cannot be read as a firm-level break. What remains for
-a post-2020 indicator to explain is the within-firm change net of common shocks,
-which is exactly the quantity the shock question asks about. This is why we estimate
-the break inside a two-way fixed-effects regression rather than from raw means, from a
-single firm's time series, or from an event study around one date: only the panel
-holds the standing differences between firms and the shared movements across them
-fixed at the same time. The estimate is credible under three assumptions the setting
-makes reasonable: that, absent the shock, the pre- and post-periods would have shared
-a common trend; that the timing of the break is set by the pandemic's onset rather
-than by anything in a firm's own coverage or returns; and that, after the
-within-transformation, what is left is uncorrelated with the post indicator. To guard
-the last of these we report HC1-robust standard errors throughout, and, where several
-firms are covered on the same day, standard errors clustered by day.
-
 \subsection{RQ1: Did Media Stance Shift After the Shock?}
-The outcome for this question is the tone of a firm's coverage on a day. Each retained
-headline is read by a target-dependent sentiment model that reports, for the firm
-named in it, how likely its tone toward that firm is positive, negative, or neutral;
-write these three probabilities as $p^{+}_a$, $p^{-}_a$, and $p^{0}_a$ for headline
-$a$, with $p^{+}_a + p^{-}_a + p^{0}_a = 1$. We collapse them into a single signed
-score, $p^{+}_a - p^{-}_a$, which runs from $-1$ for wholly unfavorable coverage to
-$+1$ for wholly favorable coverage and sits near zero when the headline is even-handed
-or the model is unsure. A firm's stance on a day is the average of these scores over
-the headlines it drew that day,
+With a daily, firm-level stance series in hand, the first question the 2020 shock
+raises is the plainest one: did the tone of a firm's coverage step to a new level once
+the shock arrived? The tempting way to answer it is to average each firm's stance over
+the years before 2020 and over the years after, then read off the difference. That
+comparison would mislead, and seeing why fixes the design for this question and the
+one that follows.
+
+Two forces move a firm's coverage that have nothing to do with the shock, and a raw
+before-and-after average folds both of them into what it would label the 2020 effect.
+Firms differ from one another in ways that persist across the whole sample, so that
+some are covered more, and more warmly, than others. And on any single day every firm
+is pushed in the same direction by the news cycle as a whole, so a run of shared bad
+days, or a change in which firms happen to be in the news, would surface as a break
+that owes nothing to the pandemic. A panel regression with two sets of fixed effects
+removes exactly these two confounders. Firm effects tie each firm to its own baseline,
+so the comparison is between a firm and its own past rather than between one firm and
+another; daily effects hold constant whatever is common to every firm on a given day,
+so a market-wide swing in tone cannot be read as a firm-level break. What remains for
+a post-2020 indicator to explain is the within-firm change net of these common shocks,
+which is precisely the quantity the question asks about. The estimate is credible
+under three assumptions the setting makes reasonable: that, absent the shock, the pre-
+and post-periods would have followed a common trend; that the timing of the break is
+set by the pandemic's onset rather than by anything in a firm's own coverage; and that,
+once the firm and day effects are removed, what is left is uncorrelated with the post
+indicator. We guard the last of these by reporting HC1-robust standard errors and,
+because several firms are often covered on the same day, standard errors clustered by
+day.
+
+The outcome that carries this question is the tone of a firm's coverage on a day. A
+target-dependent sentiment model reads each retained headline and reports, for the
+firm the headline names, how likely its tone toward that firm is positive, negative,
+or neutral; we write these three probabilities as $p^{+}_a$, $p^{-}_a$, and $p^{0}_a$
+for headline $a$, with $p^{+}_a + p^{-}_a + p^{0}_a = 1$. We collapse them into a
+single signed score, $p^{+}_a - p^{-}_a$, which runs from $-1$ for wholly unfavorable
+coverage to $+1$ for wholly favorable coverage and sits near zero when a headline is
+even-handed or the model is unsure. A firm's stance on a day is the mean of these
+scores over the headlines it drew that day,
 \begin{equation}
 \text{bias}_{it} = \frac{1}{N_{it}} \sum_{a \in A_{it}} \bigl(p^{+}_a - p^{-}_a\bigr),
 \label{eq:bias}
@@ -406,9 +399,9 @@ where $A_{it}$ is the set of retained headlines about firm $i$ on day $t$,
 $N_{it} = |A_{it}|$ is that day's coverage volume, and
 $\text{bias}_{it} \in [-1,1]$ is the average tone toward the firm.
 
-We ask whether this daily stance moved to a new level after the shock. The regression
-places stance on the post-2020 indicator alongside firm and daily time effects and the
-day's coverage volume,
+To ask whether this daily stance moved to a new level after the shock, we place it on
+the post-2020 indicator alongside the firm and daily effects and the day's coverage
+volume,
 \begin{equation}
 \text{bias}_{it} = \alpha_i + \delta_t^{\text{day}} + \beta\,\text{Post}_t
 + \gamma\,\text{vol}_{it} + \varepsilon_{it}.
@@ -417,16 +410,16 @@ day's coverage volume,
 Here $\text{Post}_t = \mathbf{1}[\,t \ge \text{2020-01-01}\,]$ switches on for every day
 from January 2020 onward, and its coefficient $\beta$ is the quantity of interest;
 $\alpha_i$ are the firm effects and $\delta_t^{\text{day}}$ the daily effects. The
-control $\text{vol}_{it} = N_{it}$ enters because a daily average tightens
-mechanically as more headlines are folded into it, so holding the count fixed keeps a
+volume control $\text{vol}_{it} = N_{it}$ enters because a daily average tightens
+mechanically as more headlines fold into it, so holding the count fixed keeps a
 genuine change in tone from being mistaken for a change in the sheer amount of
 coverage. We test
 \begin{equation*}
 H_0^{(1)}:\ \beta = 0 \qquad\text{against}\qquad H_1^{(1)}:\ \beta \neq 0,
 \end{equation*}
 estimating \eqref{eq:rq1} by the within-transformation with HC1-robust standard
-errors, and, since several firms can be covered on the same day, reporting
-day-clustered standard errors alongside them.
+errors and, since several firms can be covered on the same day, day-clustered standard
+errors alongside them.
 
 \subsection{RQ2: Did Firm-Level Returns Shift After the Shock?}
 The second question asks the same of prices. The outcome is firm $i$'s daily log
@@ -434,10 +427,10 @@ return, $\text{return}_{it} = \ln P_{it} - \ln P_{i,t-1}$, where $P_{it}$ is the
 firm's closing price on day $t$; we draw the daily closing prices, the S\&P~500 index,
 and the VIX volatility index from \texttt{yfinance}. Log returns are additive over
 time and roughly symmetric, which suits a linear model. Returns carry a large common
-component---when the market rises, most firms rise with it---so the design must strip
-that component out before it can see a firm-level break. Monthly time effects absorb
-the broad market regime, and within each month the S\&P~500 return and the VIX account
-for the day-to-day market swings and the level of volatility. The regression is
+component: when the market rises, most firms rise with it, so the design must strip
+that component out before it can see a firm-level break. Monthly effects absorb the
+broad market regime, and within each month the S\&P~500 return and the VIX account for
+the day-to-day market swings and the level of volatility. The regression is
 \begin{equation}
 \text{return}_{it} = \alpha_i + \delta_t^{\text{month}} + \beta\,\text{Post}_t
 + \gamma_1\,\text{sp500\_ret}_t + \gamma_2\,\text{vix}_t + \varepsilon_{it},
@@ -479,7 +472,96 @@ $\delta_t^{\text{month}}$ & RQ2 & Monthly effects, absorbing shocks common to al
 {\footnotesize \textit{Note:} ``(dep.)'' marks the dependent variable; the remaining rows are regressors or fixed effects.}
 \end{table*}
 
-\subsection{RQ3: }
+\subsection{RQ3: Did the Stance--Return Relationship Change?}
+\label{sec:var}
+The two level tests leave a question they cannot reach. Learning that neither the
+tone of coverage nor firm returns stepped to a new level after the shock says
+nothing about whether the two moved together differently once it arrived; a
+relationship can change how it behaves while each series holds its average in
+place. The third question therefore asks not where stance and returns sit but how
+they lead each other, and whether that lead--lag structure shifted around 2020. We
+leave the direction of any such link open. Coverage may carry information prices
+have yet to absorb, so that past stance forecasts returns, or prices may move first
+and coverage follow, so that returns forecast stance; a design fit for this question
+has to admit both and let the data choose between them.
+
+A vector autoregression answers to exactly that requirement, because it treats
+stance and returns as jointly endogenous and reads the direction of predictability
+off the data rather than off an assumed ordering. For a firm we gather the two
+series into $\mathbf{y}_t = (\Delta\text{bias}_t,\, r_t)^{\top}$ and write the
+reduced-form VAR of order $p$ as
+\begin{equation}
+\mathbf{y}_t = \mathbf{c} + \sum_{\ell=1}^{p}\mathbf{A}_\ell\,\mathbf{y}_{t-\ell}
++ \mathbf{u}_t,
+\label{eq:var}
+\end{equation}
+with coefficient matrices $\mathbf{A}_\ell \in \R^{2\times2}$ and innovations
+$\mathbf{u}_t$ of covariance $\Sigma$. The off-diagonal terms hold the cross-dynamics
+the question turns on: a nonzero $(2,1)$ entry means past stance moves current
+returns, and a nonzero $(1,2)$ entry means past returns move current stance. We fit
+the model at a weekly frequency. Daily firm-level stance is too thin for many firms
+to support a lag-rich dynamic model, whereas aggregating the headlines into calendar
+weeks restores a dense, near-continuous series for each retained firm while leaving
+enough weeks for the lags the model needs. We align each weekly stance series to the
+firm's weekly log return, bridge the short coverage gaps by imputation, and keep an
+observed-only version of every series so that no dynamic result can rest on the
+filled values.
+
+Two properties of the weekly data set the specification. A VAR in levels is
+trustworthy only when its series are stationary, since a levels regression on
+integrated data is spurious, so we classify each series by pairing the Augmented
+Dickey--Fuller test, whose null is a unit root, with the KPSS test, whose null is
+stationarity. Weekly returns come back stationary for every firm, while the stance
+index is stationary for some firms and integrated or break-driven for the rest. To
+hold every firm to one specification without courting a spurious regression, we take
+the VAR on the first difference of the stance index, $\Delta\text{bias}_t$, which is
+stationary throughout, paired with the weekly return; the handful of firms whose
+stance and returns test as cointegrated we carry separately as robustness exceptions
+to the differenced form.
+
+Because the question is about a regime change, we let the data date the change rather
+than impose the calendar. A Bai--Perron procedure locates the single largest shift in
+the mean of each weekly series, and that estimated break splits the firm's sample into
+a pre- and a post-break segment on which the dynamics can be compared. Dating the
+break empirically is what makes the comparison honest: some firms break near the
+pandemic window while others break on news of their own, so a single imposed 2020 cut
+would misplace the change for many of them. For each firm we set the VAR order by
+minimizing the Bayesian Information Criterion over $p = 1,\dots,8$, which penalizes
+extra parameters heavily and so favors parsimonious, well-identified models, and we
+certify every fit for stability, with all roots of the companion matrix outside the
+unit circle, for the absence of residual autocorrelation, and for the heavy tails and
+volatility clustering typical of financial returns, the last of which is why the
+inference that follows is made robust to heteroskedasticity and autocorrelation.
+
+On each fitted model we test predictability in both directions through Granger
+causality, which asks whether the past of one series helps predict the other beyond
+that other's own past. Writing $a^{(2,1)}_\ell$ for the coefficient on lag-$\ell$
+stance in the return equation, stance fails to forecast returns when
+\begin{equation*}
+H_0^{(3)}:\ a^{(2,1)}_1 = \cdots = a^{(2,1)}_p = 0
+\end{equation*}
+holds against the alternative that at least one of these coefficients is nonzero, and
+the mirror-image hypothesis on the $(1,2)$ coefficients asks whether returns forecast
+stance. We test each with a joint Wald statistic and Newey--West standard errors that
+absorb the residual dependence found above, on the full sample and on the pre- and
+post-break segments in turn.
+
+A firm-by-firm test is underpowered, since each rests on one short series, so the
+specification the dynamic conclusion leans on pools the firms into a panel VAR.
+Pooling buys power but revives a hazard: ordinary within-firm demeaning ties the
+transformed errors to the lagged regressors and bends the estimated dynamics, the
+Nickell bias. We strip firm heterogeneity with the Arellano--Bover (Helmert) forward
+transformation instead, which subtracts from each observation the mean of its own
+future values and so keeps the lagged regressors orthogonal to the transformed error,
+\begin{equation}
+\tilde{y}_{it} = c_{it}\Bigl(y_{it} - \tfrac{1}{T_{it}}\textstyle\sum_{s>t} y_{is}\Bigr),
+\end{equation}
+with $c_{it}$ a factor that equalizes the variance of the transformed errors. Into the
+pooled model we partial the very forces that could otherwise counterfeit a
+media--market link: the post-2020 indicator, the VIX, the weekly S\&P~500 return, and
+the week's coverage volume. A Granger relation that survives these controls cannot be
+an echo of market-wide volatility or of how much was written, which is the standard the
+paper's central claim is held to.
 
 %=====================================================================
 % RESULTS  (2--3 pg)

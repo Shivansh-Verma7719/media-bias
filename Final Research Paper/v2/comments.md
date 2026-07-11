@@ -1,0 +1,1 @@
+Methodology section B seems unnecessary and not very well written

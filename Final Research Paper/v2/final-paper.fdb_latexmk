@@ -1,6 +1,14 @@
 # Fdb version 4
-["pdflatex"] 1783188852.72397 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1783188853.19583 0
-  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" 1783188843.89139 23208 79408fdd5d018911007541e1fdad8069 ""
+["bibtex final-paper"] 1783778076.8362 "final-paper.aux" "final-paper.bbl" "final-paper" 1783778077.6539 0
+  "./references.bib" 1783776294.09285 10002 71e6959b1597bf6e114871ad797fabc3 ""
+  "/usr/local/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1440712899 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
+  "final-paper.aux" 1783778077.46439 6639 df0dfa3bd73ff47b1bec79dc151ac9bc "pdflatex"
+  (generated)
+  "final-paper.bbl"
+  "final-paper.blg"
+  (rewritten before read)
+["pdflatex"] 1783778076.92252 "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1783778077.654 0
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" 1783778075.66919 43036 656d05ae11f9a994e1751127f73015a9 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -55,6 +63,7 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb" 1136849748 45758 19968a0990191524e34e1994d4a31cb6 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb" 1136849748 44729 811d6c62865936705a31c797a1d5dada ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb" 1136849748 44656 0cbca70e0534538582128f6b54593cca ""
@@ -99,13 +108,15 @@
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd" 1137110629 961 15056f4a61917ceed3a44e4ac11fcc52 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty" 1727642399 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "/usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf" 1739380943 42148 61becc7c670cd061bb319c643c27fdd4 ""
-  "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1760512895 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
-  "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1760512815 3345733 331d7ef9d415455749c8e9cff59fa0a0 ""
+  "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1761154854 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
+  "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1761154847 3345739 d57daa19046d33682a48772a8502eb7c ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "final-paper.aux" 1783188853.15028 4142 2da90694ce16fd2ac73d4e01bc1536b3 "pdflatex"
-  "final-paper.tex" 1783188843.89139 23208 79408fdd5d018911007541e1fdad8069 ""
-  "images/fig_coverage_per_firm.png" 1783187288.4611 87108 1e72766e1d06d988ffa154eca4a6006c ""
-  "images/fig_stratification.png" 1783188093.15793 83139 49d592b937fa8679babb226e3fb78520 ""
+  "final-paper.aux" 1783778077.46439 6639 df0dfa3bd73ff47b1bec79dc151ac9bc "pdflatex"
+  "final-paper.bbl" 1783778076.92072 7074 92f00d1d1277871c869bd1a7f52d6f4c "bibtex final-paper"
+  "final-paper.tex" 1783778075.66919 43036 656d05ae11f9a994e1751127f73015a9 ""
+  "images/fig_coverage_per_firm.png" 1783776294.09224 87108 1e72766e1d06d988ffa154eca4a6006c ""
+  "images/fig_stratification.png" 1783776294.09248 83139 49d592b937fa8679babb226e3fb78520 ""
+  "images/fig_threshold_sweep.png" 1783776294.09272 78707 beff698e64e6c8aa34ce1542e1f41d99 ""
   (generated)
   "final-paper.aux"
   "final-paper.log"
