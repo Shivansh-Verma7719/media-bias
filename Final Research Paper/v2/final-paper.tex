@@ -82,14 +82,87 @@ anirban.sen@ashoka.edu.in
 %     mostly what we feel about the results.
 %=====================================================================
 \section{Introduction}
-Impact of the media on the stock market what is it and why it imp?
-Then flow to
-Start with EMH (Cite) 
-why EMH is imp
-then flow to
-RQs mentioned:
-then flow to
-Findings:
+The news is one of the primary channels through which information about a company
+reaches the investors who buy and sell its stock, and for that reason the tone of a
+firm's coverage has long been suspected of moving its share price. When a national
+outlet casts a firm's quarter as a triumph or its leadership as embattled, the framing
+travels to thousands of readers who already hold the stock or might soon buy it, and
+whether that framing leaves a mark on the price or merely repeats what the market has
+already worked out is a question that reaches well beyond the newsroom. It matters to
+the investor deciding whether a run of hostile headlines is a signal worth trading on,
+to the firm weighing how much its public image is worth defending, and to the regulator
+asking whether the press can tilt the fortunes of the largest companies. The question
+is also stubbornly hard to answer, because coverage and prices move together for many
+reasons that have nothing to do with one driving the other, and any convincing account
+has to pull apart the coverage that carries genuine new information from the coverage
+that only narrates a move the market has already made.
+
+The sharpest way to draw that line is the efficient market hypothesis~\cite{fama1970},
+which holds that the price of a stock at any given moment already reflects every piece
+of information publicly available about the firm. Read strictly, this idea leaves no
+room for the tone of a headline to forecast returns, because whatever the headline
+reports has been folded into the price by the time it appears in print, and coverage
+becomes a mirror held up to the market rather than a force acting on it. The hypothesis
+matters to us not because we expect it to hold to the letter but because it sets the
+null against which any claim of media influence has to be measured. If the tone of a
+firm's coverage does help predict its returns, then either the market is slow to absorb
+public information or the coverage is carrying something the market has not yet seen,
+and if the tone predicts nothing, then the press is largely reporting the market back to
+itself. We take no position in advance on which of these holds, and we do not even
+assume that influence, where it exists, runs from coverage to prices rather than the
+other way around, since a firm whose stock has just tumbled tends to draw darker
+coverage in the days that follow.
+
+The year 2020 offers a rare occasion to put these questions to a genuine test. The
+onset of the pandemic was a shock that fell on every firm at once, crowded out almost
+everything else in the news for months, and repriced the whole market within a few
+violent weeks, so if the relationship between coverage and returns were ever going to
+bend out of its usual shape, this is the moment it would show. Earlier work has already
+documented that the coupling between news and markets broke apart around that
+period~\cite{mamaysky2023}, which turns the stability of the link from something we can
+assume into something we have to test directly. We therefore treat the shock as a
+natural experiment and ask three questions of it. The first is whether the tone of a
+firm's coverage stepped to a new level once the shock arrived. The second asks the same
+of prices, whether firm returns settled at a new level after the shock rather than
+simply riding a market that had been repriced around them. The third, and the one the
+paper turns on, asks whether the relationship between tone and returns changed its
+behavior around 2020 even when neither series shifted its average, and in particular
+whether coverage began to lead returns, or returns to lead coverage, in a way it had
+not before.
+
+Answering these questions calls for a measure of tone that belongs to a single firm
+rather than to the market as a whole, so we begin by reading each headline with a
+target-dependent sentiment model that scores how favorably the headline speaks about the
+specific firm it names~\cite{hamborg2021}, and we collapse those readings into one
+signed daily figure for each company. For the first two questions we place that figure,
+and the firm's returns, on a panel regression with fixed effects for every firm and
+every day, because the plain before-and-after comparison that first suggests itself
+would confuse a genuine 2020 break with two things that have nothing to do with the
+pandemic, namely the permanent differences that make some firms more heavily and more
+warmly covered than others, and the market-wide swings that push every firm in the same
+direction on a given day. The fixed effects hold both of these aside and leave the
+regression looking only at how a firm changed relative to its own past once the day's
+common movement has been removed. For the third question a single regression is not
+enough, because the direction of any link is precisely what we want to learn rather than
+assume, so we turn to a vector autoregression, which treats tone and returns as jointly
+determined and reads off from the data whether past tone helps predict returns, whether
+past returns help predict tone, or neither, and we let the timing of any regime change be
+estimated from each firm's own history rather than pinned to the calendar in advance.
+
+The picture that emerges is quieter than the drama of 2020 might lead one to expect, and
+that quiet is itself the finding. From an initial pull of $6.28$ million headlines we
+distilled a corpus of $90{,}579$ materially relevant, firm-scored headlines across $26$
+large United States firms, and on that corpus neither the tone of coverage nor firm
+returns shows a detectable shift in level after the shock once the movements common to
+all firms are taken out. The relationship between the two turns out to be real but local.
+Where coverage and returns do lead one another, the link belongs to individual firms and
+tends to switch on only after each firm's own structural break, and once the firms are
+pooled and the broad market is controlled for, no market-wide channel survives in either
+direction. Our reading is that the 2020 shock did not rewrite the relationship between
+the financial press and the market so much as leave it as it found it, firm-specific and
+heterogeneous before the crisis and firm-specific and heterogeneous after, and that a
+design careful enough to strip out the common shocks earns this conclusion precisely by
+refusing to manufacture the sweeping aggregate effect the moment seemed to invite.
 
 %=====================================================================
 % RELATED WORK  (0.75--1 pg)  --  Shivansh Verma, Soham Tulsyan, Sashwat Dhanuka

@@ -20,6 +20,15 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{fama1970}
+E.~F. Fama, ``Efficient capital markets: A review of theory and empirical work,'' \emph{The Journal of Finance}, vol.~25, no.~2, pp. 383--417, 1970.
+
+\bibitem{mamaysky2023}
+H.~Mamaysky, ``News and markets in the time of {COVID}-19,'' \emph{Journal of Financial and Quantitative Analysis}, vol.~59, no.~8, pp. 3564--3600, 2023.
+
+\bibitem{hamborg2021}
+F.~Hamborg and K.~Donnay, ``{NewsMTSC}: Target-dependent stance classification in news articles,'' in \emph{Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics (EACL)}, 2021.
+
 \bibitem{costola2023}
 M.~Costola, O.~Hinz, M.~Nofer, and L.~Pelizzon, ``Machine learning sentiment analysis, {COVID}-19 news and stock market reactions,'' \emph{Research in International Business and Finance}, vol.~64, 2023.
 
@@ -62,9 +71,6 @@ A.~Todd, J.~Bowden, and Y.~Moshfeghi, ``Text-based sentiment analysis in finance
 \bibitem{huang2023}
 A.~H. Huang, H.~Wang, and Y.~Yang, ``{FinBERT}: A large language model for extracting information from financial text,'' \emph{Contemporary Accounting Research}, vol.~40, no.~2, 2023.
 
-\bibitem{hamborg2021}
-F.~Hamborg and K.~Donnay, ``{NewsMTSC}: Target-dependent stance classification in news articles,'' in \emph{Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics (EACL)}, 2021.
-
 \bibitem{kirtac2024}
 K.~Kirtac and G.~Germano, ``Sentiment trading with large language models,'' \emph{Finance Research Letters}, vol.~62, 2024.
 
@@ -82,9 +88,6 @@ P.~Liskowski and K.~Jankowski, ``Large-scale aspect-based sentiment analysis wit
 
 \bibitem{vanderheever2026}
 W.~van~der Heever, K.~Ong, R.~Satapathy, and E.~Cambria, ``Beyond correlation: Refutation-validated aspect-based sentiment analysis for explainable energy market returns,'' 2026.
-
-\bibitem{mamaysky2023}
-H.~Mamaysky, ``News and markets in the time of {COVID}-19,'' \emph{Journal of Financial and Quantitative Analysis}, vol.~59, no.~8, pp. 3564--3600, 2023.
 
 \bibitem{mukherjee2025}
 T.~Mukherjee, ``Investor sentiment and market movements: A {G}ranger causality perspective,'' 2025.

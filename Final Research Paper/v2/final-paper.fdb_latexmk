@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex final-paper"] 1784563336.15201 "final-paper.aux" "final-paper.bbl" "final-paper" 1784563344.7996 0
-  "./references.bib" 1784561821.93902 10002 71e6959b1597bf6e114871ad797fabc3 ""
+["bibtex final-paper"] 1784717625.91707 "final-paper.aux" "final-paper.bbl" "final-paper" 1784717627.00149 0
+  "./references.bib" 1784717597.0598 10292 531d9ac110742bf9621149f46d5d0c5c ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1440712899 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "final-paper.aux" 1784563344.49324 8785 79c2b5273a6de9c62579d124de6d68e4 "pdflatex"
+  "final-paper.aux" 1784717626.7899 8883 15e1a72c932ba79b0ea38ebe5d1cb681 "pdflatex"
   (generated)
   "final-paper.bbl"
   "final-paper.blg"
   (rewritten before read)
-["pdflatex"] 1784563343.47927 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1784563344.79977 0
-  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" 1784563343.30151 49756 7b7b485bd094e6542fab8537d79749f6 ""
+["pdflatex"] 1784717625.99044 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1784717627.0016 0
+  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" 1784717623.59079 56039 4856a1e3f2e78ce3d3043f90f56e336a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -112,9 +112,9 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1760512895 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1760512815 3345733 331d7ef9d415455749c8e9cff59fa0a0 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "final-paper.aux" 1784563344.49324 8785 79c2b5273a6de9c62579d124de6d68e4 "pdflatex"
-  "final-paper.bbl" 1784563336.23828 7074 92f00d1d1277871c869bd1a7f52d6f4c "bibtex final-paper"
-  "final-paper.tex" 1784563343.30151 49756 7b7b485bd094e6542fab8537d79749f6 ""
+  "final-paper.aux" 1784717626.7899 8883 15e1a72c932ba79b0ea38ebe5d1cb681 "pdflatex"
+  "final-paper.bbl" 1784717625.98872 7243 fa4b391e1d16c2db2387c85b7dc8be0f "bibtex final-paper"
+  "final-paper.tex" 1784717623.59079 56039 4856a1e3f2e78ce3d3043f90f56e336a ""
   "images/fig_breaks_WFC.png" 1784561821.93574 248094 b540be59bc268670a911274dc12a6372 ""
   "images/fig_coverage_per_firm.png" 1783187288.4611 87108 1e72766e1d06d988ffa154eca4a6006c ""
   "images/fig_returns_V.png" 1784561821.93618 83856 ddadb78df90f48ac89b8eeafad3c42e5 ""
