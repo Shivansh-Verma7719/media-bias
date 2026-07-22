@@ -23,100 +23,97 @@
 \bibitem{fama1970}
 E.~F. Fama, ``Efficient capital markets: A review of theory and empirical work,'' \emph{The Journal of Finance}, vol.~25, no.~2, pp. 383--417, 1970.
 
-\bibitem{mamaysky2023}
-H.~Mamaysky, ``News and markets in the time of {COVID}-19,'' \emph{Journal of Financial and Quantitative Analysis}, vol.~59, no.~8, pp. 3564--3600, 2023.
+\bibitem{glasserman2024}
+P.~Glasserman, H.~Mamaysky, and M.~Shen, ``News and markets in the time of {COVID-19},'' \emph{Journal of Financial and Quantitative Analysis}, 2024.
 
 \bibitem{hamborg2021}
-F.~Hamborg and K.~Donnay, ``{NewsMTSC}: Target-dependent stance classification in news articles,'' in \emph{Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics (EACL)}, 2021.
+F.~Hamborg and K.~Donnay, ``{NewsMTSC}: A dataset for (multi-)target-dependent sentiment classification in news articles,'' in \emph{Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics (EACL)}, 2021, pp. 1663--1675.
 
 \bibitem{costola2023}
-M.~Costola, O.~Hinz, M.~Nofer, and L.~Pelizzon, ``Machine learning sentiment analysis, {COVID}-19 news and stock market reactions,'' \emph{Research in International Business and Finance}, vol.~64, 2023.
+M.~Costola, O.~Hinz, M.~Nofer, and L.~Pelizzon, ``Machine learning sentiment analysis, {COVID-19} news and stock market reactions,'' \emph{Research in International Business and Finance}, vol.~64, 2023.
+
+\bibitem{huynh2021}
+T.~L.~D. Huynh, M.~Foglia, M.~A. Nasir, and E.~Angelini, ``Feverish sentiment and global equity markets during the {COVID-19} pandemic,'' \emph{Journal of Economic Behavior \& Organization}, vol. 188, pp. 1088--1108, 2021.
 
 \bibitem{bai2023}
-Z.~Bai, Q.~Han, J.~Pan, and R.~Zhang, ``Financial market sentiment and returns,'' \emph{Finance Research Letters}, 2023.
+C.~Bai, Y.~Duan, X.~Fan, and S.~Tang, ``Financial market sentiment and stock return during the {COVID-19} pandemic,'' \emph{Finance Research Letters}, vol.~54, 2023.
 
-\bibitem{nyakurukwa2024}
-K.~Nyakurukwa and Y.~Seetharam, ``Sentimental showdown: News media vs.\ social media in stock markets,'' \emph{Heliyon}, vol.~10, 2024.
+\bibitem{anastasiou2022}
+D.~Anastasiou, A.~Ballis, and K.~Drakos, ``Constructing a positive sentiment index for {COVID-19}: Evidence from {G20} stock markets,'' \emph{International Review of Financial Analysis}, vol.~81, 2022.
 
-\bibitem{xuhz2025}
-Z.~Xu, X.~Hua, and T.~Zhang, ``Does official media sentiment matter for the stock market? {E}vidence from {China},'' \emph{Emerging Markets Review}, 2025.
+\bibitem{anastasiou2026}
+D.~Anastasiou, A.~Ballis, C.~Kallandranis, and I.~Vlassas, ``Positive {COVID-19} related sentiment, economic uncertainty \& risk management implications,'' \emph{Journal of Banking Regulation}, 2026.
 
-\bibitem{davidovic2025}
-M.~Davidovic and J.~McCleary, ``News sentiment and stock market dynamics: A machine learning investigation,'' \emph{Journal of Risk and Financial Management}, vol.~18, no.~8, p. 412, 2025.
+\bibitem{verma2025}
+R.~Verma and P.~Verma, ``Economic news, social media sentiments, and stock returns: Which is a bigger driver?'' \emph{Journal of Risk and Financial Management}, vol.~18, no.~1, 2025.
 
-\bibitem{cai2024}
-Y.~Cai, Z.~Tang, and Y.~Chen, ``Can real-time investor sentiment help predict the high-frequency stock returns? {E}vidence from a mixed-frequency-rolling decomposition forecasting method,'' \emph{The North American Journal of Economics and Finance}, 2024.
-
-\bibitem{nguyen2025}
-H.~H. Nguyen, V.~M. Ngo, L.~M. Pham, and P.~V. Nguyen, ``Investor sentiment and market returns: A multi-horizon analysis,'' \emph{Research in International Business and Finance}, 2025.
-
-\bibitem{krystyniak2025}
-K.~Krystyniak, H.~Liu, and H.~Hu, ``What's trending? {S}tock-level investor sentiment and returns,'' \emph{International Journal of Financial Studies}, vol.~13, no.~3, p. 158, 2025.
+\bibitem{eierle2022}
+B.~Eierle, S.~Klamer, and M.~Muck, ``Does it really pay off for investors to consider information from social media?'' \emph{International Review of Financial Analysis}, vol.~81, 2022.
 
 \bibitem{kimhahm2025}
-H.~Kim-Hahm, A.~S. Abou-Zaid, and A.~Mohd, ``News vs.\ social media: Sentiment impact on stock performance of big tech companies,'' \emph{Journal of Risk and Financial Management}, vol.~18, no.~12, p. 660, 2025.
+H.~Kim-Hahm, A.~S. Abou-Zaid, and A.~Mohd, ``News vs. social media: Sentiment impact on stock performance of big tech companies,'' \emph{Journal of Risk and Financial Management}, vol.~18, no.~12, 2025.
 
-\bibitem{avila2024}
-C.~S.~R. Avila, ``Tweet influence on market trends: Analyzing the impact of social media sentiment on biotech stocks,'' 2024.
+\bibitem{sing2023}
+N.~B. Sing and R.~G. Singh, ``Investor attention and reaction in {COVID-19} crisis: sentiment analysis in the indian stock market,'' \emph{Managerial Finance}, vol.~49, no.~4, 2023.
 
-\bibitem{smith2025}
-M.~L. Smith, V.~Kilders, T.~Kuethe, and N.~O. Widmar, ``A time series analysis of herd investor behavior using online and social media data,'' \emph{SAGE Open}, vol.~15, no.~3, 2025.
+\bibitem{dong2022}
+X.~Dong, S.~Xu, J.~Liu, and F.-S. Tsai, ``Does media sentiment affect stock prices? evidence from china's {STAR} market,'' \emph{Frontiers in Psychology}, vol.~13, 2022.
 
-\bibitem{wang2024}
-W.~Wang, ``Investor sentiment and stock market returns: a story of night and day,'' \emph{The European Journal of Finance}, 2024.
+\bibitem{araci2019}
+D.~Araci, ``{FinBERT}: Financial sentiment analysis with pre-trained language models,'' arXiv preprint arXiv:1908.10063, 2019.
 
-\bibitem{todd2024}
-A.~Todd, J.~Bowden, and Y.~Moshfeghi, ``Text-based sentiment analysis in finance: Synthesising the existing literature and exploring future directions,'' \emph{Intelligent Systems in Accounting, Finance and Management}, vol.~31, 2024.
+\bibitem{liu2020}
+Z.~Liu, D.~Huang, K.~Huang, Z.~Li, and J.~Zhao, ``{FinBERT}: A pre-trained financial language representation model for financial text mining,'' in \emph{Proceedings of the Twenty-Ninth International Joint Conference on Artificial Intelligence (IJCAI)}, 2020.
 
-\bibitem{huang2023}
-A.~H. Huang, H.~Wang, and Y.~Yang, ``{FinBERT}: A large language model for extracting information from financial text,'' \emph{Contemporary Accounting Research}, vol.~40, no.~2, 2023.
+\bibitem{tang2023}
+Y.~Tang, Y.~Yang, A.~Huang, A.~Tam, and J.~Tang, ``{FinEntity}: Entity-level sentiment classification for financial texts,'' in \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, 2023.
 
-\bibitem{kirtac2024}
-K.~Kirtac and G.~Germano, ``Sentiment trading with large language models,'' \emph{Finance Research Letters}, vol.~62, 2024.
+\bibitem{daudert2021}
+T.~Daudert, ``A multi-source entity-level sentiment corpus for the financial domain: the {FinLin} corpus,'' \emph{Language Resources and Evaluation}, vol.~55, 2021.
 
-\bibitem{kirtac2025}
-------, ``Large language models in finance: What is financial sentiment?'' 2025.
+\bibitem{heever2026}
+W.~van~der Heever, K.~Ong, R.~Satapathy, and E.~Cambria, ``Beyond correlation: Refutation-validated aspect-based sentiment analysis for explainable energy market returns,'' arXiv preprint arXiv:2603.21473, 2026.
 
-\bibitem{liu2025}
-H.~Liu, Z.~Lin, and R.~R. Rojas, ``Enhancing trading performance through sentiment analysis with large language models: Evidence from the {S\&P}~500,'' 2025.
+\bibitem{mahmoudi2022}
+N.~Mahmoudi, P.~Docherty, and A.~Melia, ``Firm-level investor sentiment and corporate announcement returns,'' \emph{Journal of Banking \& Finance}, vol. 144, 2022.
 
-\bibitem{shah2024}
-A.~Shah, A.~Hiray, P.~Shah, A.~Banerjee, A.~Singh, D.~Eidnani, S.~Chava, B.~Chaudhury, and S.~Chava, ``Numerical claim detection in finance: A new financial dataset, weak-supervision model, and market analysis,'' 2024.
+\bibitem{ftu2025}
+{Foreign Trade University}, ``Analyzing and forecasting {P/E} ratios with investor sentiment in 2025,'' Foreign Trade University, Working Paper, 2025.
 
-\bibitem{liskowski2026}
-P.~Liskowski and K.~Jankowski, ``Large-scale aspect-based sentiment analysis with reasoning-infused {LLMs},'' 2026.
+\bibitem{gandhi2025}
+V.~Gandhi and S.~Gandhi, ``Prompt sentiment: The catalyst for {LLM} change,'' arXiv preprint arXiv:2503.13510, 2025.
 
-\bibitem{vanderheever2026}
-W.~van~der Heever, K.~Ong, R.~Satapathy, and E.~Cambria, ``Beyond correlation: Refutation-validated aspect-based sentiment analysis for explainable energy market returns,'' 2026.
+\bibitem{lseg2023}
+{London Stock Exchange Group}, ``Using {GPT-4} with prompt engineering for financial industry tasks,'' LSEG, White Paper, 2023.
 
-\bibitem{mukherjee2025}
-T.~Mukherjee, ``Investor sentiment and market movements: A {G}ranger causality perspective,'' 2025.
+\bibitem{li2023}
+X.~Li, S.~Chan, X.~Zhu, Y.~Pei, Z.~Ma, X.~Liu, and S.~Shah, ``Are {ChatGPT} and {GPT-4} general-purpose solvers for financial text analytics? a study on several typical tasks,'' in \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing: Industry Track}, 2023.
 
-\bibitem{farrell2025}
-H.~Farrell and F.~O'Connor, ``The {CNN} fear and greed index as a predictor of {US} equity index returns: Static and time-varying {G}ranger causality,'' \emph{Finance Research Letters}, 2025.
+\bibitem{nel2026}
+P.~Nel and R.~van Eyden, ``From news to noise: Does media sentiment drive stock market volatility?'' University of Pretoria, Working Paper 202605, 2026.
 
-\bibitem{davis2020}
-S.~J. Davis, S.~Hansen, and C.~Seminario-Amez, ``Firm-level risk exposures and stock returns in the wake of {COVID}-19,'' National Bureau of Economic Research, Working Paper, 2020.
+\bibitem{moutinho2025}
+V.~Moutinho, R.~H.~C. Domingues, G.~Fantini, and M.~Moraes, ``Examining time-varying causality: investor sentiment and asset spreads across {COVID} and {Ukraine} war periods,'' \emph{Applied Economics Letters}, 2025.
 
-\bibitem{blajer2024}
-A.~Blajer-Golebiewska, S.~Honecker, and S.~Nowak, ``Investor sentiment response to {COVID}-19: A sectoral analysis,'' \emph{The North American Journal of Economics and Finance}, 2024.
+\bibitem{cevik2022}
+E.~Cevik, B.~Kirci~Altinkeski, E.~I. Cevik, and S.~Dibooglu, ``Investor sentiments and stock markets during the {COVID-19} pandemic,'' \emph{Financial Innovation}, vol.~8, 2022.
 
-\bibitem{yang2024}
-S.~Yang, ``Pandemic, policy, and markets: insights and learning from {COVID}-19's impact on global stock behavior,'' \emph{Empirical Economics}, 2024.
+\bibitem{ballinari2020}
+D.~Ballinari and S.~Behrendt, ``Structural breaks in online investor sentiment: A note on the nonstationarity of financial chatter,'' \emph{Finance Research Letters}, vol.~35, 2020.
 
-\bibitem{zhu2023}
-X.~Zhu, S.~Li, K.~Srinivasan, and M.~Lash, ``Impact of the {COVID}-19 pandemic on the stock market and investor online word of mouth,'' \emph{Decision Support Systems}, 2023.
+\bibitem{rossi2019}
+B.~Rossi and Y.~Wang, ``Vector autoregressive-based {Granger} causality test in the presence of instabilities,'' \emph{The Stata Journal}, vol.~19, no.~4, 2019.
 
-\bibitem{baiel2024}
-S.~Y. Bai and E.~W.~J. Lee, ``Examining media's coverage of {COVID}-19 vaccines and social media sentiments on vaccine manufacturers' stock prices,'' \emph{Frontiers in Public Health}, vol.~12, 2024.
+\bibitem{ditzen2025}
+J.~Ditzen, Y.~Karavias, and J.~Westerlund, ``Testing and estimating structural breaks in time series and panel data in {Stata},'' \emph{The Stata Journal}, 2025.
 
-\bibitem{xu2024}
-H.~Xu, ``News bias in financial journalists' social networks,'' \emph{Journal of Accounting Research}, 2024.
+\bibitem{pretis2026}
+F.~Pretis and M.~Schwarz, ``Discovering what mattered: Answering reverse causal questions by detecting unknown treatment assignment and timing as breaks in panel models,'' SSRN Working Paper, 2026.
 
-\bibitem{chung2025}
-V.~Chung, J.~Espinoza, and R.~Quispe, ``Forecasting financial volatility under structural breaks: A comparative study of {GARCH} models and deep learning techniques,'' \emph{Journal of Risk and Financial Management}, vol.~18, no.~9, p. 494, 2025.
+\bibitem{lumsdaine2023}
+R.~L. Lumsdaine, R.~Okui, and W.~Wang, ``Time-varying group heterogeneity in panel data models,'' \emph{Journal of Econometrics}, vol. 232, no.~1, 2023.
 
-\bibitem{segnon2024}
-M.~Segnon, R.~Gupta, and B.~Wilfling, ``Forecasting stock market volatility with regime-switching {GARCH-MIDAS}: The role of geopolitical risks,'' \emph{International Journal of Forecasting}, 2024.
+\bibitem{oliveira2024}
+A.~M.~B. Oliveira, A.~Mandal, and G.~J. Power, ``Impact of {COVID-19} on stock indices volatility: Long-memory persistence, structural breaks, or both?'' \emph{Annals of Data Science}, vol.~11, 2024.
 
 \end{thebibliography}

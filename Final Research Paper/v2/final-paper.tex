@@ -119,7 +119,7 @@ everything else in the news for months, and repriced the whole market within a f
 violent weeks, so if the relationship between coverage and returns were ever going to
 bend out of its usual shape, this is the moment it would show. Earlier work has already
 documented that the coupling between news and markets broke apart around that
-period~\cite{mamaysky2023}, which turns the stability of the link from something we can
+period~\cite{glasserman2024}, which turns the stability of the link from something we can
 assume into something we have to test directly. We therefore treat the shock as a
 natural experiment and ask three questions of it. The first is whether the tone of a
 firm's coverage stepped to a new level once the shock arrived. The second asks the same
@@ -174,71 +174,80 @@ refusing to manufacture the sweeping aggregate effect the moment seemed to invit
 %=====================================================================
 \section{Related Work}
 
-table of 10 sources each and the ir findings, methodology, and gap in the literature (come together one sentence).
-
 \subsection{Media Sentiment and Market Outcomes}
-The question of whether the tone of the news moves prices has drawn a wave of recent
-work, and its trajectory explains where our study sits. Costola et
-al.~\cite{costola2023} ran machine-learning sentiment over COVID-19 news and found
-that a darker news tone accompanied contemporaneous market reactions, while Bai et
-al.~\cite{bai2023} showed that a market-level sentiment index carries predictive
-content for returns at short horizons. Both findings live at the level of the whole
-market, and that is precisely their limit: an aggregate index cannot say whether
-warm coverage of one firm and hostile coverage of another cancel or compound, which
-is the distinction a firm-level question needs. The same limit runs through the
-studies that compare channels and sources. Nyakurukwa and
-Seetharam~\cite{nyakurukwa2024} find that social-media tone has come to dominate
-news tone for United States returns, Xu et al.~\cite{xuhz2025} show that
-official-media sentiment moves the Chinese market, and a broad set of recent papers
-measures the sentiment--return link across horizons, frequencies, and machine-learning
-pipelines~\cite{davidovic2025, cai2024, nguyen2025, krystyniak2025}, across news
-versus social channels~\cite{kimhahm2025, avila2024, smith2025}, and across the
-day--night boundary of the trading calendar~\cite{wang2024}. Each of these works
-reads tone off an aggregate or an outlet; none of them attributes it to the specific
-firm a headline names, which is the measurement our study is built on.
+A large recent literature establishes that the tone of financial news moves with
+market outcomes, and the shape of that literature is what places our study. Working
+directly on the 2020 window, Costola et al.~\cite{costola2023} run machine-learning
+sentiment over COVID-19 news and find a positive relationship between news tone and
+S\&P~500 returns, Huynh et al.~\cite{huynh2021} tie a constructed feverish-sentiment
+index to depressed pandemic-era returns, and Bai et al.~\cite{bai2023} show that the
+sentiment-to-return relation itself changes phase by phase across the crisis. A
+parallel line builds standing aggregate indices: Anastasiou et al. construct a
+positive-sentiment index from search behavior that cushions G20 return
+declines~\cite{anastasiou2022} and later link vaccine-related sentiment shocks to
+persistent falls in policy uncertainty and market fear~\cite{anastasiou2026}. Others
+weigh one signal against another, with Verma and Verma~\cite{verma2025} finding that
+economic-news sentiment carries more return-relevant information than the noisier
+social-media stream, and Eierle et al.~\cite{eierle2022} showing that an adjusted
+social-media proxy predicts short-horizon returns once fundamentals are held fixed. A
+few studies already hint that the effect is uneven across firms: Kim-Hahm et
+al.~\cite{kimhahm2025} report that sentiment moves volume and volatility differently
+across large technology names, Sing and Singh~\cite{sing2023} find sector- and
+wave-dependent responses, and Dong et al.~\cite{dong2022} document a clear price
+effect in a high-growth market. What unites this work, and marks its limit for our
+purposes, is that it reads tone off an aggregate index, a whole market, or a channel;
+even the studies that glimpse firm variation stop at a handful of names and never
+attribute tone to the specific firm each headline is about, which is the measurement
+our study is built on.
 
 \subsection{Measuring Tone at the Level of a Firm}
-Attributing tone to the right entity is its own research problem. A survey of
-text-based financial sentiment by Todd et al.~\cite{todd2024} closes by naming
-entity- and aspect-level attribution as the open direction of the field, and the
-tooling has been catching up to that call. Huang et al.~\cite{huang2023} show that a
-finance-domain language model extracts information from financial text more
-faithfully than general-purpose models, and Hamborg and Donnay~\cite{hamborg2021}
-supply the piece we lean on directly: a target-dependent stance model that scores
-the sentiment a sentence expresses toward a named entity rather than the sentence's
-overall mood. At the same time, recent work counsels care in how such tools are
-used. Kirtac and Germano show both that language-model sentiment can support
-profitable trading signals~\cite{kirtac2024} and that the measured sentiment shifts
-with the choice of model and prompt~\cite{kirtac2025}, a sensitivity Liu et
-al.~\cite{liu2025} confirm on S\&P~500 headlines; Shah et al.~\cite{shah2024} show
-how weak supervision can stretch scarce labels in finance text, and aspect-level
-sentiment with large language models remains an active
-frontier~\cite{liskowski2026, vanderheever2026}. We take the warning seriously: our
-pipeline fixes a single supervised relevance stage and a transparent signed score,
-so that every downstream number traces to one auditable measurement rather than to
-a moving model choice.
+Attributing tone to the right firm is a research problem in its own right, and the
+tooling has been moving toward it. Domain adaptation came first: FinBERT-style models
+fine-tuned on financial text read sentiment more faithfully than general-purpose
+ones~\cite{araci2019, liu2020}. Attribution to a named entity came next. Tang et
+al.~\cite{tang2023} annotate entity spans and their sentiment and show that
+entity-level resolution beats sentence-level classification, Daudert~\cite{daudert2021}
+builds a multi-source entity-level corpus expressly to keep co-occurring names from
+contaminating one another's scores, and van der Heever et al.~\cite{heever2026} pair
+aspect-based sentiment with a refutation step that filters spurious sentiment-to-return
+correlations. Firm-level sentiment carries real pricing content in this frame: Mahmoudi
+et al.~\cite{mahmoudi2022} tie firm-specific sentiment to corporate-announcement
+returns, and text-derived sentiment shifts valuation multiples in panel
+settings~\cite{ftu2025}. The same literature, though, warns that the measurement is
+fragile. Prompt wording alone biases language-model sentiment~\cite{gandhi2025}, and
+general-purpose GPT-style models prove highly sensitive to input parameters and stumble
+on financial entity recognition relative to domain models~\cite{lseg2023, li2023}. We
+take that warning as a design constraint: rather than let a moving model choice drive
+the numbers, our pipeline scores each headline for the firm it names with a single
+target-dependent stance model~\cite{hamborg2021}, behind one fixed supervised relevance
+stage and a transparent signed score, so that every downstream figure traces to one
+auditable measurement.
 
 \subsection{Dynamic Links and Structural Change}
-A third strand asks not whether tone and returns are related but in which direction
-the relation runs, and whether it survived 2020 intact. Mamaysky~\cite{mamaysky2023}
-dates a structural break in mid-March 2020 after which news and markets became
-markedly less coupled, which turns the stability of the news--market link from an
-assumption into something a study must test. On direction,
-Mukherjee~\cite{mukherjee2025} examines sentiment and market movements through
-Granger causality and Farrell and O'Connor~\cite{farrell2025} find that the
-predictive power of a widely watched sentiment index over United States returns
-comes and goes rather than holding steady; both, again, work with one aggregate
-series. The COVID-era event studies point the same way from the cross-section: the
-shock's imprint was uneven across firms and sectors~\cite{davis2020, blajer2024,
-yang2024, zhu2023, baiel2024}, coverage tone itself has a structural, non-random
-component~\cite{xu2024}, and the econometric literature shows that inference which
-ignores breaks and regime shifts is distorted by them~\cite{chung2025, segnon2024}.
-What no study in this strand does is test the lead--lag relation between firm-level
-stance and firm-level returns in both directions, on series whose stationarity has
-been verified and whose break dates are estimated rather than imposed. That
-combination, firm-level target-dependent stance at scale, level-shift tests for
-stance and returns under one controlled break, and a break-dated bidirectional
-dynamic analysis, is the gap this paper fills.
+A third strand asks not whether tone and returns are related but in which direction the
+relation runs, and whether it held through 2020. Glasserman et al.~\cite{glasserman2024}
+date a structural break in mid-March 2020 after which news and equity markets became
+markedly less coupled, which turns the stability of the link into something a study has
+to test rather than assume. On direction the evidence is mixed and time-varying: Nel and
+van Eyden~\cite{nel2026} find causality running mainly from market volatility to
+sentiment rather than the reverse, while Moutinho et al.~\cite{moutinho2025} detect
+bidirectional, time-varying causality between sentiment and S\&P~500 spreads that is
+strongest during the COVID crisis, and Cevik et al.~\cite{cevik2022} trace the same
+shifting sentiment-to-return dynamic across pandemic waves. Both the volatility and the
+causality evidence rest on aggregate series. A companion econometric literature supplies
+the tools and the cautions a break-aware design needs: investor-sentiment series are
+strongly nonstationary and punctuated by endogenous breaks~\cite{ballinari2020}, Granger
+tests lose validity when parameters drift unless they are made robust to
+it~\cite{rossi2019}, and recent panel methods estimate the number, timing, and group
+structure of breaks directly, including as a way to recover unknown treatment timing such
+as a pandemic shock~\cite{ditzen2025, pretis2026, lumsdaine2023}, while the COVID
+cross-section shows breaks and regime shifts in volatility itself~\cite{oliveira2024}.
+What none of this work does is test the lead--lag relation between firm-level stance and
+firm-level returns in both directions, on series whose stationarity has been verified and
+whose break dates are estimated rather than imposed. That combination, firm-level
+target-dependent stance at scale, level-shift tests for stance and returns under one
+controlled break, and a break-dated bidirectional dynamic analysis, is the gap this paper
+fills.
 
 %=====================================================================
 % DATA COLLECTION  (0.5--0.75 pg)

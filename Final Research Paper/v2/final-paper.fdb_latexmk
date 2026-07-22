@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex final-paper"] 1784717625.91707 "final-paper.aux" "final-paper.bbl" "final-paper" 1784717627.00149 0
-  "./references.bib" 1784717597.0598 10292 531d9ac110742bf9621149f46d5d0c5c ""
+["bibtex final-paper"] 1784723671.79677 "final-paper.aux" "final-paper.bbl" "final-paper" 1784723673.02582 0
+  "./references.bib" 1784723605.03788 11047 70cbb61d4047d7900a6a05105bb034be ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1440712899 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "final-paper.aux" 1784717626.7899 8883 15e1a72c932ba79b0ea38ebe5d1cb681 "pdflatex"
+  "final-paper.aux" 1784723672.83018 8917 bbef4a33f915af3573caf01d9b37e02e "pdflatex"
   (generated)
   "final-paper.bbl"
   "final-paper.blg"
   (rewritten before read)
-["pdflatex"] 1784717625.99044 "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1784717627.0016 0
-  "/Users/Shivansh/Downloads/stma/media-bias/Final Research Paper/v2/final-paper.tex" 1784717623.59079 56039 4856a1e3f2e78ce3d3043f90f56e336a ""
+["pdflatex"] 1784723671.92904 "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" "final-paper.pdf" "final-paper" 1784723673.02593 0
+  "/Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/Final Research Paper/v2/final-paper.tex" 1784723492.25809 56995 56b2e5c6ee9ff037924440b7c2dd71d7 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -109,18 +109,18 @@
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd" 1137110629 961 15056f4a61917ceed3a44e4ac11fcc52 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty" 1727642399 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "/usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf" 1739380943 42148 61becc7c670cd061bb319c643c27fdd4 ""
-  "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1760512895 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
-  "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1760512815 3345733 331d7ef9d415455749c8e9cff59fa0a0 ""
+  "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1761154854 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
+  "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1761154847 3345739 d57daa19046d33682a48772a8502eb7c ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "final-paper.aux" 1784717626.7899 8883 15e1a72c932ba79b0ea38ebe5d1cb681 "pdflatex"
-  "final-paper.bbl" 1784717625.98872 7243 fa4b391e1d16c2db2387c85b7dc8be0f "bibtex final-paper"
-  "final-paper.tex" 1784717623.59079 56039 4856a1e3f2e78ce3d3043f90f56e336a ""
-  "images/fig_breaks_WFC.png" 1784561821.93574 248094 b540be59bc268670a911274dc12a6372 ""
-  "images/fig_coverage_per_firm.png" 1783187288.4611 87108 1e72766e1d06d988ffa154eca4a6006c ""
-  "images/fig_returns_V.png" 1784561821.93618 83856 ddadb78df90f48ac89b8eeafad3c42e5 ""
-  "images/fig_stratification.png" 1783188093.15793 83139 49d592b937fa8679babb226e3fb78520 ""
-  "images/fig_threshold_sweep.png" 1784561821.93726 78707 beff698e64e6c8aa34ce1542e1f41d99 ""
-  "images/weekly_ts_UBER.png" 1784561821.93783 121894 1210f0c4087740635dae8fceb7b97585 ""
+  "final-paper.aux" 1784723672.83018 8917 bbef4a33f915af3573caf01d9b37e02e "pdflatex"
+  "final-paper.bbl" 1784723671.92684 7528 ae0a6b4d892493eebeaebc1e55b1fb40 "bibtex final-paper"
+  "final-paper.tex" 1784723492.25809 56995 56b2e5c6ee9ff037924440b7c2dd71d7 ""
+  "images/fig_breaks_WFC.png" 1783779221.44103 248094 b540be59bc268670a911274dc12a6372 ""
+  "images/fig_coverage_per_firm.png" 1783776294.09224 87108 1e72766e1d06d988ffa154eca4a6006c ""
+  "images/fig_returns_V.png" 1783779221.43641 83856 ddadb78df90f48ac89b8eeafad3c42e5 ""
+  "images/fig_stratification.png" 1783776294.09248 83139 49d592b937fa8679babb226e3fb78520 ""
+  "images/fig_threshold_sweep.png" 1783776294.09272 78707 beff698e64e6c8aa34ce1542e1f41d99 ""
+  "images/weekly_ts_UBER.png" 1783779221.43411 121894 1210f0c4087740635dae8fceb7b97585 ""
   (generated)
   "final-paper.aux"
   "final-paper.log"
