@@ -361,9 +361,6 @@ Name or ticker in title, de-duplicated & $695{,}731$ & $26$ \\
 \end{tabular}
 \end{table}
 
-% Table on article volume + temporal variation; final distribution/volume
-% reported POST relevance classification.  --  Sashwat Dhanuka
-
 %=====================================================================
 % METHODOLOGY  (2--3 pg)
 %=====================================================================
@@ -429,7 +426,10 @@ headline feeds directly into a firm's measured tone. Applied to the scored corpu
 the classifier retains $90{,}579$ headlines as materially relevant, about $13\%$ of
 the total, which is consistent with how much of a large firm's news flow reports
 corporate substance rather than mentions it in passing. These retained headlines are
-the raw material for every panel that follows.
+the raw material for every panel that follows. Coverage stays as uneven within this
+relevant set as it was in the raw stream, a handful of heavily reported names carrying
+far more than their share, which is exactly the imbalance the firm fixed effects in the
+panels are there to absorb.
 
 \begin{figure}[!t]
 \centerline{\includegraphics[width=\linewidth]{fig_threshold_sweep.png}}
@@ -928,18 +928,34 @@ strategy that can speak to mechanism rather than to prediction alone.
 %=====================================================================
 \section{Conclusion}
 We set out to learn whether the 2020 shock changed what the news says about large
-United States firms, what their stocks do, and how the two move together. From
-$6.28$ million headlines we distilled a corpus of $90{,}579$ materially relevant,
-target-scored headlines across $26$ S\&P~500 firms, and put the shock to three
-tests: pre/post panel regressions for the level of stance and of returns, and a
-break-dated weekly dynamic analysis for the link between them. The levels did not
-move: neither media stance nor firm-specific returns shows a significant aggregate
-shift once common shocks are absorbed. The link between stance and returns turns out
-to be real but local, surfacing in individual firms after their own structural
-breaks while no market-wide channel survives the pooled, controlled test. The 2020
-shock, on this evidence, did not rewrite the relationship between the financial
-press and the market; it left a relationship that was firm-specific before the
-crisis just as firm-specific after it.
+United States firms, what their stocks do, and how the two move together. From an
+initial $6.28$ million headlines we distilled a corpus of $90{,}579$ materially
+relevant, target-scored headlines across $26$ S\&P~500 firms, and put the shock to
+three tests: pre/post panel regressions for the level of stance and of returns, and
+a break-dated weekly vector autoregression for the link between them. Neither level
+moved. Once the shocks common to every firm are removed, neither the tone of a
+firm's coverage nor its returns steps to a new level after January 2020, and when
+the firms are pooled and market-wide volatility, the index return, and coverage
+volume are controlled, no lead--lag channel between stance and returns survives in
+either direction. What predictability we do find is local: it belongs to individual
+firms and switches on only after each firm's own structural break, not to the market
+as a whole.
+
+Read against the efficient market hypothesis that framed the question, this pattern
+is close to what the strict form of the idea predicts. If prices already embed the
+public information a headline carries, then tone should not forecast returns, and
+coverage should read as a mirror held up to the market rather than a force acting on
+it; that is what the aggregate evidence shows, with the press across the panel
+largely reporting the market back to itself and the pandemic, for all its violence,
+never turning coverage into a systematic mover of prices. The firm-specific,
+post-break predictability is the exception the null does not cover, the place where
+either the market is slow to absorb what one firm's coverage carries or that
+coverage bends to a return move that came first. That this effect is confined to a
+few firms and a few windows, and dissolves the moment the cross-section is pooled and
+the market is held aside, is itself the finding: the 2020 shock did not rewrite the
+relationship between the financial press and the market so much as leave it as it
+found it, efficient in the aggregate and idiosyncratic at the edges, firm-specific
+before the crisis just as firm-specific after it.
 
 %=====================================================================
 % APPENDIX (optional)
