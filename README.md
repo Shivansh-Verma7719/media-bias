@@ -41,7 +41,3 @@ Because the data collection and inference steps process millions of records and 
 python main.py --skip-augmentation --skip-inference --skip-sentiment
 ```
 Run `python main.py --help` for all available skipping flags. Ensure that your `.env` file is properly configured with your Supabase credentials before running.
-
-## Note on Submissions
-
-This repository contains only the relevant scripts, pipelines, and configuration necessary to reproduce the findings in the paper. Intermediate files, synthetic data sets for NLP training, and diagnostic checklists are included within their respective subdirectories.
