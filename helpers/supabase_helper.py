@@ -1,3 +1,4 @@
+"""This helper allows us to communicate with the Supabase Postgres DB we used, via the PostgREST API provided by the Supabase service."""
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client

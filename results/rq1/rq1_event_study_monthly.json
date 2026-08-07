@@ -1,8 +1,0 @@
-{
-  "n_obs": 23439,
-  "n_regressors": 49,
-  "window_lower": -24,
-  "window_upper": 24,
-  "reference_month": -1,
-  "n_coefficients": 49
-}

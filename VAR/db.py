@@ -1,3 +1,5 @@
+"""This module provides utility functions to communicate with the Supabase Postgres DB for our research."""
+
 import os
 from pathlib import Path
 import psycopg2
