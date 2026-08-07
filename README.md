@@ -30,6 +30,18 @@ The project is structured as a multi-stage data processing and analysis pipeline
 - **[`scripts/`](file:///Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/scripts/README.md)**: Standalone robustness check scripts.
 - **[`helpers/`](file:///Users/sohamtulsyan/Documents/Coursework/ISM/media-bias/helpers/README.md)**: Shared database utilities.
 
+## Execution
+
+The entire pipeline can be run sequentially using the provided top-level orchestrator:
+```bash
+python main.py
+```
+Because the data collection and inference steps process millions of records and can take days, you can selectively skip phases using command-line arguments:
+```bash
+python main.py --skip-augmentation --skip-inference --skip-sentiment
+```
+Run `python main.py --help` for all available skipping flags. Ensure that your `.env` file is properly configured with your Supabase credentials before running.
+
 ## Note on Submissions
 
 This repository contains only the relevant scripts, pipelines, and configuration necessary to reproduce the findings in the paper. Intermediate files, synthetic data sets for NLP training, and diagnostic checklists are included within their respective subdirectories.
